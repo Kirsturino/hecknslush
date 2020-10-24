@@ -1,8 +1,6 @@
-//Get project framerate
-global.framesPerSecond = game_get_speed(gamespeed_fps);
-
 //This doesn't really matter what it is, but will affect rate of everything. 
 //Just needs some constant to measure against, I think.
+//Could be changed to 60, for example
 #macro defaultFramesPerSecond 144
 
 //Time that a single frame should last by default

@@ -1,7 +1,7 @@
 //Debug
-var margin = 16;
+var margin = 8;
 var space = 16;
 
-draw_text(margin, margin, "FPS: " + string(fps));
-draw_text(margin, margin + space, "DELTA MULTIPLIER: " + string(delta));
-draw_text(margin, margin + space * 2, "DELTA: " + string(delta_time));
+scribble_draw(margin, margin, "FPS: " + string(fps));
+scribble_draw(margin, margin + space, "DELTA MULTIPLIER: " + string(delta));
+scribble_draw(margin, margin + space * 2, "DELTA: " + string(delta_time));

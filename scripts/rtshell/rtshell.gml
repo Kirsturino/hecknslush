@@ -135,24 +135,31 @@ function sh_theme_solarized_dark() {
 
 //Custom rt-shell scripts
 
-function sh_room_next() {
-	room_goto_next();
-}
-
+//Go to given room
+//Give room name as it appears in resource tree
 function sh_room_goto(args) {
 	var rm = asset_get_index(args[1]);
 	
 	if (rm != -1) {
 		room_goto(rm);
 	} else {
-		return "Room not found";
+		return "Invalid room name";
 	}
 }
 
+//Set fps of game, mainly for delta time testing
 function sh_set_fps(args) {
 	game_set_speed(args[1], gamespeed_fps);
 }
 
+//Quit game
 function sh_game_end() {
 	game_end();
+}
+
+//Execute any custom global script
+function sh_script_execute(args) {
+	var scr = asset_get_index(args[1]);
+	
+	script_execute(scr);
 }

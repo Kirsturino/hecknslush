@@ -64,9 +64,10 @@
     {"id":{"name":"scribble_init","path":"scripts/scribble_init/scribble_init.yy",},"order":4,},
     {"id":{"name":"scribble_whitelist_sprite","path":"scripts/scribble_whitelist_sprite/scribble_whitelist_sprite.yy",},"order":8,},
     {"id":{"name":"scribble_autotype_set_sound","path":"scripts/scribble_autotype_set_sound/scribble_autotype_set_sound.yy",},"order":6,},
-    {"id":{"name":"font_console","path":"fonts/font_console/font_console.yy",},"order":1,},
+    {"id":{"name":"fntConsole","path":"fonts/fntConsole/fntConsole.yy",},"order":1,},
     {"id":{"name":"scribble_set_glyph_property","path":"scripts/scribble_set_glyph_property/scribble_set_glyph_property.yy",},"order":7,},
     {"id":{"name":"scribble_reset","path":"scripts/scribble_reset/scribble_reset.yy",},"order":14,},
+    {"id":{"name":"fntScribble","path":"fonts/fntScribble/fntScribble.yy",},"order":15,},
     {"id":{"name":"scribble_set_transform","path":"scripts/scribble_set_transform/scribble_set_transform.yy",},"order":10,},
     {"id":{"name":"scribble_set_animation","path":"scripts/scribble_set_animation/scribble_set_animation.yy",},"order":1,},
     {"id":{"name":"DoLater","path":"scripts/DoLater/DoLater.yy",},"order":0,},
@@ -127,7 +128,9 @@
   "TextureGroups": [
     {"isScaled":true,"autocrop":true,"border":2,"mipsToGenerate":0,"targets":461609314234257646,"resourceVersion":"1.0","name":"Default","resourceType":"GMTextureGroup",},
   ],
-  "IncludedFiles": [],
+  "IncludedFiles": [
+    {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"fntScribble.yy","resourceType":"GMIncludedFile",},
+  ],
   "MetaData": {
     "IDEVersion": "2.3.0.529",
   },
