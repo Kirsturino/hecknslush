@@ -8,3 +8,6 @@ delta = global.actualDelta / global.targetDelta * global.timeScale;
 //Limit delta time, so intentional lagging won't break things
 //This is would be equal to someone having around 15 FPS
 delta = min(delta, maxDelta);
+
+//Make DoLater use our delta time
+DoLaterTick(delta);
