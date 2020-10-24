@@ -15,7 +15,7 @@ suggestionIndex = 0;
 
 // If another instance of rt-shell already exists, destroy ourself
 // Must do after initializing surface and lists so our clean-up step succeeds 
-if (instance_number(obj_shell) > 1) {
+if (instance_number(oShell) > 1) {
 	instance_destroy();
 }
 
