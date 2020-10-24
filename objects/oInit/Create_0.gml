@@ -4,7 +4,7 @@ instance_create_layer(0, 0, layer, oDeltaTime);
 //Init rt-shell
 instance_create_layer(0, 0, layer, oShell);
 
-//Init Scribble stuff
+//Init Scribble fonts
 scribble_init("", "fntScribble", false);
 scribble_add_font("fntScribble");
 

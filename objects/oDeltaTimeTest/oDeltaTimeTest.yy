@@ -1,7 +1,7 @@
 {
   "spriteId": {
-    "name": "sPlaceholder",
-    "path": "sprites/sPlaceholder/sPlaceholder.yy",
+    "name": "sDeltaTimeTest",
+    "path": "sprites/sDeltaTimeTest/sDeltaTimeTest.yy",
   },
   "solid": false,
   "visible": true,
@@ -26,8 +26,8 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Delta Time Test",
-    "path": "folders/Delta Time Test.yy",
+    "name": "Delta Time",
+    "path": "folders/Delta Time.yy",
   },
   "resourceVersion": "1.0",
   "name": "oDeltaTimeTest",

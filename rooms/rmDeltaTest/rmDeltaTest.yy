@@ -46,8 +46,8 @@
     "PhysicsWorldPixToMetres": 0.1,
   },
   "parent": {
-    "name": "Delta Time Test",
-    "path": "folders/Delta Time Test.yy",
+    "name": "Delta Time",
+    "path": "folders/Delta Time.yy",
   },
   "resourceVersion": "1.0",
   "name": "rmDeltaTest",

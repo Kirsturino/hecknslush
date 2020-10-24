@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Delta Time Test",
-    "path": "folders/Delta Time Test.yy",
+    "name": "Delta Time",
+    "path": "folders/Delta Time.yy",
   },
   "resourceVersion": "1.0",
-  "name": "scrInitDeltaTime",
+  "name": "InitializeDeltaTime",
   "tags": [],
   "resourceType": "GMScript",
 }

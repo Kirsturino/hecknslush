@@ -200,7 +200,7 @@
   "maintainGms1Font": false,
   "parent": {
     "name": "Scribble",
-    "path": "folders/Scribble.yy",
+    "path": "folders/Imported Tools/Scribble.yy",
   },
   "resourceVersion": "1.0",
   "name": "fntScribble",

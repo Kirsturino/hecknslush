@@ -3,7 +3,7 @@
   "isCompatibility": false,
   "parent": {
     "name": "rt-shell",
-    "path": "folders/rt-shell.yy",
+    "path": "folders/Imported Tools/rt-shell.yy",
   },
   "resourceVersion": "1.0",
   "name": "rtshell",
