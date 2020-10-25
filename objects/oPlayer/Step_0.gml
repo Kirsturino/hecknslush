@@ -8,3 +8,5 @@ switch (state) {
 		playerDummy();
 	break;
 }
+
+depthSorting();
