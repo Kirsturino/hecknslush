@@ -11,3 +11,6 @@ delta = min(delta, maxDelta);
 
 //Make DoLater use our delta time
 DoLaterTick(delta);
+
+//Update Input
+input_tick();

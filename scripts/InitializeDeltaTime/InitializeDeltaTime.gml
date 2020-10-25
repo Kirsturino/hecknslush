@@ -16,3 +16,6 @@ delta = global.actualDelta / global.targetDelta;
 
 //Additional multiplier for slowmotion and stuff
 global.timeScale = 1;
+
+//Debug things
+global.debugDelta = true;

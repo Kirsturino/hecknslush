@@ -62,78 +62,80 @@ function sh_set_shell_anchor(args) {
 	}
 }
 
-function sh_say_greeting(args) {
-	var whomToGreet = args[1];
-	return "Hello " + whomToGreet + "!";
-}
+//function sh_say_greeting(args) {
+//	var whomToGreet = args[1];
+//	return "Hello " + whomToGreet + "!";
+//}
 
-function sh_theme_rtshell_dark() {
-	oShell.consoleAlpha = 0.9;
-	oShell.consoleColor = c_black;
-	oShell.fontColor = make_color_rgb(255, 242, 245);
-	oShell.fontColorSecondary = make_color_rgb(140, 118, 123);
-	oShell.cornerRadius = 12;
-	oShell.anchorMargin = 4;
-	oShell.promptColor = make_color_rgb(237, 0, 54);
-	oShell.prompt = "$";
-}
+//function sh_theme_rtshell_dark() {
+//	oShell.consoleAlpha = 0.9;
+//	oShell.consoleColor = c_black;
+//	oShell.fontColor = make_color_rgb(255, 242, 245);
+//	oShell.fontColorSecondary = make_color_rgb(140, 118, 123);
+//	oShell.cornerRadius = 12;
+//	oShell.anchorMargin = 4;
+//	oShell.promptColor = make_color_rgb(237, 0, 54);
+//	oShell.prompt = "$";
+//}
 
-function sh_theme_rtshell_light() {
-	oShell.consoleAlpha = 0.9;
-	oShell.consoleColor = make_color_rgb(235, 235, 235);
-	oShell.fontColor = make_color_rgb(40, 40, 45);
-	oShell.fontColorSecondary = make_color_rgb(120, 120, 128);
-	oShell.cornerRadius = 12;
-	oShell.anchorMargin = 4;
-	oShell.promptColor = make_color_rgb(29, 29, 196);
-	oShell.prompt = "$";
-}
+//function sh_theme_rtshell_light() {
+//	oShell.consoleAlpha = 0.9;
+//	oShell.consoleColor = make_color_rgb(235, 235, 235);
+//	oShell.fontColor = make_color_rgb(40, 40, 45);
+//	oShell.fontColorSecondary = make_color_rgb(120, 120, 128);
+//	oShell.cornerRadius = 12;
+//	oShell.anchorMargin = 4;
+//	oShell.promptColor = make_color_rgb(29, 29, 196);
+//	oShell.prompt = "$";
+//}
 
-function sh_theme_ocean_blue() {
-	oShell.consoleAlpha = 1;
-	oShell.consoleColor = make_color_rgb(29, 31, 33);
-	oShell.fontColor = make_color_rgb(197, 200, 198);
-	oShell.fontColorSecondary = make_color_rgb(116, 127, 140);
-	oShell.cornerRadius = 0;
-	oShell.anchorMargin = 0;
-	oShell.promptColor = make_color_rgb(57, 113, 237);
-	oShell.prompt = "%";
-}
+//function sh_theme_ocean_blue() {
+//	oShell.consoleAlpha = 1;
+//	oShell.consoleColor = make_color_rgb(29, 31, 33);
+//	oShell.fontColor = make_color_rgb(197, 200, 198);
+//	oShell.fontColorSecondary = make_color_rgb(116, 127, 140);
+//	oShell.cornerRadius = 0;
+//	oShell.anchorMargin = 0;
+//	oShell.promptColor = make_color_rgb(57, 113, 237);
+//	oShell.prompt = "%";
+//}
 
-function sh_theme_dracula() {
-	oShell.consoleAlpha = 1;
-	oShell.consoleColor = make_color_rgb(40, 42, 54);
-	oShell.fontColor = make_color_rgb(248, 248, 242);
-	oShell.fontColorSecondary = make_color_rgb(98, 114, 164);
-	oShell.cornerRadius = 8;
-	oShell.anchorMargin = 4;
-	oShell.promptColor = make_color_rgb(80, 250, 123);
-	oShell.prompt = "->";
-}
+//function sh_theme_dracula() {
+//	oShell.consoleAlpha = 1;
+//	oShell.consoleColor = make_color_rgb(40, 42, 54);
+//	oShell.fontColor = make_color_rgb(248, 248, 242);
+//	oShell.fontColorSecondary = make_color_rgb(98, 114, 164);
+//	oShell.cornerRadius = 8;
+//	oShell.anchorMargin = 4;
+//	oShell.promptColor = make_color_rgb(80, 250, 123);
+//	oShell.prompt = "->";
+//}
 
-function sh_theme_solarized_light() {
-	oShell.consoleAlpha = 1;
-	oShell.consoleColor = make_color_rgb(253, 246, 227);
-	oShell.fontColor = make_color_rgb(101, 123, 131);
-	oShell.fontColorSecondary = make_color_rgb(147, 161, 161);
-	oShell.cornerRadius = 2;
-	oShell.anchorMargin = 4;
-	oShell.promptColor = make_color_rgb(42, 161, 152);
-	oShell.prompt = "~";
-}
+//function sh_theme_solarized_light() {
+//	oShell.consoleAlpha = 1;
+//	oShell.consoleColor = make_color_rgb(253, 246, 227);
+//	oShell.fontColor = make_color_rgb(101, 123, 131);
+//	oShell.fontColorSecondary = make_color_rgb(147, 161, 161);
+//	oShell.cornerRadius = 2;
+//	oShell.anchorMargin = 4;
+//	oShell.promptColor = make_color_rgb(42, 161, 152);
+//	oShell.prompt = "~";
+//}
 
-function sh_theme_solarized_dark() {
-	oShell.consoleAlpha = 1;
-	oShell.consoleColor = make_color_rgb(0, 43, 54);
-	oShell.fontColor = make_color_rgb(131, 148, 150);
-	oShell.fontColorSecondary = make_color_rgb(88, 110, 117);
-	oShell.cornerRadius = 2;
-	oShell.anchorMargin = 4;
-	oShell.promptColor = make_color_rgb(42, 161, 152);
-	oShell.prompt = "~";
-}
+//function sh_theme_solarized_dark() {
+//	oShell.consoleAlpha = 1;
+//	oShell.consoleColor = make_color_rgb(0, 43, 54);
+//	oShell.fontColor = make_color_rgb(131, 148, 150);
+//	oShell.fontColorSecondary = make_color_rgb(88, 110, 117);
+//	oShell.cornerRadius = 2;
+//	oShell.anchorMargin = 4;
+//	oShell.promptColor = make_color_rgb(42, 161, 152);
+//	oShell.prompt = "~";
+//}
 
+//--------------------------------------------------------
 //Custom rt-shell scripts
+//--------------------------------------------------------
 
 //Go to given room
 //Give room name as it appears in resource tree
@@ -143,7 +145,7 @@ function sh_room_goto(args) {
 	if (rm != -1) {
 		room_goto(rm);
 	} else {
-		return "Invalid room name";
+		return "Invalid room name: " + string(args[1]);
 	}
 }
 
@@ -162,4 +164,13 @@ function sh_script_execute(args) {
 	var scr = asset_get_index(args[1]);
 	
 	script_execute(scr);
+}
+
+//BE CAREFUL WITH THIS! DOESN'T LIMIT WHAT YOU CAN SET THE VALUES TO
+function sh_global_set(args) {
+	if (variable_global_exists(args[1])) {
+		variable_global_set(args[1], args[2]);
+	} else {
+		return "Invalid global variable: " + string(args[1]);
+	}
 }
