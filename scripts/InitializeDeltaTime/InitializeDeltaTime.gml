@@ -18,4 +18,4 @@ delta = global.actualDelta / global.targetDelta;
 global.timeScale = 1;
 
 //Debug things
-global.debugDelta = true;
+global.debugDelta = false;

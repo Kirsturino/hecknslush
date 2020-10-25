@@ -1,6 +1,15 @@
 //Set up quick reference
 #macro view view_camera[0]
 
+//Center window
+DoLater(1,
+            function()
+            {
+                window_center();
+            },
+            0,
+            true);
+
 //Setup camera variables
 camera_set_view_pos(view, 0, 0);
 window_set_size(viewWidth * global.windowScale, viewHeight * global.windowScale);

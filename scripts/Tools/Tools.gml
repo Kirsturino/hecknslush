@@ -29,3 +29,8 @@ function checkIfInRoomBounds(objectID) {
 		else															{ return false; }
 	}
 }
+
+function moveInDirection(amount, direction) {
+	x += lengthdir_x(amount, direction);
+	y += lengthdir_y(amount, direction);
+}

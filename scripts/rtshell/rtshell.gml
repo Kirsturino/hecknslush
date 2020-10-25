@@ -167,7 +167,7 @@ function sh_script_execute(args) {
 }
 
 //BE CAREFUL WITH THIS! DOESN'T LIMIT WHAT YOU CAN SET THE VALUES TO
-function sh_global_set(args) {
+function sh_set_global(args) {
 	if (variable_global_exists(args[1])) {
 		variable_global_set(args[1], args[2]);
 	} else {
