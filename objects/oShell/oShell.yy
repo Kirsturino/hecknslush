@@ -45,8 +45,8 @@
         "vk_shift",
         "vk_alt",
       ],"multiselect":true,"filters":[],"resourceVersion":"1.0","name":"modifierKeys","tags":[],"resourceType":"GMObjectProperty",},
-    {"varType":4,"value":"undefined","rangeEnabled":false,"rangeMin":0.0,"rangeMax":10.0,"listItems":[],"multiselect":false,"filters":[],"resourceVersion":"1.0","name":"openFunction","tags":[],"resourceType":"GMObjectProperty",},
-    {"varType":4,"value":"undefined","rangeEnabled":false,"rangeMin":0.0,"rangeMax":10.0,"listItems":[],"multiselect":false,"filters":[],"resourceVersion":"1.0","name":"closeFunction","tags":[],"resourceType":"GMObjectProperty",},
+    {"varType":4,"value":"activateConsole","rangeEnabled":false,"rangeMin":0.0,"rangeMax":10.0,"listItems":[],"multiselect":false,"filters":[],"resourceVersion":"1.0","name":"openFunction","tags":[],"resourceType":"GMObjectProperty",},
+    {"varType":4,"value":"closeConsole","rangeEnabled":false,"rangeMin":0.0,"rangeMax":10.0,"listItems":[],"multiselect":false,"filters":[],"resourceVersion":"1.0","name":"closeFunction","tags":[],"resourceType":"GMObjectProperty",},
   ],
   "overriddenProperties": [],
   "parent": {

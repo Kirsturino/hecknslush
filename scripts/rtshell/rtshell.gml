@@ -62,6 +62,16 @@ function sh_set_shell_anchor(args) {
 	}
 }
 
+function activateConsole() {
+	playerToDummy();
+	global.timeScale = 0;
+}
+
+function closeConsole() {
+	playerToGrounded();
+	global.timeScale = 1;
+}
+
 //function sh_say_greeting(args) {
 //	var whomToGreet = args[1];
 //	return "Hello " + whomToGreet + "!";

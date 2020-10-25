@@ -1,8 +1,8 @@
+if (!global.debugDelta) exit;
+
 //Debug
 var margin = 8;
 var space = 16;
-
-if (!global.debugDelta) exit;
 
 scribble_set_starting_format("fntDebug", c_white, fa_left);
 scribble_draw(margin, margin, "FPS: " + string(fps));
