@@ -1,12 +1,12 @@
 function approach(value, to, amount) {
 	if (value < to)
 	{
-	    value += amount;
+	    value += amount * delta;
 	    if (value > to) return to;
 	}
 	else
 	{
-	    value -= amount;
+	    value -= amount * delta;
 	    if (value < to) return to;
 	}
 	return value;
@@ -31,6 +31,6 @@ function checkIfInRoomBounds(objectID) {
 }
 
 function moveInDirection(amount, direction) {
-	x += lengthdir_x(amount, direction);
-	y += lengthdir_y(amount, direction);
+	x += lengthdir_x(amount * delta, direction);
+	y += lengthdir_y(amount * delta, direction);
 }

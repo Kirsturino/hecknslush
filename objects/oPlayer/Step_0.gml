@@ -7,6 +7,22 @@ switch (state) {
 	case states.dummy:
 		playerDummy();
 	break;
+	
+	case states.meleeing:
+		playerMeleeing();
+	break;
+	
+	case states.shooting:
+		playerShooting();
+	break;
+	
+	case states.dodging:
+		playerDodging();
+	break;
+	
+	default:
+		show_message("Hey, idiot. Your state machine broke");
+	break;
 }
 
 depthSorting();
