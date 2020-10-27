@@ -29,6 +29,10 @@ switch (state) {
 	break;
 }
 
-scribble_draw(8, 8, txt);
-scribble_draw(8, 24, "hsp: " + string(move.hsp));
-scribble_draw(8, 40, "vsp: " + string(move.vsp));
+var space = 16;
+scribble_draw(8, space, txt);
+scribble_draw(8, space * 2, "combo: " + string(melee.combo));
+scribble_draw(8, space * 3, "comboLength: " + string(curMeleeWeapon.comboLength));
+scribble_draw(8, space * 4, "comboComplete: " + string(melee.comboComplete));
+scribble_draw(8, space * 5, "meleeCooldown: " + string(melee.cooldown));
+scribble_draw(8, space * 6, "comboBuffered: " + string(checkBufferForState(states.meleeing)));

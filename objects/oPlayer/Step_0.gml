@@ -26,3 +26,9 @@ switch (state) {
 }
 
 depthSorting();
+
+//Things that should be done almost always
+if (state == states.dummy) exit;
+
+updateStateBuffer();
+incrementVerbCooldowns();
