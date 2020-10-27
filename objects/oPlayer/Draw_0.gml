@@ -29,4 +29,6 @@ switch (state) {
 	break;
 }
 
-scribble_draw(x, y - sprite_height, txt);
+scribble_draw(8, 8, txt);
+scribble_draw(8, 24, "hsp: " + string(move.hsp));
+scribble_draw(8, 40, "vsp: " + string(move.vsp));

@@ -165,6 +165,10 @@ function sh_set_fps(args) {
 }
 
 //Quit game
+function sh_room_restart() {
+	room_restart();
+}
+
 function sh_game_end() {
 	game_end();
 }
@@ -176,7 +180,7 @@ function sh_script_execute(args) {
 	script_execute(scr);
 }
 
-//BE CAREFUL WITH THIS! DOESN'T LIMIT WHAT YOU CAN SET THE VALUES TO
+//BE CAREFUL WITH THIS! DOESN'T LIMIT WHAT YOU CAN SET THE VALUES TO AND WILL CRASH IF YOU SET A WRONG VALUE
 function sh_set_global(args) {
 	if (variable_global_exists(args[1])) {
 		variable_global_set(args[1], args[2]);
