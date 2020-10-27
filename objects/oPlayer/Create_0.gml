@@ -161,23 +161,26 @@ function toDodging(dodgeStruct) {
 	state = states.dodging;
 }
 
-//DIAGONAL MOVEMENT IS SCUFFED AF RN BECAUSE I HAVE BETTER THINGS TO DO
 function groundedMovement() {
-	//Basic movement & input
+	//Get input and input direction
 	var mv = getMovementInput();
+	var dir = getMovementInputDirection();
 
+	//If left/right is held, accelerate, if not, decelerate
 	if (mv[0] != 0) {
-		move.hsp = approach(move.hsp, move.maxSpd * mv[0], move.axl);
+		move.hsp = approach(move.hsp, lengthdir_x(move.maxSpd, dir), move.axl);
 	} else {
 		move.hsp = approach(move.hsp, 0, move.fric);
 	}
 
+	//If up/down is held, accelerate, if not, decelerate
 	if (mv[1] != 0) {
-		move.vsp = approach(move.vsp, move.maxSpd * mv[1], move.axl);
+		move.vsp = approach(move.vsp, lengthdir_y(move.maxSpd, dir), move.axl);
 	} else {
 		move.vsp = approach(move.vsp, 0, move.fric);
 	}
 	
+	//Apply momentum
 	x += move.hsp * delta;
 	y += move.vsp * delta;
 }
