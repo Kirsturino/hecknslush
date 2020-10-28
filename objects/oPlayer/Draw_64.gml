@@ -1,5 +1,3 @@
-draw_self();
-
 //This is player state debugging and just bad, but oh well, it's just debugging, I guess
 if (!global.debugPlayer) exit;
 

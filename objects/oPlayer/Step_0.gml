@@ -28,7 +28,7 @@ switch (state) {
 depthSorting();
 
 //Things that should be done almost always
-if (state == states.dummy) exit;
+if (state == states.dummy || state == states.dead) exit;
 
 updateStateBuffer();
 incrementVerbCooldowns();

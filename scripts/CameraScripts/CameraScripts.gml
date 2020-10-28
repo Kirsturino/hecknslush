@@ -1,9 +1,15 @@
-//Init camera
-#macro viewWidth 320
-#macro viewHeight 180
-global.windowScale = 3;
+//Set up quick reference
+#macro view view_camera[0]
 
-function shakeCamera(amount, duration) {
+//Init camera
+#macro viewWidth 640
+#macro viewHeight 360
+global.windowScale = 2;
+
+//Limit GUI draw resolution
+display_set_gui_size(viewWidth, viewHeight);
+
+function shakeCamera(panAmount, rotAmount, duration) {
 	oCamera.shakeAmount = amount;
 	oCamera.shakeDuration = duration;
 }

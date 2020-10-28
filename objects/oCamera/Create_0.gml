@@ -1,6 +1,3 @@
-//Set up quick reference
-#macro view view_camera[0]
-
 //Center window
 DoLater(1,
             function()
@@ -15,7 +12,7 @@ camera_set_view_pos(view, 0, 0);
 window_set_size(viewWidth * global.windowScale, viewHeight * global.windowScale);
 
 //Apply camera
-camera_set_view_size(view, room_width, room_height);
+camera_set_view_size(view, viewWidth, viewHeight);
 surface_resize(application_surface, viewWidth , viewHeight);
 
 
@@ -42,6 +39,7 @@ zoomOffsetY = 0;
 //Camera rotation
 rot = 0;
 
+//TO-DO: ADD ROTATIONAL SHAKE
 function cameraShake() {
 	if (shakeDuration > 0)
 	{
@@ -69,11 +67,12 @@ function cameraRotation() {
 	camera_set_view_angle(view, rot);
 }
 
+//TO-DO: REDO THIS LATER
 function cameraZoom() {
 	zoomMultiplier = lerp(zoomMultiplier, 1, zoomLerpSpeed);
 
 	zoomOffsetX = viewWidth - (viewWidth * zoomMultiplier);
 	zoomOffsetY = viewHeight - (viewHeight * zoomMultiplier);
 
-	camera_set_view_size(view, room_width * zoomMultiplier, room_height * zoomMultiplier);
+	//camera_set_view_size(view, zoomMultiplier, zoomMultiplier);
 }
