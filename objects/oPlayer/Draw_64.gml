@@ -34,3 +34,4 @@ scribble_draw(8, space * 3, "comboLength: " + string(curMeleeWeapon.comboLength)
 scribble_draw(8, space * 4, "comboComplete: " + string(melee.comboComplete));
 scribble_draw(8, space * 5, "meleeCooldown: " + string(melee.cooldown));
 scribble_draw(8, space * 6, "comboBuffered: " + string(checkBufferForState(states.meleeing)));
+scribble_draw(8, space * 7, "verb.shoot: " + string(input_check(verbs.shoot)));

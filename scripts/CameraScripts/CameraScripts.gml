@@ -2,8 +2,8 @@
 #macro view view_camera[0]
 
 //Init camera
-#macro viewWidth 640
-#macro viewHeight 360
+#macro viewWidth 480
+#macro viewHeight 270
 global.windowScale = 2;
 
 //Limit GUI draw resolution

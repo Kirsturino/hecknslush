@@ -1,0 +1,4 @@
+enum weapons {
+	melee,
+	ranged
+}
