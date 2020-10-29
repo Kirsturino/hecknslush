@@ -154,7 +154,7 @@ function playerMeleeing() {
 	attackMovement();
 	
 	//Spawn hitboxes for each melee strike here
-	if (!melee.htbx && melee.dur >= curMeleeWeapon.htbxStart[melee.combo - 1]) spawnHitbox(curMeleeWeapon);
+	if (!melee.htbx) spawnHitbox(curMeleeWeapon);
 	
 	//Work out if player wants to keep attacking or not
 	//If dur reaches zero and player hasn't pressed attack again, go back to normal state and reset combo
@@ -385,10 +385,11 @@ function spawnHitbox(struct) {
 			htbx.atk.dur = struct.htbxLength[melee.combo - 1];	
 			htbx.atk.dmg = struct.baseDmg * struct.dmgMultiplier[melee.combo - 1];
 			htbx.atk.knockback = struct.knockback[melee.combo - 1];
+			htbx.atk.delay = struct.htbxStart[melee.combo - 1];
 		
 			//All melee weapons can cleave and persist
-			htbx.destroyOnStop = false;
-			htbx.piercing = true;
+			htbx.atk.destroyOnStop = false;
+			htbx.atk.piercing = true;
 		
 			melee.htbx = true;
 		break;

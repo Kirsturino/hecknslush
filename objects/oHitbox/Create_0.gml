@@ -6,7 +6,8 @@ atk = {
 	knockback : 0,
 	piercing : true,
 	damagedEnemies : ds_list_create(),
-	destroyOnStop : false
+	destroyOnStop : false,
+	delay : 0
 }
 
 //Movement variables
@@ -15,6 +16,11 @@ move = {
 	vsp : 0,
 	dir : 0,
 	fric : 0.05
+}
+
+visuals = {
+	animSpd : 0.2,
+	frm : 0
 }
 
 
