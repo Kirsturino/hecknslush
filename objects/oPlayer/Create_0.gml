@@ -61,6 +61,7 @@ move = {
 	axl : 0.12,
 	fric : 0.04,
 	lastDir : 0,
+	dir : 0,
 	moving : false
 }
 
@@ -261,19 +262,20 @@ function groundedMovement() {
 	//Get input and input direction
 	var mv = getMovementInput();
 	var dir = getMovementInputDirection();
+	move.dir = point_direction(0, 0, move.hsp, move.vsp);
 
 	//If left/right is held, accelerate, if not, decelerate
 	if (mv[0] != 0) {
 		move.hsp = approach(move.hsp, lengthdir_x(move.maxSpd, dir), abs(lengthdir_x(move.axl, dir)));
 	} else {
-		move.hsp = approach(move.hsp, 0, move.fric);
+		move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.fric, move.dir)));
 	}
 
 	//If up/down is held, accelerate, if not, decelerate
 	if (mv[1] != 0) {
 		move.vsp = approach(move.vsp, lengthdir_y(move.maxSpd, dir), abs(lengthdir_y(move.axl, dir)));
 	} else {
-		move.vsp = approach(move.vsp, 0, move.fric);
+		move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.fric, move.dir)));
 	}
 	
 	//Set last direction player was going
@@ -353,9 +355,11 @@ function resetShots() {
 }
 
 function performMelee() {
-	var dir = getAttackDir();
-	if (!melee.htbx) spawnHitbox(curMeleeWeapon, dir);
-	setAttackMovement(struct.slide[melee.combo - 1]);
+	if (!melee.htbx) {
+		setAttackMovement(curMeleeWeapon.slide[melee.combo - 1]);
+		var dir = getAttackDir();
+		spawnHitbox(curMeleeWeapon, dir);
+	}
 }
 
 function performShot() {
@@ -490,8 +494,8 @@ switch (struct.type) {
 }
 
 function attackMovement() {
-	move.hsp = approach(move.hsp, 0, move.fric);
-	move.vsp = approach(move.vsp, 0, move.fric);
+	move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.fric, move.dir)));
+	move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.fric, move.dir)));
 	
 	x += move.hsp * delta;
 	y += move.vsp * delta;
@@ -499,13 +503,13 @@ function attackMovement() {
 
 function setAttackMovement(amount) {
 	if (input_player_source_get(0) == INPUT_SOURCE.KEYBOARD_AND_MOUSE) {
-		var dir = point_direction(x, y, mouse_x, mouse_y);
+		move.dir = point_direction(x, y, mouse_x, mouse_y);
 	} else if (!isHoldingDirection()) {
-		var dir = move.lastDir;
+		move.dir = move.lastDir;
 	} else {
-		var dir = getMovementInputDirection();
+		move.dir = getMovementInputDirection();
 	}
 	
-	move.hsp = lengthdir_x(amount, dir);
-	move.vsp = lengthdir_y(amount, dir);
+	move.hsp = lengthdir_x(amount, move.dir);
+	move.vsp = lengthdir_y(amount, move.dir);
 }
