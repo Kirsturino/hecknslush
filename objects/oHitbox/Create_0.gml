@@ -1,5 +1,6 @@
 //Probably will need to get passed damage and stuff from player weapon
 //Then needs to disappear after a set amount of time
+
 atk = {
 	dur : 0,
 	dmg : 0,
@@ -19,7 +20,7 @@ move = {
 }
 
 visuals = {
-	animSpd : 0.2,
+	animSpd : 0.5,
 	frm : 0
 }
 

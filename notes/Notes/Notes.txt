@@ -1,0 +1,4 @@
+Add more flexibility to melee weapons, like multiple hitboxes per melee etc.
+Add possibility for bursts of bursts in ranged weapons
+
+Implement aiming state
