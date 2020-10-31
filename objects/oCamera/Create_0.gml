@@ -6,6 +6,8 @@ DoLater(1,
             },
             0,
             true);
+			
+state = cameraStates.follow;
 
 //Setup camera variables
 camera_set_view_pos(view, 0, 0);
@@ -75,4 +77,54 @@ function cameraZoom() {
 	zoomOffsetY = viewHeight - (viewHeight * zoomMultiplier);
 
 	//camera_set_view_size(view, zoomMultiplier, zoomMultiplier);
+}
+
+function followPlayer() {
+	//Apply effects
+	cameraShake();
+	cameraPush();
+	cameraRotation();
+	cameraZoom();
+
+	curX = camera_get_view_x(view);
+	curY = camera_get_view_y(view);
+
+	var spd = .1;
+	
+	var posX = oPlayer.x  - viewWidth / 2;
+	var posY = oPlayer.y - viewHeight / 2;
+	
+	xx = clamp(posX, 0, room_width - viewWidth / 2);
+	yy = clamp(posY, 0, room_height - viewHeight / 2);
+	
+	xTo = lerp(curX, xx + shakeX + pushX, spd);
+	yTo = lerp(curY, yy + shakeY + pushY, spd);
+
+	camera_set_view_pos(view, xTo, yTo);
+}
+
+function followPlayerAim() {
+	//Apply effects
+	cameraShake();
+	cameraPush();
+	cameraRotation();
+	cameraZoom();
+
+	curX = camera_get_view_x(view);
+	curY = camera_get_view_y(view);
+
+	var spd = .1;
+	var multiplier = 10;
+	
+	var dist = min(oPlayer.curRangedWeapon.spd * multiplier, point_distance(oPlayer.x, oPlayer.y, mouse_x, mouse_y));
+	var posX = oPlayer.x  - viewWidth / 2 + lengthdir_x(dist, oPlayer.ranged.aimDir);
+	var posY = oPlayer.y - viewHeight / 2 + lengthdir_y(dist, oPlayer.ranged.aimDir);
+	
+	xx = clamp(posX, 0, room_width - viewWidth / 2);
+	yy = clamp(posY, 0, room_height - viewHeight / 2);
+	
+	xTo = lerp(curX, xx + shakeX + pushX, spd);
+	yTo = lerp(curY, yy + shakeY + pushY, spd);
+
+	camera_set_view_pos(view, xTo, yTo);
 }

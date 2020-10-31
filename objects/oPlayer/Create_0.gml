@@ -7,9 +7,9 @@ enum verbs {
 	left,
 	down,
 	up,
-	melee,
-	shoot,
-	dodge
+	attack,
+	dodge,
+	aim
 }
 
 //Bind default keys
@@ -17,19 +17,18 @@ input_default_key(ord("A"), verbs.left);
 input_default_key(ord("D"), verbs.right);
 input_default_key(ord("W"), verbs.up);
 input_default_key(ord("S"), verbs.down);
-input_default_key(ord("J"), verbs.melee);
-input_default_key(ord("K"), verbs.shoot);
+input_default_key(ord("J"), verbs.attack);
+input_default_key(ord("K"), verbs.attack);
 input_default_key(vk_space, verbs.dodge);
-input_default_mouse_button(mb_left, verbs.melee, true);
-input_default_mouse_button(mb_right, verbs.shoot, true);
+input_default_mouse_button(mb_left, verbs.attack, true);
+input_default_mouse_button(mb_right, verbs.aim, true);
 
 #macro meleeBufferSize 100
 #macro shootBufferSize 100
 #macro dodgeBufferSize 200
 
 //Input jank
-input_consume(verbs.melee);
-input_consume(verbs.shoot);
+input_consume(verbs.attack);
 input_consume(verbs.dodge);
 
 //Init states
@@ -48,9 +47,9 @@ state = states.grounded;
 
 //Circular buffer for states, normalize size for different target framerates
 //This will be used to add some leniency to combos and various actions
-var bufSize = round(game_get_speed(gamespeed_fps) / 5);
-stateBuffer = array_create(bufSize, 0);
-stateBufferSize = bufSize;
+var buffSize = round(game_get_speed(gamespeed_fps) / 5);
+stateBuffer = array_create(buffSize, 0);
+stateBufferSize = buffSize;
 stateBufferPointer = 0;
 
 //Movement variables and player properties
@@ -83,7 +82,7 @@ curMeleeWeapon = {
 	htbx :			oHitbox,
 	baseDmg :		1,
 	comboLength :	3,
-	cooldown :		30,
+	cooldown :		60,
 	amount :		[1, 1, 3],
 	delay  :		[0, 0, 5],
 	multiSpread :	[0, 0, 120],
@@ -104,14 +103,16 @@ ranged = {
 	dur : 0,
 	cooldown : 0,
 	shot : 0,
-	burst : 0
+	burst : 0,
+	aimDir : 0,
 }
 
 curRangedWeapon = {
 	name :			"testRanged",
 	type :			weapons.ranged,
 	htbx :			oHitbox,
-	spr :			sProjectile,
+	spr :			sGun,
+	projSpr :		sProjectile,
 	amount :		5,
 	delay :			5,
 	burstAmount :	1,
@@ -152,8 +153,8 @@ function playerGrounded() {
 	
 	//State switches
 	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, dodgeBufferSize)) toDodging();
-	if (melee.cooldown == 0 && input_check_press(verbs.melee, 0, meleeBufferSize)) toMeleeing();
-	if (ranged.cooldown == 0 && input_check_press(verbs.shoot, 0, shootBufferSize)) toShooting();
+	if (melee.cooldown == 0 && input_check_press(verbs.attack, 0, meleeBufferSize)) toMeleeing();
+	if (ranged.cooldown == 0 && input_check(verbs.aim)) toAiming();
 }
 
 function playerDummy() {
@@ -182,12 +183,13 @@ function playerMeleeing() {
 			}
 			toGrounded();
 		}
-	} else if (input_check_press(verbs.melee, 0, 0) && !melee.comboComplete) {
+	} else if (input_check_press(verbs.attack, 0, 0) && !melee.comboComplete) {
 		melee.queued = true;
 	}
 }
 
 function playerShooting() {
+	ranged.aimDir = getAttackDir();
 	ranged.dur = approach(ranged.dur, 0, 1);
 	
 	//If we have a burst weapon (it has > 0 delay and more than 1 bullet), repeat shot
@@ -205,12 +207,16 @@ function playerShooting() {
 	
 	//State switch
 	//If current weapon is full auto (aka has 0 cooldown), holding down fire button will keep firing
-	if (ranged.dur <= 0 && curRangedWeapon.cooldown == 0 && input_check(verbs.shoot)) {
+	if (ranged.dur <= 0 && curRangedWeapon.cooldown == 0 && input_check(verbs.attack)) {
 		resetShots();
 	} else if (ranged.dur <= 0) {
 		ranged.cooldown = curRangedWeapon.cooldown;
 		resetShots();
-		toGrounded();
+		if (input_check(verbs.aim)) {
+			toAiming();
+		} else {
+			toGrounded();
+		}	
 	}
 }
 
@@ -223,41 +229,73 @@ function playerDodging() {
 	if (dodge.dur <= 0) {
 		move.hsp = lengthdir_x(move.maxSpd, dodge.dir);
 		move.vsp = lengthdir_y(move.maxSpd, dodge.dir);
+		
+		if (input_check(verbs.aim)) {
+			toAiming();
+		} else {
+			toGrounded();
+		}
+	}
+}
+
+function playerAiming() {
+	attackMovement();
+	
+	ranged.aimDir = getAttackDir();
+	
+	//State switch
+	if (input_check_release(verbs.aim)) {
 		toGrounded();
+	} else if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, dodgeBufferSize)) {
+		 toDodging();
+	} else if (ranged.cooldown == 0 && input_check_press(verbs.attack, 0, shootBufferSize)) {
+		toShooting();
 	}
 }
 
 function toDummy() {
+	oCamera.state = cameraStates.follow;
 	state = states.dummy;
 }
 
 function toGrounded() {
+	oCamera.state = cameraStates.follow;
 	state = states.grounded;
 }
 
 function toMeleeing() {
+	oCamera.state = cameraStates.follow;
 	if (!checkBufferForState(states.meleeing)) resetCombo();
 		
 	//Perform melee when transitioning for instant feedback
 	incrementCombo(curMeleeWeapon);
 	performMelee();
 	
-	input_consume(verbs.melee);
+	input_consume(verbs.attack);
 	state = states.meleeing;
 }
 	
 function toShooting() {
+	oCamera.state = cameraStates.aim;
+	
 	//Prevent melee combo cheese
 	resetCombo();
 	
 	//Instant shot when transitioning
 	performShot();
 	
-	if (curRangedWeapon.cooldown != 0) input_consume(verbs.shoot);
+	if (curRangedWeapon.cooldown != 0) input_consume(verbs.attack);
 	state = states.shooting;
 }
 
+function toAiming() {
+	oCamera.state = cameraStates.aim;
+	state = states.aiming;
+}
+
 function toDodging() {
+	oCamera.state = cameraStates.follow;
+	
 	//Set dodge stats
 	dodge.dur = curDodge.dur;
 	dodge.spd = curDodge.spd;
@@ -268,7 +306,9 @@ function toDodging() {
 	resetCombo();
 	
 	//Determine dodge direction
-	dodge.dir = getLastDir();
+	var dir = getLastDir();
+	dodge.dir = dir;
+	move.dir = dir;
 	
 	input_consume(verbs.dodge);
 	state = states.dodging;
@@ -451,7 +491,7 @@ function incrementCombo(meleeStruct) {
 	//Check if this was final hit of combo
 	if (melee.combo >= meleeStruct.comboLength) {
 		melee.comboComplete = true;
-		input_consume(verbs.melee);
+		input_consume(verbs.attack);
 	}
 }
 
@@ -513,15 +553,15 @@ switch (struct.type) {
 		break;
 		
 		case weapons.ranged:	
-			var spawnX = x + lengthdir_x(struct.reach, dir);
-			var spawnY = y + lengthdir_y(struct.reach, dir);
+			var spawnX = x + lengthdir_x(struct.reach + sprite_get_width(curRangedWeapon.spr), dir);
+			var spawnY = y + lengthdir_y(struct.reach + sprite_get_width(curRangedWeapon.spr), dir);
 		
 			//Apply random spread
 			dir += irandom_range(-struct.spread, struct.spread);
 	
 			//Impart weapon stats to hitbox
 			var htbx = instance_create_layer(spawnX, spawnY, "Instances", struct.htbx);
-			htbx.sprite_index = struct.spr;
+			htbx.sprite_index = struct.projSpr;
 			htbx.image_angle = dir;
 			htbx.visuals.size = struct.size;
 	
@@ -557,4 +597,15 @@ function setAttackMovement(amount) {
 	
 	move.hsp = lengthdir_x(amount, move.dir);
 	move.vsp = lengthdir_y(amount, move.dir);
+}
+
+function drawAimIndicator() {
+	var dir = getAttackDir();
+	var drawX = x + lengthdir_x(curRangedWeapon.reach, dir);
+	var drawY = y + lengthdir_y(curRangedWeapon.reach, dir);
+	//if (dir < 180) { var yScale = 1; } else { var yScale = -1; }
+	
+	var yScale = (dir > 90 && dir < 270) ? -1 : 1;
+	
+	draw_sprite_ext(curRangedWeapon.spr, 0, drawX, drawY, 1, yScale, dir, c_white, 1);
 }

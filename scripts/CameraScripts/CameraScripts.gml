@@ -9,6 +9,12 @@ global.windowScale = 2;
 //Limit GUI draw resolution
 display_set_gui_size(viewWidth, viewHeight);
 
+enum cameraStates {
+	follow,
+	aim,
+	scripted
+}
+
 function shakeCamera(panAmount, rotAmount, duration) {
 	oCamera.shakeAmount = amount;
 	oCamera.shakeDuration = duration;

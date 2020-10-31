@@ -20,6 +20,10 @@ switch (state) {
 		playerDodging();
 	break;
 	
+	case states.aiming:
+		playerAiming();
+	break;
+	
 	default:
 		show_message("Hey, idiot. Your state machine broke");
 	break;

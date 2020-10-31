@@ -1,6 +1,6 @@
 FEATURES:
-Implement aiming state for shooting
 Visualize cooldowns
+Add complexity to dodges
 
 REFACTOR:
 Maybe refactor the way combos are incremented?
