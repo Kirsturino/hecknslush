@@ -41,9 +41,16 @@ function dealDamage(enemy) {
 		move.hsp += lengthdir_x(other.atk.knockback, dir);
 		move.vsp += lengthdir_y(other.atk.knockback, dir);
 		move.dir = dir;
+		
 		//Visual stuff
 		visual.flash = hitFlash;
 		
+		//Hitstop
+		freeze(other.atk.dmg * 50);
+		
+		//Particles
+		part_particles_create(global.ps, x, y, global.hitPart, other.atk.dmg * 10);
+
 		//If enemy hp 0, kill 'em
 		if (combat.hp <= 0) destroySelf();
 	}

@@ -1,6 +1,5 @@
 FEATURES:
-Visualize cooldowns
-Add complexity to dodges
+Add complexity to dodges (?)
 
 REFACTOR:
 Maybe refactor the way combos are incremented?

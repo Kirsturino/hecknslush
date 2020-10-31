@@ -22,7 +22,8 @@ move = {
 visuals = {
 	animSpd : 0.5,
 	frm : 0,
-	size : 1
+	size : 1,
+	type : weapons.melee
 }
 
 image_xscale = visuals.size;

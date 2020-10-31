@@ -113,7 +113,7 @@ curRangedWeapon = {
 	htbx :			oHitbox,
 	spr :			sGun,
 	projSpr :		sProjectile,
-	amount :		5,
+	amount :		6,
 	delay :			5,
 	burstAmount :	1,
 	burstDelay :	20,
@@ -546,6 +546,7 @@ switch (struct.type) {
 			htbx.atk.dmg = struct.baseDmg * struct.dmgMultiplier[melee.combo - 1];
 			htbx.atk.knockback = struct.knockback[melee.combo - 1];
 			htbx.atk.delay = struct.htbxStart[melee.combo - 1];
+			htbx.visuals.type = weapons.melee;
 		
 			//All melee weapons can cleave and persist
 			htbx.atk.destroyOnStop = false;
@@ -574,6 +575,7 @@ switch (struct.type) {
 			htbx.atk.knockback = struct.knockback;
 			htbx.atk.piercing = struct.piercing;
 			htbx.atk.destroyOnStop = struct.destroyOnStop;
+			htbx.visuals.type = weapons.ranged;
 		break;
 	}
 }

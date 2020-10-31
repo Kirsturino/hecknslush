@@ -113,7 +113,7 @@ function followPlayerAim() {
 	curX = camera_get_view_x(view);
 	curY = camera_get_view_y(view);
 
-	var spd = .1;
+	var spd = .05;
 	var multiplier = 10;
 	
 	var dist = min(oPlayer.curRangedWeapon.spd * multiplier, point_distance(oPlayer.x, oPlayer.y, mouse_x, mouse_y));

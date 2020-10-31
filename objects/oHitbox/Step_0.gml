@@ -37,3 +37,9 @@ if (atk.destroyOnStop) {
 	var size = (abs(move.hsp) + abs(move.vsp))/4;
 	image_xscale = size;
 }
+
+//Particles
+if (visuals.type = weapons.ranged) {
+	part_type_direction(global.bulletTrail, move.dir - 10, move.dir + 10, 0, 0);
+	part_particles_create(global.ps, x, y, global.bulletTrail, 1);
+}
