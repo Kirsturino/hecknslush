@@ -1,4 +1,8 @@
-Add more flexibility to melee weapons, like multiple hitboxes per melee etc.
-Add possibility for bursts of bursts in ranged weapons
+FEATURES:
+Implement aiming state for shooting
+Visualize cooldowns
 
-Implement aiming state
+REFACTOR:
+Maybe refactor the way combos are incremented?
+Clean melee code with local variables instead of a mega if statements
+Optimize multispread calculation

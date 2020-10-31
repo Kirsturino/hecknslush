@@ -36,5 +36,4 @@ image_index = floor(visuals.frm);
 if (atk.destroyOnStop) {
 	var size = (abs(move.hsp) + abs(move.vsp))/4;
 	image_xscale = size;
-	image_yscale = size;
 }

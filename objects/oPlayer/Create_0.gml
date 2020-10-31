@@ -68,6 +68,7 @@ move = {
 //Player melee attack properties, most of the weapon stats will be imparted to the actual hitbox
 melee = {
 	dur : 0,
+	strike : 0,
 	combo : 0,
 	comboComplete : false,
 	queued : false,
@@ -83,6 +84,9 @@ curMeleeWeapon = {
 	baseDmg :		1,
 	comboLength :	3,
 	cooldown :		30,
+	amount :		[1, 1, 3],
+	delay  :		[0, 0, 5],
+	multiSpread :	[0, 0, 120],
 	spr :			[sSlash, sSlashInverse, sThrust],
 	htbxStart :		[2, 2, 5],
 	htbxLength :	[10, 10, 20],
@@ -92,7 +96,7 @@ curMeleeWeapon = {
 	dmgMultiplier:	[0.8, 1, 1.5],
 	dur :			[32, 32, 36],
 	slide :			[1, 1, -1],
-	knockback :		[1, 1, 3]
+	knockback :		[1, 1, 2.5]
 }
 
 //Player ranged attack properties, most of the weapon stats will be imparted to the actual projectile
@@ -100,6 +104,7 @@ ranged = {
 	dur : 0,
 	cooldown : 0,
 	shot : 0,
+	burst : 0
 }
 
 curRangedWeapon = {
@@ -107,16 +112,18 @@ curRangedWeapon = {
 	type :			weapons.ranged,
 	htbx :			oHitbox,
 	spr :			sProjectile,
-	amount :		8,
-	delay :			0,
+	amount :		5,
+	delay :			5,
+	burstAmount :	1,
+	burstDelay :	20,
 	spread :		0,
 	multiSpread :	40,
 	reach :			12,
 	spd :			6,
 	life :			180,
 	destroyOnStop :	true,
-	fric :			0.1,
-	knockback :		1,
+	fric :			0.05,
+	knockback :		0.5,
 	piercing :		false,
 	dmg:			0.5,
 	dur :			30,
@@ -129,6 +136,7 @@ dodge = {
 	dur : 0,
 	spd : 0,
 	dir : 0,
+	iframes : 0,
 	cooldown : 0
 }
 
@@ -186,6 +194,11 @@ function playerShooting() {
 	//It resets the shot dur until max amount of bullets have been shot
 	if (ranged.shot < curRangedWeapon.amount && ranged.dur < curRangedWeapon.dur - curRangedWeapon.delay) {
 		performShot();
+	} else if (ranged.shot == curRangedWeapon.amount && ranged.burst < curRangedWeapon.burstAmount) {
+		//If we have multiple bursts, reset shots between bursts, increment burst counter
+		ranged.shot = 0;
+		ranged.burst++;
+		ranged.dur = curRangedWeapon.dur + curRangedWeapon.burstDelay;
 	}
 
 	attackMovement();
@@ -202,9 +215,11 @@ function playerShooting() {
 }
 
 function playerDodging() {
+	dodge.dur = approach(dodge.dur, 0, 1);
+	dodge.iframes = approach(dodge.iframes, 0, 1);
+	
 	dodgeMovement();
 	
-	dodge.dur = approach(dodge.dur, 0, 1);
 	if (dodge.dur <= 0) {
 		move.hsp = lengthdir_x(move.maxSpd, dodge.dir);
 		move.vsp = lengthdir_y(move.maxSpd, dodge.dir);
@@ -247,6 +262,7 @@ function toDodging() {
 	dodge.dur = curDodge.dur;
 	dodge.spd = curDodge.spd;
 	dodge.cooldown = curDodge.cooldown;
+	dodge.iframes = curDodge.iframes;
 	
 	//Remove combo progress on dodge
 	resetCombo();
@@ -352,13 +368,45 @@ function resetCombo() {
 
 function resetShots() {
 	ranged.shot = 0;
+	ranged.burst = 0;
 }
 
 function performMelee() {
 	if (!melee.htbx) {
 		setAttackMovement(curMeleeWeapon.slide[melee.combo - 1]);
 		var dir = getAttackDir();
-		spawnHitbox(curMeleeWeapon, dir);
+		
+		if (curMeleeWeapon.amount[melee.combo - 1] > 1) {
+			//If delay is 0, deal all strikes simultaneosly
+			if (curMeleeWeapon.delay[melee.combo - 1] == 0) {
+				repeat(curMeleeWeapon.amount[melee.combo - 1]) {
+					if (curMeleeWeapon.multiSpread[melee.combo - 1] > 0) {
+						dir = getAttackDir() + (curMeleeWeapon.multiSpread[melee.combo - 1] / (curMeleeWeapon.amount[melee.combo - 1] - 1) * melee.strike) - curMeleeWeapon.multiSpread[melee.combo - 1] * .5;
+					}
+					
+					spawnHitbox(curMeleeWeapon, dir);
+					melee.strike++;
+				}
+				melee.htbx = true;
+			} else {
+				//If delay is over 0, spawn hitboxes in succession
+				if (curMeleeWeapon.multiSpread[melee.combo - 1] > 0) {
+					dir = getAttackDir() + (curMeleeWeapon.multiSpread[melee.combo - 1] / (curMeleeWeapon.amount[melee.combo - 1] - 1) * melee.strike) - curMeleeWeapon.multiSpread[melee.combo - 1] * .5;
+				}
+				
+				if (melee.strike < curMeleeWeapon.amount[melee.combo - 1] && melee.dur < curMeleeWeapon.dur[melee.combo - 1] - curMeleeWeapon.delay[melee.combo - 1]) {
+					spawnHitbox(curMeleeWeapon, dir);
+					melee.strike++;
+					melee.dur = curMeleeWeapon.dur[melee.combo - 1];
+				} else if (melee.strike == curMeleeWeapon.amount[melee.combo - 1]) {
+					melee.htbx = true;
+				}
+			}
+		} else {
+			var dir = getAttackDir();
+			spawnHitbox(curMeleeWeapon, dir);
+			melee.htbx = true;
+		}
 	}
 }
 
@@ -370,15 +418,16 @@ function performShot() {
 		repeat (curRangedWeapon.amount) {
 			var dir = getAttackDir();
 			
-			//If weapon has multispread, do some directional calculation based on the multispread variable
+			//If weapon has multispread, do some directional calculation for each projectile based on the multispread variable
 			if (curRangedWeapon.multiSpread > 0) {
 				dir += (curRangedWeapon.multiSpread / (curRangedWeapon.amount - 1) * ranged.shot) - curRangedWeapon.multiSpread * .5;
 			}
 		
 			spawnHitbox(curRangedWeapon, dir);
 			incrementShot(curRangedWeapon);
-			setAttackMovement(-curRangedWeapon.knockback);
 		}
+		
+		setAttackMovement(-curRangedWeapon.knockback * curRangedWeapon.amount);
 	} else { 
 		//This is where we go if we only shoot 1 bullet per frame, aka delay > 0
 		//Just shoot bullet in the direction, no directional shenanigans
@@ -397,6 +446,7 @@ function incrementCombo(meleeStruct) {
 	
 	melee.queued = false;
 	melee.htbx = false;
+	melee.strike = 0;
 			
 	//Check if this was final hit of combo
 	if (melee.combo >= meleeStruct.comboLength) {
@@ -460,8 +510,6 @@ switch (struct.type) {
 			//All melee weapons can cleave and persist
 			htbx.atk.destroyOnStop = false;
 			htbx.atk.piercing = true;
-		
-			melee.htbx = true;
 		break;
 		
 		case weapons.ranged:	

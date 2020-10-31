@@ -38,8 +38,8 @@ function dealDamage(enemy) {
 		if (other.move.hsp != 0 || other.move.vsp != 0) {var dir = other.move.dir}
 		else											{var dir = other.image_angle}
 		
-		move.hsp = lengthdir_x(other.atk.knockback, dir);
-		move.vsp = lengthdir_y(other.atk.knockback, dir);
+		move.hsp += lengthdir_x(other.atk.knockback, dir);
+		move.vsp += lengthdir_y(other.atk.knockback, dir);
 		move.dir = dir;
 		//Visual stuff
 		visual.flash = hitFlash;
