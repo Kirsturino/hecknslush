@@ -32,3 +32,9 @@ if (atk.dur <= 0) destroySelf();
 //Animation
 visuals.frm = approach(visuals.frm, image_number - 1, visuals.animSpd);
 image_index = floor(visuals.frm);
+
+if (atk.destroyOnStop) {
+	var size = (abs(move.hsp) + abs(move.vsp))/4;
+	image_xscale = size;
+	image_yscale = size;
+}

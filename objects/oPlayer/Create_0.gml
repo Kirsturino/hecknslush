@@ -116,7 +116,7 @@ curRangedWeapon = {
 	life :			180,
 	destroyOnStop :	true,
 	fric :			0.1,
-	knockback :		0.5,
+	knockback :		1,
 	piercing :		false,
 	dmg:			0.5,
 	dur :			30,
@@ -377,6 +377,7 @@ function performShot() {
 		
 			spawnHitbox(curRangedWeapon, dir);
 			incrementShot(curRangedWeapon);
+			setAttackMovement(-curRangedWeapon.knockback);
 		}
 	} else { 
 		//This is where we go if we only shoot 1 bullet per frame, aka delay > 0
@@ -386,9 +387,6 @@ function performShot() {
 		incrementShot(curRangedWeapon);
 		setAttackMovement(-curRangedWeapon.knockback);
 	}
-	
-	spawnHitbox(curRangedWeapon, dir);
-	incrementShot(curRangedWeapon);
 }
 
 function incrementCombo(meleeStruct) {
@@ -477,8 +475,7 @@ switch (struct.type) {
 			var htbx = instance_create_layer(spawnX, spawnY, "Instances", struct.htbx);
 			htbx.sprite_index = struct.spr;
 			htbx.image_angle = dir;
-			htbx.image_xscale = struct.size;
-			htbx.image_yscale = struct.size;
+			htbx.visuals.size = struct.size;
 	
 			htbx.move.hsp = lengthdir_x(struct.spd, dir);
 			htbx.move.vsp = lengthdir_y(struct.spd, dir);

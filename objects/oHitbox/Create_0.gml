@@ -21,8 +21,12 @@ move = {
 
 visuals = {
 	animSpd : 0.5,
-	frm : 0
+	frm : 0,
+	size : 1
 }
+
+image_xscale = visuals.size;
+image_yscale = visuals.size;
 
 
 function destroySelf() {
