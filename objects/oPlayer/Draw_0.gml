@@ -5,6 +5,10 @@ switch (state) {
 		
 	break;
 	
+	case states.sprinting:
+		
+	break;
+	
 	case states.dummy:
 		
 	break;

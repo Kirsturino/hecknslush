@@ -35,6 +35,7 @@ input_consume(verbs.dodge);
 enum states {
 	dummy,
 	grounded,
+	sprinting,
 	dodging,
 	meleeing,
 	aiming,
@@ -57,19 +58,22 @@ move = {
 	hsp : 0,
 	vsp : 0,
 	maxSpd : 1.2,
-	maxRunSpd : 2,
 	curMaxSpd : 1.2,
 	axl : 0.12,
-	sprintAxl : 0.05,
-	curAxl : 0.12,
 	fric : 0.04,
-	curFric : 0.04,
-	sprintFric : 0.04,
-	sprintCooldown : 0,
-	sprintCooldownMax : 60,
 	lastDir : 0,
 	dir : 0,
 	moving : false
+}
+
+sprint = {
+	maxSpd : 2,
+	axl : 0.05,
+	turnSpd : 0,
+	turnAxl : 0.2,
+	turnMaxSpd : 2,
+	buildup : 0,
+	buildupMax : 60
 }
 
 //Player melee attack properties, most of the weapon stats will be imparted to the actual hitbox
@@ -167,6 +171,43 @@ function playerGrounded() {
 	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, dodgeBufferSize)) toDodging();
 	if (melee.cooldown == 0 && input_check_press(verbs.attack, 0, meleeBufferSize)) toMeleeing();
 	if (ranged.cooldown == 0 && input_check(verbs.aim)) toAiming();
+	
+	//Player can sprint by holding dodge button for long enough
+	if (input_check(verbs.dodge)) {
+		sprint.buildup = approach(sprint.buildup, sprint.buildupMax, 1);
+		
+		if (sprint.buildup == sprint.buildupMax) {
+			move.dir = move.lastDir;
+			toSprinting();
+		}
+	} else {
+		sprint.buildup = 0;
+	}
+}
+
+function playerSprinting() {
+	sprintMovement();
+	
+	//State switches
+	if (melee.cooldown == 0 && input_check_press(verbs.attack, 0, meleeBufferSize)) {
+		sprint.buildup = 0;
+		move.lastDir = move.dir;
+		toMeleeing();
+	}
+	
+	if (ranged.cooldown == 0 && input_check(verbs.aim)) {
+		sprint.buildup = 0;
+		move.lastDir = move.dir;
+		toAiming();
+	}
+	
+	if (input_check_release(verbs.dodge)) {
+		sprint.buildup = 0;
+		move.hsp = lengthdir_x(move.curMaxSpd, move.dir);
+		move.vsp = lengthdir_y(move.curMaxSpd, move.dir);
+		move.lastDir = move.dir;
+		toGrounded();
+	}
 }
 
 function playerDummy() {
@@ -241,6 +282,7 @@ function playerDodging() {
 	
 	dodgeMovement();
 	
+	//State switches
 	if (dodge.dur <= 0) {
 		move.hsp = lengthdir_x(move.curMaxSpd, dodge.dir);
 		move.vsp = lengthdir_y(move.curMaxSpd, dodge.dir);
@@ -251,7 +293,7 @@ function playerDodging() {
 		} else {
 			dodge.cooldown = curDodge.cooldown;
 			if (input_check(verbs.dodge)) {
-				move.curMaxSpd = move.maxRunSpd;
+				move.curMaxSpd = sprint.maxSpd;
 				move.hsp = lengthdir_x(move.curMaxSpd, dodge.dir);
 				move.vsp = lengthdir_y(move.curMaxSpd, dodge.dir);
 			}
@@ -310,7 +352,7 @@ function toShooting() {
 }
 
 function toAiming() {
-	move.curFric = move.fric;
+	move.fric = move.fric;
 	
 	state = states.aiming;
 }
@@ -320,7 +362,6 @@ function toDodging() {
 	dodge.dur = curDodge.dur;
 	dodge.spd = curDodge.spd;
 	dodge.iframes = curDodge.iframes;
-	move.sprintCooldown = move.sprintCooldownMax;
 	
 	//Remove combo progress on dodge
 	resetCombo();
@@ -343,6 +384,10 @@ function toDodging() {
 	shakeCamera(4, 1, 4);
 }
 
+function toSprinting() {
+	state = states.sprinting;
+}
+
 function groundedMovement() {
 	//Get input and input direction
 	var mv = getMovementInput();
@@ -351,16 +396,16 @@ function groundedMovement() {
 
 	//If left/right is held, accelerate, if not, decelerate
 	if (mv[0] != 0) {
-		move.hsp = approach(move.hsp, lengthdir_x(move.curMaxSpd, dir), abs(lengthdir_x(move.curAxl, dir)));
+		move.hsp = approach(move.hsp, lengthdir_x(move.curMaxSpd, dir), abs(lengthdir_x(move.axl, dir)));
 	} else {
-		move.hsp = approach(move.hsp, 0, move.curFric);
+		move.hsp = approach(move.hsp, 0, move.fric);
 	}
 
 	//If up/down is held, accelerate, if not, decelerate
 	if (mv[1] != 0) {
-		move.vsp = approach(move.vsp, lengthdir_y(move.curMaxSpd, dir), abs(lengthdir_y(move.curAxl, dir)));
+		move.vsp = approach(move.vsp, lengthdir_y(move.curMaxSpd, dir), abs(lengthdir_y(move.axl, dir)));
 	} else {
-		move.vsp = approach(move.vsp, 0, move.curFric);
+		move.vsp = approach(move.vsp, 0, move.fric);
 	}
 	
 	//Set last direction player was going
@@ -371,26 +416,40 @@ function groundedMovement() {
 		move.moving = false;
 	}
 	
-	//Player can sprint by holding dodge button
-	//Maybe make separate state?
-	if (input_check(verbs.dodge) && move.sprintCooldown == 0) {
-			move.curAxl = move.sprintAxl;
-			move.curFric = move.sprintFric;
-			move.curMaxSpd = approach(move.curMaxSpd, move.maxRunSpd, move.curAxl);
-		} else {
-			move.curAxl = move.axl;
-			move.curFric = move.fric;
-			move.curMaxSpd = approach(move.curMaxSpd, move.maxSpd, move.curAxl);
-			
-			move.sprintCooldown = approach(move.sprintCooldown, 0, 1);
-		}
+	//Smooth transition between max speeds
+	move.curMaxSpd = approach(move.curMaxSpd, move.maxSpd, move.axl);		
+	
+	//FX
+	if (move.moving && random(1) > 0.9) part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
 	
 	//Apply momentum
 	x += move.hsp * delta;
 	y += move.vsp * delta;
+}
+
+function sprintMovement() {
+	//Smooth transition between max speeds
+	move.curMaxSpd = approach(move.curMaxSpd, sprint.maxSpd, sprint.axl);
+	
+	//Smooth turning
+	var mv = getMovementInput();
+	var pd = point_direction(0, 0, mv[0], mv[1]);
+	var dd = angle_difference(move.dir, pd);
+	
+	if (mv[0] != 0 || mv[1] != 0) {
+		sprint.turnSpd = approach(sprint.turnSpd, sprint.turnMaxSpd, sprint.turnAxl);
+	} else {
+		//sprint.turnSpd = approach(sprint.turnSpd, 0, sprint.turnFric);
+		sprint.turnSpd = 0;
+	}
+	
+	move.dir -= min(abs(dd), sprint.turnSpd) * sign(dd);
 	
 	//FX
-	if (move.moving && random(1) > 0.9) part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
+	part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
+	
+	//Apply momentum
+	moveInDirection(move.curMaxSpd, move.dir);
 }
 
 function dodgeMovement() {
@@ -589,7 +648,7 @@ switch (struct.type) {
 	
 			htbx.move.hsp = lengthdir_x(struct.htbxSlide[melee.combo - 1], dir);
 			htbx.move.vsp = lengthdir_y(struct.htbxSlide[melee.combo - 1], dir);
-			htbx.move.curFric = struct.htbxFric[melee.combo - 1];
+			htbx.move.fric = struct.htbxFric[melee.combo - 1];
 	
 			htbx.atk.dur = struct.htbxLength[melee.combo - 1];	
 			htbx.atk.dmg = struct.baseDmg * struct.dmgMultiplier[melee.combo - 1];
@@ -631,7 +690,7 @@ switch (struct.type) {
 	
 			htbx.move.hsp = lengthdir_x(struct.spd, dir);
 			htbx.move.vsp = lengthdir_y(struct.spd, dir);
-			htbx.move.curFric = struct.fric;
+			htbx.move.fric = struct.fric;
 	
 			htbx.atk.dur = struct.life;	
 			htbx.atk.dmg = struct.dmg;
@@ -654,8 +713,8 @@ switch (struct.type) {
 }
 
 function attackMovement() {
-	move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.curFric, move.dir)));
-	move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.curFric, move.dir)));
+	move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.fric, move.dir)));
+	move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.fric, move.dir)));
 	
 	x += move.hsp * delta;
 	y += move.vsp * delta;

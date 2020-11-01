@@ -4,6 +4,10 @@ switch (state) {
 		playerGrounded();
 	break;
 	
+	case states.sprinting:
+		playerSprinting();
+	break;
+	
 	case states.dummy:
 		playerDummy();
 	break;

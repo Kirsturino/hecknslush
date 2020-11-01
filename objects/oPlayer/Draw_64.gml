@@ -25,6 +25,10 @@ switch (state) {
 		var txt = "grounded";
 	break;
 	
+	case states.sprinting:
+		var txt = "sprinting";
+	break;
+	
 	case states.dummy:
 		var txt = "dummy";
 	break;
