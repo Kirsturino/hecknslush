@@ -35,7 +35,6 @@ input_consume(verbs.dodge);
 enum states {
 	dummy,
 	grounded,
-	sprinting,
 	dodging,
 	meleeing,
 	aiming,
@@ -60,12 +59,12 @@ move = {
 	maxSpd : 1.2,
 	maxRunSpd : 2,
 	curMaxSpd : 1.2,
-	axl : 0.05,
+	axl : 0.12,
 	sprintAxl : 0.05,
-	curAxl : 0.08,
-	fric : 0.03,
-	curFric : 0.03,
-	sprintFric : 0.02,
+	curAxl : 0.12,
+	fric : 0.04,
+	curFric : 0.04,
+	sprintFric : 0.04,
 	sprintCooldown : 0,
 	sprintCooldownMax : 60,
 	lastDir : 0,
@@ -129,7 +128,7 @@ curRangedWeapon = {
 	delay :			5,
 	burstAmount :	1,
 	burstDelay :	20,
-	spread :		15,
+	spread :		10,
 	multiSpread :	40,
 	reach :			12,
 	spd :			6,
@@ -159,10 +158,6 @@ curDodge = {
 	spd : 4,
 	iframes : 20,
 	cooldown : 60
-}
-
-visuals = {
-	dodge : [0, 0]
 }
 
 function playerGrounded() {
@@ -273,9 +268,6 @@ function playerAiming() {
 	
 	ranged.aimDir = getAttackDir();
 	
-	//Visuals
-	ranged.recoil = approach(ranged.recoil, 0, 0.1);
-	
 	//State switch
 	if (input_check_release(verbs.aim)) {
 		toGrounded();
@@ -354,21 +346,21 @@ function toDodging() {
 function groundedMovement() {
 	//Get input and input direction
 	var mv = getMovementInput();
-	var dir = getMovementInputDirection();
+	var dir = point_direction(0, 0, mv[0], mv[1]);
 	move.dir = point_direction(0, 0, move.hsp, move.vsp);
 
 	//If left/right is held, accelerate, if not, decelerate
 	if (mv[0] != 0) {
 		move.hsp = approach(move.hsp, lengthdir_x(move.curMaxSpd, dir), abs(lengthdir_x(move.curAxl, dir)));
 	} else {
-		move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.curFric, move.dir)));
+		move.hsp = approach(move.hsp, 0, move.curFric);
 	}
 
 	//If up/down is held, accelerate, if not, decelerate
 	if (mv[1] != 0) {
 		move.vsp = approach(move.vsp, lengthdir_y(move.curMaxSpd, dir), abs(lengthdir_y(move.curAxl, dir)));
 	} else {
-		move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.curFric, move.dir)));
+		move.vsp = approach(move.vsp, 0, move.curFric);
 	}
 	
 	//Set last direction player was going
@@ -385,23 +377,20 @@ function groundedMovement() {
 			move.curAxl = move.sprintAxl;
 			move.curFric = move.sprintFric;
 			move.curMaxSpd = approach(move.curMaxSpd, move.maxRunSpd, move.curAxl);
-			
-			//FX
-			part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
 		} else {
 			move.curAxl = move.axl;
 			move.curFric = move.fric;
 			move.curMaxSpd = approach(move.curMaxSpd, move.maxSpd, move.curAxl);
 			
 			move.sprintCooldown = approach(move.sprintCooldown, 0, 1);
-			
-			//FX
-			if (move.moving && random(1) > 0.9) part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
 		}
 	
 	//Apply momentum
 	x += move.hsp * delta;
 	y += move.vsp * delta;
+	
+	//FX
+	if (move.moving && random(1) > 0.9) part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
 }
 
 function dodgeMovement() {
@@ -688,7 +677,7 @@ function setAttackMovement(amount) {
 }
 
 function drawAimIndicator() {
-	var dir = getAttackDir() + random_range(-ranged.recoil, ranged.recoil) * curRangedWeapon.spread * .1;
+	var dir = getAttackDir();
 	var drawX = x + lengthdir_x(curRangedWeapon.reach - ranged.recoil, dir);
 	var drawY = y + lengthdir_y(curRangedWeapon.reach - ranged.recoil, dir);
 	//if (dir < 180) { var yScale = 1; } else { var yScale = -1; }
@@ -704,13 +693,4 @@ function cameraStateSwitch() {
 	} else {
 		oCamera.state = cameraStates.follow;
 	}
-}
-
-function drawDodgeFX() {
-	draw_triangle(x, y - 2, x, y + 4, visuals.dodge[0], visuals.dodge[1], false);
-}
-
-function updateVisuals() {
-	visuals.dodge[0] = lerp(visuals.dodge[0], x, 0.05 * delta);
-	visuals.dodge[1] = lerp(visuals.dodge[1], y, 0.05 * delta);
 }
