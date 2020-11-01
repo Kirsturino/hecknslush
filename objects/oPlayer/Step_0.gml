@@ -36,3 +36,4 @@ if (state == states.dummy || state == states.dead) exit;
 cameraStateSwitch();
 updateStateBuffer();
 incrementVerbCooldowns();
+updateVisuals();

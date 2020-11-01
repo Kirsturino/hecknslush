@@ -18,7 +18,7 @@ switch (state) {
 	break;
 	
 	case states.dodging:
-		
+		drawDodgeFX();
 	break;
 	
 	case states.aiming:

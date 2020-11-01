@@ -9,5 +9,6 @@ REFACTOR:
 Maybe refactor the way combos are incremented?
 Clean melee code with local variables instead of mega if statements
 Optimize multispread calculation
+Move hitbox collision checks to enemies
 
 Movement is still probably jank???
