@@ -1,9 +1,13 @@
 FEATURES:
-Add complexity to dodges (?)
-Upscale camera view so that camera lerp is not suck
+Add complexity/FX to dodge until it feels good
+- Maybe like an after image thingy
+
+Add a hoverboad/zooming state if dodge is held long enough?
 Enemy AI
 
 REFACTOR:
 Maybe refactor the way combos are incremented?
-Clean melee code with local variables instead of a mega if statements
+Clean melee code with local variables instead of mega if statements
 Optimize multispread calculation
+
+Movement is still probably jank???

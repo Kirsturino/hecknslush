@@ -36,8 +36,8 @@ function dealDamage(enemy) {
 		if (other.move.hsp != 0 || other.move.vsp != 0) {var dir = other.move.dir}
 		else											{var dir = other.image_angle}
 		
-		move.hsp += lengthdir_x(other.atk.knockback, dir);
-		move.vsp += lengthdir_y(other.atk.knockback, dir);
+		move.hsp = lengthdir_x(other.atk.knockback, dir);
+		move.vsp = lengthdir_y(other.atk.knockback, dir);
 		move.dir = dir;
 		
 		//Visual stuff
@@ -47,10 +47,12 @@ function dealDamage(enemy) {
 		freeze(other.atk.dmg * 20);
 		shakeCamera(other.atk.dmg * 40, other.atk.dmg, 4);
 		pushCamera(other.atk.dmg * 20, dir);
-		zoomCamera(1 - other.atk.dmg * 0.05);
+		zoomCamera(1 - other.atk.dmg * 0.03);
 		
 		//Particles
 		part_particles_create(global.ps, x, y, global.hitPart, other.atk.dmg * 10);
+		
+		part_type_size(global.hitPart2, other.atk.dmg * 3.2, other.atk.dmg * 3.4, -other.atk.dmg * 0.3, 0);
 		part_particles_create(global.ps, x, y, global.hitPart2, 1);
 
 		//If enemy hp 0, kill 'em

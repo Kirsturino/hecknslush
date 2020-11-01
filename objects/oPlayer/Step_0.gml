@@ -33,5 +33,6 @@ depthSorting();
 
 //Things that should be done almost always
 if (state == states.dummy || state == states.dead) exit;
+cameraStateSwitch();
 updateStateBuffer();
 incrementVerbCooldowns();

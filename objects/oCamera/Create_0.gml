@@ -80,7 +80,7 @@ function followPlayer() {
 	curX = camera_get_view_x(view);
 	curY = camera_get_view_y(view);
 
-	var spd = .1;
+	var spd = .05;
 	var finalWidth = viewWidth * zoomMultiplier;
 	var finalHeight = viewHeight * zoomMultiplier;
 	
@@ -107,7 +107,7 @@ function followPlayerAim() {
 	var finalWidth = viewWidth * zoomMultiplier;
 	var finalHeight = viewHeight * zoomMultiplier;
 	
-	var dist = min(oPlayer.curRangedWeapon.zoom, point_distance(oPlayer.x, oPlayer.y, mouse_x, mouse_y));
+	var dist = min(point_distance(oPlayer.x, oPlayer.y, mouse_x, mouse_y) * oPlayer.curRangedWeapon.zoom, 100);
 	var posX = oPlayer.x  - finalWidth / 2 + lengthdir_x(dist, oPlayer.ranged.aimDir);
 	var posY = oPlayer.y - finalHeight / 2 + lengthdir_y(dist, oPlayer.ranged.aimDir);
 	

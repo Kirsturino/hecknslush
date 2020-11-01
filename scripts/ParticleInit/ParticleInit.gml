@@ -41,3 +41,12 @@ part_type_life(p, 10, 20);
 part_type_size(p, 2, 2, -0.2, 0);
 part_type_direction(p, 0, 359, 0, 0);
 part_type_orientation(p, 0, 359, 0, 0, true);
+
+global.hangingDustPart = part_type_create();
+var p = global.hangingDustPart;
+part_type_shape(p, pt_shape_disk);
+part_type_life(p, 180, 360);
+part_type_size(p, 0.05, 0.1, -0.0005, 0);
+part_type_speed(p, 2, 3, -0.02, 0);
+part_type_orientation(p, 0, 0, 0, 0, true);
+part_type_gravity(p, 0.01, 90);

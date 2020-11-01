@@ -57,8 +57,16 @@ move = {
 	hsp : 0,
 	vsp : 0,
 	maxSpd : 1.2,
+	maxRunSpd : 2,
+	curMaxSpd : 1.2,
 	axl : 0.12,
+	sprintAxl : 0.05,
+	curAxl : 0.12,
 	fric : 0.04,
+	curFric : 0.04,
+	sprintFric : 0.04,
+	sprintCooldown : 0,
+	sprintCooldownMax : 60,
 	lastDir : 0,
 	dir : 0,
 	moving : false
@@ -93,7 +101,7 @@ curMeleeWeapon = {
 	htbxSlide :		[0, 0, 0],
 	htbxFric :		[0.05, 0.05, 0.1],
 	reach :			[32, 32, 48],
-	dmgMultiplier:	[0.8, 1, 1.5],
+	dmgMultiplier:	[1.5, 1.5, 1.25],
 	dur :			[32, 32, 36],
 	slide :			[1, 1, -1],
 	knockback :		[1, 1, 2.5]
@@ -120,19 +128,19 @@ curRangedWeapon = {
 	delay :			5,
 	burstAmount :	1,
 	burstDelay :	20,
-	spread :		5,
+	spread :		15,
 	multiSpread :	40,
 	reach :			12,
 	spd :			6,
 	life :			180,
 	destroyOnStop :	true,
-	fric :			0.05,
+	fric :			0.06,
 	knockback :		0.5,
-	piercing :		false,
+	piercing :		true,
 	dmg:			0.5,
 	dur :			30,
 	size :			1,
-	zoom :			100,
+	zoom :			0.4,
 	cooldown :		60
 }
 
@@ -147,8 +155,8 @@ dodge = {
 
 curDodge = {
 	dur : 20,
-	spd : 3.5,
-	iframes : 5,
+	spd : 4,
+	iframes : 20,
 	cooldown : 60
 }
 
@@ -234,15 +242,25 @@ function playerDodging() {
 	dodgeMovement();
 	
 	if (dodge.dur <= 0) {
-		move.hsp = lengthdir_x(move.maxSpd, dodge.dir);
-		move.vsp = lengthdir_y(move.maxSpd, dodge.dir);
+		move.hsp = lengthdir_x(move.curMaxSpd, dodge.dir);
+		move.vsp = lengthdir_y(move.curMaxSpd, dodge.dir);
 		
 		if (input_check(verbs.aim)) {
+			dodge.cooldown = curDodge.cooldown;
 			toAiming();
 		} else {
+			dodge.cooldown = curDodge.cooldown;
+			if (input_check(verbs.dodge)) {
+				move.curMaxSpd = move.maxRunSpd;
+				move.hsp = lengthdir_x(move.curMaxSpd, dodge.dir);
+				move.vsp = lengthdir_y(move.curMaxSpd, dodge.dir);
+			}
 			toGrounded();
 		}
 	}
+	
+	//FX
+	if (random(1) > 0.7) part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 1);
 }
 
 function playerAiming() {
@@ -261,17 +279,15 @@ function playerAiming() {
 }
 
 function toDummy() {
-	oCamera.state = cameraStates.follow;
 	state = states.dummy;
 }
 
 function toGrounded() {
-	oCamera.state = cameraStates.follow;
+	move.curMaxSpd = move.maxSpd;
 	state = states.grounded;
 }
 
 function toMeleeing() {
-	oCamera.state = cameraStates.follow;
 	if (!checkBufferForState(states.meleeing)) resetCombo();
 		
 	//Perform melee when transitioning for instant feedback
@@ -283,8 +299,6 @@ function toMeleeing() {
 }
 	
 function toShooting() {
-	oCamera.state = cameraStates.aim;
-	
 	//Prevent melee combo cheese
 	resetCombo();
 	
@@ -296,18 +310,17 @@ function toShooting() {
 }
 
 function toAiming() {
-	oCamera.state = cameraStates.aim;
+	move.curFric = move.fric;
+	
 	state = states.aiming;
 }
 
 function toDodging() {
-	oCamera.state = cameraStates.follow;
-	
 	//Set dodge stats
 	dodge.dur = curDodge.dur;
 	dodge.spd = curDodge.spd;
-	dodge.cooldown = curDodge.cooldown;
 	dodge.iframes = curDodge.iframes;
+	move.sprintCooldown = move.sprintCooldownMax;
 	
 	//Remove combo progress on dodge
 	resetCombo();
@@ -317,8 +330,17 @@ function toDodging() {
 	dodge.dir = dir;
 	move.dir = dir;
 	
-	input_consume(verbs.dodge);
+	//input_consume(verbs.dodge);
 	state = states.dodging;
+	
+	//FX
+	part_type_direction(global.hangingDustPart, dodge.dir - 220, dodge.dir - 140, 0, 0);
+	part_type_speed(global.hangingDustPart, 1, 2, -0.01, 0);
+	part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 10);
+	part_type_direction(global.hangingDustPart, dodge.dir - 10, dodge.dir + 10, 0, 0);
+	part_type_speed(global.hangingDustPart, 2, 3, -0.02, 0);
+	
+	shakeCamera(4, 1, 4);
 }
 
 function groundedMovement() {
@@ -329,16 +351,16 @@ function groundedMovement() {
 
 	//If left/right is held, accelerate, if not, decelerate
 	if (mv[0] != 0) {
-		move.hsp = approach(move.hsp, lengthdir_x(move.maxSpd, dir), abs(lengthdir_x(move.axl, dir)));
+		move.hsp = approach(move.hsp, lengthdir_x(move.curMaxSpd, dir), abs(lengthdir_x(move.curAxl, dir)));
 	} else {
-		move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.fric, move.dir)));
+		move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.curFric, move.dir)));
 	}
 
 	//If up/down is held, accelerate, if not, decelerate
 	if (mv[1] != 0) {
-		move.vsp = approach(move.vsp, lengthdir_y(move.maxSpd, dir), abs(lengthdir_y(move.axl, dir)));
+		move.vsp = approach(move.vsp, lengthdir_y(move.curMaxSpd, dir), abs(lengthdir_y(move.curAxl, dir)));
 	} else {
-		move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.fric, move.dir)));
+		move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.curFric, move.dir)));
 	}
 	
 	//Set last direction player was going
@@ -349,16 +371,33 @@ function groundedMovement() {
 		move.moving = false;
 	}
 	
+	//Player can sprint by holding dodge button
+	//Maybe make separate state?
+	if (input_check(verbs.dodge) && move.sprintCooldown == 0) {
+			move.curAxl = move.sprintAxl;
+			move.curFric = move.sprintFric;
+			move.curMaxSpd = approach(move.curMaxSpd, move.maxRunSpd, move.curAxl);
+		} else {
+			move.curAxl = move.axl;
+			move.curFric = move.fric;
+			move.curMaxSpd = approach(move.curMaxSpd, move.maxSpd, move.curAxl);
+			
+			move.sprintCooldown = approach(move.sprintCooldown, 0, 1);
+		}
+	
 	//Apply momentum
 	x += move.hsp * delta;
 	y += move.vsp * delta;
 	
 	//FX
-	if (move.moving) part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
+	if (move.moving && random(1) > 0.9) part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
 }
 
 function dodgeMovement() {
 	moveInDirection(dodge.spd, dodge.dir);
+	
+	//FX
+	part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
 }
 
 function getMovementInput() {
@@ -550,7 +589,7 @@ switch (struct.type) {
 	
 			htbx.move.hsp = lengthdir_x(struct.htbxSlide[melee.combo - 1], dir);
 			htbx.move.vsp = lengthdir_y(struct.htbxSlide[melee.combo - 1], dir);
-			htbx.move.fric = struct.htbxFric[melee.combo - 1];
+			htbx.move.curFric = struct.htbxFric[melee.combo - 1];
 	
 			htbx.atk.dur = struct.htbxLength[melee.combo - 1];	
 			htbx.atk.dmg = struct.baseDmg * struct.dmgMultiplier[melee.combo - 1];
@@ -592,7 +631,7 @@ switch (struct.type) {
 	
 			htbx.move.hsp = lengthdir_x(struct.spd, dir);
 			htbx.move.vsp = lengthdir_y(struct.spd, dir);
-			htbx.move.fric = struct.fric;
+			htbx.move.curFric = struct.fric;
 	
 			htbx.atk.dur = struct.life;	
 			htbx.atk.dmg = struct.dmg;
@@ -615,8 +654,8 @@ switch (struct.type) {
 }
 
 function attackMovement() {
-	move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.fric, move.dir)));
-	move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.fric, move.dir)));
+	move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.curFric, move.dir)));
+	move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.curFric, move.dir)));
 	
 	x += move.hsp * delta;
 	y += move.vsp * delta;
@@ -646,4 +685,12 @@ function drawAimIndicator() {
 	var yScale = (dir > 90 && dir < 270) ? -1 : 1;
 	
 	draw_sprite_ext(curRangedWeapon.spr, 0, drawX, drawY, 1, yScale, dir, c_white, 1);
+}
+
+function cameraStateSwitch() {
+	if (input_check(verbs.aim)) {
+		oCamera.state = cameraStates.aim;
+	} else {
+		oCamera.state = cameraStates.follow;
+	}
 }

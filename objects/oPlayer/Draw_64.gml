@@ -13,6 +13,10 @@ barLength = melee.cooldown;
 scribble_draw(margin, margin + space, "CD:");
 draw_line_width_color(margin + barXOffset, margin + space + barYOffset, margin + barXOffset + barLength, margin + space + barYOffset, width, c, c);
 
+var barLength = dodge.cooldown;
+scribble_draw(margin, margin + space * 2, "CD:");
+draw_line_width_color(margin + barXOffset, margin + space * 2 + barYOffset, margin + barXOffset + barLength, margin + space * 2 + barYOffset, width, c, c);
+
 ////This is player state debugging and just bad, but oh well, it's just debugging, I guess
 //if (!global.debugPlayer) exit;
 
@@ -46,7 +50,7 @@ switch (state) {
 	break;
 }
 
-scribble_draw(8, space * 3, txt);
+scribble_draw(8, space * 4, txt);
 //scribble_draw(8, space * 2, "combo: " + string(melee.combo));
 //scribble_draw(8, space * 3, "comboLength: " + string(curMeleeWeapon.comboLength));
 //scribble_draw(8, space * 4, "comboComplete: " + string(melee.comboComplete));
