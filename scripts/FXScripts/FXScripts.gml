@@ -1,3 +1,5 @@
+#macro hitFlash 6
+
 function freeze(amount) {
 	var time = current_time;
 	var dur = argument0;

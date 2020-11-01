@@ -2,16 +2,16 @@
 var space = 16;
 var margin = 8;
 var width = 12;
+var c = c_red;
 var barXOffset = string_width("CD: ");
 var barYOffset = string_height("CD: ") / 2;
 var barLength = ranged.cooldown;
-
 scribble_draw(margin, margin, "CD:");
-draw_line_width(margin + barXOffset, margin + barYOffset, margin + barXOffset + barLength, margin + barYOffset, width);
+draw_line_width_color(margin + barXOffset, margin + barYOffset, margin + barXOffset + barLength, margin + barYOffset, width, c, c);
 
 barLength = melee.cooldown;
 scribble_draw(margin, margin + space, "CD:");
-draw_line_width(margin + barXOffset, margin + space + barYOffset, margin + barXOffset + barLength, margin + space + barYOffset, width);
+draw_line_width_color(margin + barXOffset, margin + space + barYOffset, margin + barXOffset + barLength, margin + space + barYOffset, width, c, c);
 
 ////This is player state debugging and just bad, but oh well, it's just debugging, I guess
 //if (!global.debugPlayer) exit;

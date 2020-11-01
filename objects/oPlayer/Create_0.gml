@@ -79,6 +79,7 @@ melee = {
 curMeleeWeapon = {
 	name :			"testMelee",
 	type :			weapons.melee,
+	clr :			c_red,
 	htbx :			oHitbox,
 	baseDmg :		1,
 	comboLength :	3,
@@ -105,11 +106,13 @@ ranged = {
 	shot : 0,
 	burst : 0,
 	aimDir : 0,
+	recoil : 0
 }
 
 curRangedWeapon = {
 	name :			"testRanged",
 	type :			weapons.ranged,
+	clr :			c_red,
 	htbx :			oHitbox,
 	spr :			sGun,
 	projSpr :		sProjectile,
@@ -117,7 +120,7 @@ curRangedWeapon = {
 	delay :			5,
 	burstAmount :	1,
 	burstDelay :	20,
-	spread :		0,
+	spread :		5,
 	multiSpread :	40,
 	reach :			12,
 	spd :			6,
@@ -129,6 +132,7 @@ curRangedWeapon = {
 	dmg:			0.5,
 	dur :			30,
 	size :			1,
+	zoom :			100,
 	cooldown :		60
 }
 
@@ -204,6 +208,9 @@ function playerShooting() {
 	}
 
 	attackMovement();
+	
+	//Visuals
+	ranged.recoil = lerp(ranged.recoil, 0, 0.1);
 	
 	//State switch
 	//If current weapon is full auto (aka has 0 cooldown), holding down fire button will keep firing
@@ -345,6 +352,9 @@ function groundedMovement() {
 	//Apply momentum
 	x += move.hsp * delta;
 	y += move.vsp * delta;
+	
+	//FX
+	if (move.moving) part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
 }
 
 function dodgeMovement() {
@@ -547,15 +557,29 @@ switch (struct.type) {
 			htbx.atk.knockback = struct.knockback[melee.combo - 1];
 			htbx.atk.delay = struct.htbxStart[melee.combo - 1];
 			htbx.visuals.type = weapons.melee;
+			htbx.image_blend = struct.clr;
 		
 			//All melee weapons can cleave and persist
 			htbx.atk.destroyOnStop = false;
 			htbx.atk.piercing = true;
+			
+			//FX
+			shakeCamera(curRangedWeapon.dmg * 20, 0, 4);
+			pushCamera(curRangedWeapon.dmg * 40, dir);
+			
+			if (struct.multiSpread[melee.combo - 1] == 0) {
+				var sprd = 40;
+			} else {
+				var sprd = struct.multiSpread[melee.combo - 1] * .5;
+			}
+			
+			part_type_direction(global.shootPart, dir - sprd, dir + sprd, 0, 0);
+			part_particles_create(global.ps, spawnX, spawnY, global.shootPart, 5);
 		break;
 		
 		case weapons.ranged:	
-			var spawnX = x + lengthdir_x(struct.reach + sprite_get_width(curRangedWeapon.spr), dir);
-			var spawnY = y + lengthdir_y(struct.reach + sprite_get_width(curRangedWeapon.spr), dir);
+			var spawnX = x + lengthdir_x(struct.reach + sprite_get_width(struct.spr), dir);
+			var spawnY = y + lengthdir_y(struct.reach + sprite_get_width(struct.spr), dir);
 		
 			//Apply random spread
 			dir += irandom_range(-struct.spread, struct.spread);
@@ -576,6 +600,16 @@ switch (struct.type) {
 			htbx.atk.piercing = struct.piercing;
 			htbx.atk.destroyOnStop = struct.destroyOnStop;
 			htbx.visuals.type = weapons.ranged;
+			htbx.image_blend = struct.clr;
+			
+			//FX
+			shakeCamera(curRangedWeapon.dmg * 60, 0, 4);
+			pushCamera(curRangedWeapon.dmg * 40, dir + 180);
+			ranged.recoil = curRangedWeapon.dmg * 10;
+			
+			part_particles_create(global.ps, spawnX, spawnY, global.muzzleFlashPart, 1);
+			part_type_direction(global.shootPart, dir - struct.spread * 2, dir + struct.spread * 2, 0, 0);
+			part_particles_create(global.ps, spawnX, spawnY, global.shootPart, 10);
 		break;
 	}
 }
@@ -597,14 +631,16 @@ function setAttackMovement(amount) {
 		move.dir = getMovementInputDirection();
 	}
 	
+	part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
+	
 	move.hsp = lengthdir_x(amount, move.dir);
 	move.vsp = lengthdir_y(amount, move.dir);
 }
 
 function drawAimIndicator() {
 	var dir = getAttackDir();
-	var drawX = x + lengthdir_x(curRangedWeapon.reach, dir);
-	var drawY = y + lengthdir_y(curRangedWeapon.reach, dir);
+	var drawX = x + lengthdir_x(curRangedWeapon.reach - ranged.recoil, dir);
+	var drawY = y + lengthdir_y(curRangedWeapon.reach - ranged.recoil, dir);
 	//if (dir < 180) { var yScale = 1; } else { var yScale = -1; }
 	
 	var yScale = (dir > 90 && dir < 270) ? -1 : 1;

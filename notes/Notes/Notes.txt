@@ -1,5 +1,7 @@
 FEATURES:
 Add complexity to dodges (?)
+Upscale camera view so that camera lerp is not suck
+Enemy AI
 
 REFACTOR:
 Maybe refactor the way combos are incremented?

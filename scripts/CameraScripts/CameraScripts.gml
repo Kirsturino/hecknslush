@@ -16,8 +16,9 @@ enum cameraStates {
 }
 
 function shakeCamera(panAmount, rotAmount, duration) {
-	oCamera.shakeAmount = amount;
+	oCamera.shakeAmount = panAmount;
 	oCamera.shakeDuration = duration;
+	oCamera.rot = lerp(oCamera.rot, oCamera.rot + rotAmount, 0.5);
 }
 
 function pushCamera(amount, direction) {

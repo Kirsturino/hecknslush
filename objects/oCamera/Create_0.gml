@@ -35,8 +35,6 @@ pushY = 0;
 //Camera zoom stuff
 zoomMultiplier = 1;
 zoomLerpSpeed = 0.1;
-zoomOffsetX = 0;
-zoomOffsetY = 0;
 
 //Camera rotation
 rot = 0;
@@ -66,17 +64,10 @@ function cameraPush() {
 
 function cameraRotation() {
 	rot = lerp(rot, 0, 0.1);
-	camera_set_view_angle(view, rot);
 }
 
-//TO-DO: REDO THIS LATER
 function cameraZoom() {
 	zoomMultiplier = lerp(zoomMultiplier, 1, zoomLerpSpeed);
-
-	zoomOffsetX = viewWidth - (viewWidth * zoomMultiplier);
-	zoomOffsetY = viewHeight - (viewHeight * zoomMultiplier);
-
-	//camera_set_view_size(view, zoomMultiplier, zoomMultiplier);
 }
 
 function followPlayer() {
@@ -90,17 +81,16 @@ function followPlayer() {
 	curY = camera_get_view_y(view);
 
 	var spd = .1;
+	var finalWidth = viewWidth * zoomMultiplier;
+	var finalHeight = viewHeight * zoomMultiplier;
 	
-	var posX = oPlayer.x  - viewWidth / 2;
-	var posY = oPlayer.y - viewHeight / 2;
+	var posX = oPlayer.x  - finalWidth / 2;
+	var posY = oPlayer.y - finalHeight / 2;
 	
-	xx = clamp(posX, 0, room_width - viewWidth / 2);
-	yy = clamp(posY, 0, room_height - viewHeight / 2);
+	xx = clamp(posX, 0, room_width - finalWidth / 2);
+	yy = clamp(posY, 0, room_height - finalHeight / 2);
 	
-	xTo = lerp(curX, xx + shakeX + pushX, spd);
-	yTo = lerp(curY, yy + shakeY + pushY, spd);
-
-	camera_set_view_pos(view, xTo, yTo);
+	applyCameraPos(spd, finalWidth, finalHeight);
 }
 
 function followPlayerAim() {
@@ -114,17 +104,24 @@ function followPlayerAim() {
 	curY = camera_get_view_y(view);
 
 	var spd = .05;
-	var multiplier = 10;
+	var finalWidth = viewWidth * zoomMultiplier;
+	var finalHeight = viewHeight * zoomMultiplier;
 	
-	var dist = min(oPlayer.curRangedWeapon.spd * multiplier, point_distance(oPlayer.x, oPlayer.y, mouse_x, mouse_y));
-	var posX = oPlayer.x  - viewWidth / 2 + lengthdir_x(dist, oPlayer.ranged.aimDir);
-	var posY = oPlayer.y - viewHeight / 2 + lengthdir_y(dist, oPlayer.ranged.aimDir);
+	var dist = min(oPlayer.curRangedWeapon.zoom, point_distance(oPlayer.x, oPlayer.y, mouse_x, mouse_y));
+	var posX = oPlayer.x  - finalWidth / 2 + lengthdir_x(dist, oPlayer.ranged.aimDir);
+	var posY = oPlayer.y - finalHeight / 2 + lengthdir_y(dist, oPlayer.ranged.aimDir);
 	
-	xx = clamp(posX, 0, room_width - viewWidth / 2);
-	yy = clamp(posY, 0, room_height - viewHeight / 2);
+	xx = clamp(posX, 0, room_width - finalWidth / 2);
+	yy = clamp(posY, 0, room_height - finalHeight / 2);
 	
+	applyCameraPos(spd, finalWidth, finalHeight);
+}
+
+function applyCameraPos(spd, width, height) {
 	xTo = lerp(curX, xx + shakeX + pushX, spd);
 	yTo = lerp(curY, yy + shakeY + pushY, spd);
 
 	camera_set_view_pos(view, xTo, yTo);
+	camera_set_view_angle(view, rot);
+	camera_set_view_size(view, width, height);
 }
