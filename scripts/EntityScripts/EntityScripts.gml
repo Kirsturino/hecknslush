@@ -45,7 +45,7 @@ function dealDamage(enemy) {
 		
 		//Hitstop & camera stuff
 		freeze(other.atk.dmg * 20);
-		shakeCamera(other.atk.dmg * 40, other.atk.dmg, 4);
+		shakeCamera(other.atk.dmg * 40, other.atk.dmg * 2, 4);
 		pushCamera(other.atk.dmg * 20, dir);
 		zoomCamera(1 - other.atk.dmg * 0.03);
 		

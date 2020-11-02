@@ -38,22 +38,22 @@ zoomLerpSpeed = 0.1;
 
 //Camera rotation
 rot = 0;
+rotTo = 0;
 
-//TO-DO: ADD ROTATIONAL SHAKE
 function cameraShake() {
-	if (shakeDuration > 0)
-	{
+	if (shakeDuration > 0) {
 		var amount = irandom_range(-shakeAmount, shakeAmount);
 		shakeX = amount;
 		amount = irandom_range(-shakeAmount, shakeAmount);
 		shakeY = amount;
-	
-		shakeDuration--;
-	} else
-	{
+	} else {
 		shakeX = 0;
 		shakeY = 0;
+		shakeAmount = 0;
 	}
+	
+	shakeAmount = approach(shakeAmount, 0, 2);
+	shakeDuration = approach(shakeDuration, 0, 1);
 }
 
 function cameraPush() {
@@ -63,23 +63,15 @@ function cameraPush() {
 }
 
 function cameraRotation() {
-	rot = lerp(rot, 0, 0.1);
+	rot = lerp(rot, rotTo, 0.1 * delta);
+	rotTo = approach(rotTo, 0, 1);
 }
 
 function cameraZoom() {
-	zoomMultiplier = lerp(zoomMultiplier, 1, zoomLerpSpeed);
+	zoomMultiplier = lerp(zoomMultiplier, 1, zoomLerpSpeed * delta);
 }
 
 function followPlayer() {
-	//Apply effects
-	cameraShake();
-	cameraPush();
-	cameraRotation();
-	cameraZoom();
-
-	curX = camera_get_view_x(view);
-	curY = camera_get_view_y(view);
-
 	var spd = .05;
 	var finalWidth = viewWidth * zoomMultiplier;
 	var finalHeight = viewHeight * zoomMultiplier;
@@ -94,15 +86,6 @@ function followPlayer() {
 }
 
 function followPlayerAim() {
-	//Apply effects
-	cameraShake();
-	cameraPush();
-	cameraRotation();
-	cameraZoom();
-
-	curX = camera_get_view_x(view);
-	curY = camera_get_view_y(view);
-
 	var spd = .05;
 	var finalWidth = viewWidth * zoomMultiplier;
 	var finalHeight = viewHeight * zoomMultiplier;
@@ -118,6 +101,9 @@ function followPlayerAim() {
 }
 
 function applyCameraPos(spd, width, height) {
+	curX = camera_get_view_x(view);
+	curY = camera_get_view_y(view);
+	
 	xTo = lerp(curX, xx + shakeX + pushX, spd);
 	yTo = lerp(curY, yy + shakeY + pushY, spd);
 

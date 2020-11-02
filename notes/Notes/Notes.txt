@@ -1,13 +1,21 @@
+---------------------------------------------------------------------------
 FEATURES:
-Add complexity/FX to dodge until it feels good
-- Maybe like an after image thingy
+- Enemy AI
+- Weighted camera
+- Perk/Buff system
+- Dungeon generation
 
-Add a hoverboad/zooming state if dodge is held long enough?
-Enemy AI
-
+---------------------------------------------------------------------------
 REFACTOR:
-Maybe refactor the way combos are incremented?
-Clean melee code with local variables instead of mega if statements
-Optimize multispread calculation
-Move hitbox collision checks to enemies
-Calculate hitbox animation to match the timing of hitbox lifetime
+Yes
+- Clean melee code with local variables instead of mega if statements
+- Calculate hitbox animation to match the timing of hitbox lifetime
+- State machine rework
+
+Maybe
+- Optimize multispread calculation
+- Move hitbox collision checks to enemies (?)
+- Maybe refactor the way combos are incremented?
+
+---------------------------------------------------------------------------
+KNOWN BUGS:

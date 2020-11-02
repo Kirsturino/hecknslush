@@ -49,4 +49,11 @@ part_type_life(p, 180, 360);
 part_type_size(p, 0.05, 0.1, -0.0005, 0);
 part_type_speed(p, 2, 3, -0.02, 0);
 part_type_orientation(p, 0, 0, 0, 0, true);
-part_type_gravity(p, 0.01, 90);
+part_type_gravity(p, 0.007, 90);
+
+global.dodgePart = part_type_create();
+var p = global.dodgePart;
+part_type_sprite(p, sPlayer, false, false, false);
+part_type_alpha2(p, 0.5, 0);
+part_type_life(p, 10, 10);
+part_type_size(p, 1, 1, 0, 0);

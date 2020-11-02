@@ -1,3 +1,9 @@
+//Apply effects
+cameraShake();
+cameraPush();
+cameraRotation();
+cameraZoom();
+
 switch (state) {
 	case cameraStates.follow:
 		followPlayer();

@@ -188,6 +188,19 @@ function playerGrounded() {
 function playerSprinting() {
 	sprintMovement();
 	
+	//FX
+	part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
+	
+	if (random(1) > 0.8) {
+		part_type_speed(global.hangingDustPart, 2, 2, -0.01, 0);
+		part_type_direction(global.hangingDustPart, move.dir - 20, move.dir + 20, 0, 0);
+		part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 1);
+	}
+	
+	part_type_direction(global.hangingDustPart, move.dir - 90, move.dir + 90, 0, 0);
+	part_type_speed(global.hangingDustPart, 0.1, 0.2, -0.01, 0);
+	part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 1);
+	
 	//State switches
 	if (melee.cooldown == 0 && input_check_press(verbs.attack, 0, meleeBufferSize)) {
 		sprint.buildup = 0;
@@ -302,7 +315,16 @@ function playerDodging() {
 	}
 	
 	//FX
+	part_type_direction(global.hangingDustPart, dodge.dir - 20, dodge.dir + 20 , 0, 0);
+	part_type_speed(global.hangingDustPart, 2, 3, -0.01, 0);
 	if (random(1) > 0.7) part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 1);
+	
+	part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
+	part_particles_create(global.ps, x, y, global.dodgePart, 1);
+	
+	part_type_direction(global.hangingDustPart, dodge.dir - 90, dodge.dir + 90, 0, 0);
+	part_type_speed(global.hangingDustPart, 0.1, 0.2, -0.01, 0);
+	part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 1);
 }
 
 function playerAiming() {
@@ -378,10 +400,15 @@ function toDodging() {
 	part_type_direction(global.hangingDustPart, dodge.dir - 220, dodge.dir - 140, 0, 0);
 	part_type_speed(global.hangingDustPart, 1, 2, -0.01, 0);
 	part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 10);
+	
 	part_type_direction(global.hangingDustPart, dodge.dir - 10, dodge.dir + 10, 0, 0);
 	part_type_speed(global.hangingDustPart, 2, 3, -0.02, 0);
 	
-	shakeCamera(4, 1, 4);
+	part_type_direction(global.hangingDustPart, 0, 359, 0, 0);
+	part_type_speed(global.hangingDustPart, 0.6, 0.8, -0.01, 0);
+	part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 20);
+	
+	shakeCamera(4, 2, 4);
 }
 
 function toSprinting() {
@@ -420,7 +447,11 @@ function groundedMovement() {
 	move.curMaxSpd = approach(move.curMaxSpd, move.maxSpd, move.axl);		
 	
 	//FX
-	if (move.moving && random(1) > 0.9) part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
+	if (move.moving && random(1) > 0.9) {
+		part_type_direction(global.hangingDustPart, move.dir - 90, move.dir + 90, 0, 0);
+		part_type_speed(global.hangingDustPart, 0.1, 0.2, -0.01, 0);
+		part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 1);
+	}
 	
 	//Apply momentum
 	x += move.hsp * delta;
@@ -445,18 +476,12 @@ function sprintMovement() {
 	
 	move.dir -= min(abs(dd), sprint.turnSpd) * sign(dd);
 	
-	//FX
-	part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
-	
 	//Apply momentum
 	moveInDirection(move.curMaxSpd, move.dir);
 }
 
 function dodgeMovement() {
 	moveInDirection(dodge.spd, dodge.dir);
-	
-	//FX
-	part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
 }
 
 function getMovementInput() {
@@ -662,7 +687,7 @@ switch (struct.type) {
 			htbx.atk.piercing = true;
 			
 			//FX
-			shakeCamera(curRangedWeapon.dmg * 20, 0, 4);
+			shakeCamera(curRangedWeapon.dmg * 20, 2, 4);
 			pushCamera(curRangedWeapon.dmg * 40, dir);
 			
 			if (struct.multiSpread[melee.combo - 1] == 0) {
@@ -701,8 +726,8 @@ switch (struct.type) {
 			htbx.image_blend = struct.clr;
 			
 			//FX
-			shakeCamera(curRangedWeapon.dmg * 60, 0, 4);
-			pushCamera(curRangedWeapon.dmg * 40, dir + 180);
+			shakeCamera(curRangedWeapon.dmg * 60, 2, 4);
+			pushCamera(curRangedWeapon.dmg * 50, dir + 180);
 			ranged.recoil = curRangedWeapon.dmg * 10;
 			
 			part_particles_create(global.ps, spawnX, spawnY, global.muzzleFlashPart, 1);
