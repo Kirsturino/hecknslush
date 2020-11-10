@@ -1,7 +1,7 @@
 {
   "spriteId": {
-    "name": "sEnemy",
-    "path": "sprites/sEnemy/sEnemy.yy",
+    "name": "sEnemyMelee",
+    "path": "sprites/sEnemyMelee/sEnemyMelee.yy",
   },
   "solid": false,
   "visible": true,
@@ -31,8 +31,8 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Enemies",
-    "path": "folders/Enemies.yy",
+    "name": "Swarmer",
+    "path": "folders/Enemies/Swarmer.yy",
   },
   "resourceVersion": "1.0",
   "name": "oEnemyMelee",

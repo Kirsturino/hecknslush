@@ -10,12 +10,13 @@ move = {
 }
 
 visual = {
-	flash : 0
+	flash : 0,
+	corpse: sEnemyCorpse
 }
-function destroySelf() {
+
+function destroySelf(corpseSprite) {
 	var corpse = instance_create_layer(x, y, "Instances", oCorpse);
-	corpse.sprite_index = sprite_index;
-	corpse.image_index = 1;
+	corpse.sprite_index = corpseSprite;
 	corpse.move.hsp = move.hsp;
 	corpse.move.vsp = move.vsp;
 	corpse.move.dir = point_direction(0, 0, move.hsp, move.vsp);

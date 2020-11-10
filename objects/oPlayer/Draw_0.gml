@@ -1,4 +1,6 @@
-draw_self();
+if (combat.iframes == 0 || combat.iframes mod 40 < 10) {
+	draw_self();
+}
 
 switch (state) {
 	case states.grounded:

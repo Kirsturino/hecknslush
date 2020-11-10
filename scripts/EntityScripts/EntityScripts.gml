@@ -33,12 +33,15 @@ function dealDamage(enemy) {
 		combat.hp -= other.atk.dmg;
 		
 		//Inflict knockback
-		if (other.move.hsp != 0 || other.move.vsp != 0) {var dir = other.move.dir}
-		else											{var dir = other.image_angle}
+		if (other.move.hsp != 0 || other.move.vsp != 0) { var dir = other.move.dir }
+		else											{ var dir = other.image_angle }
 		
-		move.hsp = lengthdir_x(other.atk.knockback, dir);
-		move.vsp = lengthdir_y(other.atk.knockback, dir);
+		move.hsp += lengthdir_x(other.atk.knockback, dir);
+		move.vsp += lengthdir_y(other.atk.knockback, dir);
 		move.dir = dir;
+		
+		//Stun enemy if applicable
+		if (combat.stunnable && other.visuals.type == weapons.melee) toStunned(other.atk.dmg * 10);
 		
 		//Visual stuff
 		visual.flash = hitFlash;
@@ -56,11 +59,31 @@ function dealDamage(enemy) {
 		part_particles_create(global.ps, x, y, global.hitPart2, 1);
 
 		//If enemy hp 0, kill 'em
-		if (combat.hp <= 0) destroySelf();
+		if (combat.hp <= 0) destroySelf(visual.corpse);
 	}
 }
 
 function negateMomentum() {
 	move.hsp = 0;
 	move.vsp = 0;
+}
+
+function staticMovement() {
+	//Simple movement
+	move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.fric, move.dir)));
+	move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.fric, move.dir)));
+
+	x += move.hsp * delta;
+	y += move.vsp * delta;
+}
+
+function avoidOverlap() {
+	var phys = instance_place(x, y, parPhysical);
+	
+	if (phys != noone) {
+		var dir = point_direction(phys.x, phys.y, x, y);
+
+		x += lengthdir_x(0.2, dir);
+		y += lengthdir_y(0.2, dir);
+	}
 }

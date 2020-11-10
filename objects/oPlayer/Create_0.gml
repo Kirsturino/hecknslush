@@ -76,6 +76,18 @@ sprint = {
 	buildupMax : 60
 }
 
+//Combat variables
+combat = {
+	hp : 5,
+	iframesMax : 144,
+	iframes : 0
+}
+
+//Visuals
+visual = {
+	
+}
+
 //Player melee attack properties, most of the weapon stats will be imparted to the actual hitbox
 melee = {
 	dur : 0,
@@ -128,9 +140,9 @@ curRangedWeapon = {
 	htbx :			oHitbox,
 	spr :			sGun,
 	projSpr :		sProjectile,
-	amount :		6,
+	amount :		10,
 	delay :			5,
-	burstAmount :	1,
+	burstAmount :	0,
 	burstDelay :	20,
 	spread :		10,
 	multiSpread :	40,
@@ -139,9 +151,9 @@ curRangedWeapon = {
 	life :			180,
 	destroyOnStop :	true,
 	fric :			0.06,
-	knockback :		0.5,
+	knockback :		0.2,
 	piercing :		true,
-	dmg:			0.5,
+	dmg:			0.3,
 	dur :			30,
 	size :			1,
 	zoom :			0.4,
@@ -153,7 +165,6 @@ dodge = {
 	dur : 0,
 	spd : 0,
 	dir : 0,
-	iframes : 0,
 	cooldown : 0
 }
 
@@ -291,7 +302,6 @@ function playerShooting() {
 
 function playerDodging() {
 	dodge.dur = approach(dodge.dur, 0, 1);
-	dodge.iframes = approach(dodge.iframes, 0, 1);
 	
 	dodgeMovement();
 	
@@ -383,7 +393,7 @@ function toDodging() {
 	//Set dodge stats
 	dodge.dur = curDodge.dur;
 	dodge.spd = curDodge.spd;
-	dodge.iframes = curDodge.iframes;
+	combat.iframes = curDodge.iframes;
 	
 	//Remove combo progress on dodge
 	resetCombo();
@@ -413,6 +423,10 @@ function toDodging() {
 
 function toSprinting() {
 	state = states.sprinting;
+}
+
+function toDead() {
+	
 }
 
 function groundedMovement() {
@@ -658,6 +672,9 @@ function incrementVerbCooldowns() {
 	dodge.cooldown = approach(dodge.cooldown, 0, 1);
 	melee.cooldown = approach(melee.cooldown, 0, 1);
 	ranged.cooldown = approach(ranged.cooldown, 0, 1);
+	
+	//Iframes
+	combat.iframes = approach(combat.iframes, 0, 1);
 }
 
 function spawnHitbox(struct, dir) {
@@ -688,7 +705,7 @@ switch (struct.type) {
 			
 			//FX
 			shakeCamera(curRangedWeapon.dmg * 20, 2, 4);
-			pushCamera(curRangedWeapon.dmg * 40, dir);
+			pushCamera(curRangedWeapon.dmg * 150, dir);
 			
 			if (struct.multiSpread[melee.combo - 1] == 0) {
 				var sprd = 40;
@@ -776,5 +793,30 @@ function cameraStateSwitch() {
 		oCamera.state = cameraStates.aim;
 	} else {
 		oCamera.state = cameraStates.follow;
+	}
+}
+
+function takeDamage(amount) {
+	combat.hp -= amount;
+	combat.iframes = combat.iframesMax;
+	
+	freeze(200);
+	pushEnemies();
+}
+
+function pushEnemies() {
+	with (oEnemyBase) {
+		var dist = distance_to_object(oPlayer);
+		
+		if (dist < 128) {
+			var dir = point_direction(oPlayer.x, oPlayer.y, x, y);
+			var force = 4 - dist * 0.02 * combat.weight;
+			
+			move.hsp = lengthdir_x(force, dir);
+			move.vsp = lengthdir_y(force, dir);
+			move.dir = dir;
+			
+			toStunned(144);
+		}
 	}
 }

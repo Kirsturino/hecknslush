@@ -1,9 +1,9 @@
 ---------------------------------------------------------------------------
 FEATURES:
-- Enemy AI
 - Weighted camera
 - Perk/Buff system
 - Dungeon generation
+- Frustum culling
 
 ---------------------------------------------------------------------------
 REFACTOR:
@@ -11,6 +11,9 @@ Yes
 - Clean melee code with local variables instead of mega if statements
 - Calculate hitbox animation to match the timing of hitbox lifetime
 - State machine rework
+- Cap hitstop to single enemy
+	- Melee should have consistent hitstop because combos
+	- Ranged can maybe stay as is (?)
 
 Maybe
 - Optimize multispread calculation
