@@ -263,6 +263,12 @@ function playerMeleeing() {
 	} else if (input_check_press(verbs.attack, 0, 0) && !melee.comboComplete) {
 		melee.queued = true;
 	}
+	
+	//Make player be able to break out of melee at will
+	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, dodgeBufferSize)) {
+		resetCombo();
+		toDodging();
+	}
 }
 
 function playerShooting() {
@@ -297,6 +303,12 @@ function playerShooting() {
 		} else {
 			toGrounded();
 		}	
+	}
+	
+	//Make player be able to break out of melee at will
+	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, dodgeBufferSize)) {
+		resetShots();
+		toDodging();
 	}
 }
 

@@ -4,6 +4,7 @@ FEATURES:
 - Perk/Buff system
 - Dungeon generation
 - Frustum culling
+- Add last seen player location to enemies
 
 ---------------------------------------------------------------------------
 REFACTOR:

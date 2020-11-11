@@ -3,8 +3,8 @@ event_inherited();
 
 combat = {
 	hp : 3,
-	detectionRadius : 180,
-	attackRadius : 64,
+	detectionRadius : 200,
+	attackRadius : 124,
 	stunDur : 0,
 	stunnable : true,
 	weight : 1
