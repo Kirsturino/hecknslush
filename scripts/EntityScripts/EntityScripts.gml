@@ -29,6 +29,11 @@ function getTouchingObjects(list, object, func) {
 
 function dealDamage(enemy) {
 	with (enemy) {
+		if (state == idle) {
+			move.aggroTimer = move.aggroTimerMax;
+			toChasing();
+		}
+		
 		//Reduce hp
 		combat.hp -= other.atk.dmg;
 		
@@ -41,13 +46,19 @@ function dealDamage(enemy) {
 		move.dir = dir;
 		
 		//Stun enemy if applicable
-		if (combat.stunnable && other.visuals.type == weapons.melee) toStunned(other.atk.dmg * 10);
+		if (combat.stunnable && other.visuals.type == weapons.melee) toStunned(other.atk.dmg * 40);
 		
 		//Visual stuff
 		visual.flash = hitFlash;
+		image_yscale += other.atk.dmg;
+		image_xscale -= other.atk.dmg;
 		
 		//Hitstop & camera stuff
-		freeze(other.atk.dmg * 20);
+		if (other.visuals.hitStop) {
+			freeze(other.atk.dmg * 40);
+			other.visuals.hitStop = false;
+		}
+		
 		shakeCamera(other.atk.dmg * 40, other.atk.dmg * 2, 4);
 		pushCamera(other.atk.dmg * 20, dir);
 		zoomCamera(1 - other.atk.dmg * 0.03);
@@ -59,7 +70,11 @@ function dealDamage(enemy) {
 		part_particles_create(global.ps, x, y, global.hitPart2, 1);
 
 		//If enemy hp 0, kill 'em
-		if (combat.hp <= 0) destroySelf(visual.corpse);
+		if (combat.hp <= 0) {
+			image_yscale = 4;
+			image_xscale = 0.25;
+			destroySelf(visual.corpse);
+		}
 	}
 }
 
@@ -70,8 +85,8 @@ function negateMomentum() {
 
 function staticMovement() {
 	//Simple movement
-	move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.fric, move.dir)));
-	move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.fric, move.dir)));
+	move.hsp = approach(move.hsp, 0, move.fric);
+	move.vsp = approach(move.vsp, 0, move.fric);
 
 	x += move.hsp * delta;
 	y += move.vsp * delta;
@@ -83,7 +98,7 @@ function avoidOverlap() {
 	if (phys != noone) {
 		var dir = point_direction(phys.x, phys.y, x, y);
 
-		x += lengthdir_x(0.2, dir);
-		y += lengthdir_y(0.2, dir);
+		move.hsp += lengthdir_x(0.05, dir) * delta;
+		move.vsp += lengthdir_y(0.05, dir) * delta;
 	}
 }

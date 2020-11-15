@@ -23,7 +23,8 @@ visuals = {
 	animSpd : 0.5,
 	frm : 0,
 	size : 1,
-	type : weapons.melee
+	type : weapons.melee,
+	hitStop : true
 }
 
 image_xscale = visuals.size;

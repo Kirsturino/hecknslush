@@ -11,7 +11,9 @@ move = {
 
 visual = {
 	flash : 0,
-	corpse: sEnemyCorpse
+	corpse: sEnemyMeleeCorpse,
+	frm : 0,
+	spd : 1
 }
 
 function destroySelf(corpseSprite) {
@@ -22,4 +24,16 @@ function destroySelf(corpseSprite) {
 	corpse.move.dir = point_direction(0, 0, move.hsp, move.vsp);
 	
 	instance_destroy();
+}
+
+function incrementAnimationFrame() {
+	visual.frm += visual.spd * delta;
+	
+	if (visual.frm > image_number) {
+		visual.frm = frac(visual.frm);
+	}
+	
+	//Reset squash
+	image_xscale = lerp(image_xscale, 1, 0.1 * delta);
+	image_yscale = lerp(image_yscale, 1, 0.1 * delta);
 }

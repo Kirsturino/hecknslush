@@ -7,9 +7,9 @@
   "edgeFiltering": false,
   "collisionTolerance": 0,
   "swfPrecision": 2.525,
-  "bbox_left": 0,
-  "bbox_right": 31,
-  "bbox_top": 3,
+  "bbox_left": 5,
+  "bbox_right": 26,
+  "bbox_top": 1,
   "bbox_bottom": 31,
   "HTile": false,
   "VTile": false,
@@ -25,9 +25,10 @@
   "gridY": 0,
   "frames": [
     {"compositeImage":{"FrameId":{"name":"b3d4aebd-f6a5-4196-bb9c-b7dfe972e3bd","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"LayerId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},"images":[
-        {"FrameId":{"name":"b3d4aebd-f6a5-4196-bb9c-b7dfe972e3bd","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"LayerId":{"name":"d5134bbb-5af8-4461-95e0-d2c33dac526e","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
-        {"FrameId":{"name":"b3d4aebd-f6a5-4196-bb9c-b7dfe972e3bd","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"LayerId":{"name":"dbf8dd4c-16d6-4308-bbeb-83d697e6a035","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
+        {"FrameId":{"name":"b3d4aebd-f6a5-4196-bb9c-b7dfe972e3bd","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"LayerId":{"name":"sEnemyMeleeStunned","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
+        {"FrameId":{"name":"b3d4aebd-f6a5-4196-bb9c-b7dfe972e3bd","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"LayerId":{"name":"sEnemyMeleeStunned","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
         {"FrameId":{"name":"b3d4aebd-f6a5-4196-bb9c-b7dfe972e3bd","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"LayerId":{"name":"da5186ad-40a2-4e36-a458-f47d3eff4570","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
+        {"FrameId":{"name":"b3d4aebd-f6a5-4196-bb9c-b7dfe972e3bd","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"LayerId":{"name":"bb9634b8-faef-423a-884e-6aa610b821d9","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
       ],"parent":{"name":"sEnemyMeleeStunned","path":"sprites/sEnemyMeleeStunned/sEnemyMeleeStunned.yy",},"resourceVersion":"1.0","name":"b3d4aebd-f6a5-4196-bb9c-b7dfe972e3bd","tags":[],"resourceType":"GMSpriteFrame",},
   ],
   "sequence": {
@@ -68,6 +69,7 @@
   },
   "layers": [
     {"visible":true,"isLocked":false,"blendMode":0,"opacity":100.0,"displayName":"default (2)","resourceVersion":"1.0","name":"da5186ad-40a2-4e36-a458-f47d3eff4570","tags":[],"resourceType":"GMImageLayer",},
+    {"visible":true,"isLocked":false,"blendMode":0,"opacity":100.0,"displayName":"Layer 1","resourceVersion":"1.0","name":"bb9634b8-faef-423a-884e-6aa610b821d9","tags":[],"resourceType":"GMImageLayer",},
   ],
   "parent": {
     "name": "Sprites",
