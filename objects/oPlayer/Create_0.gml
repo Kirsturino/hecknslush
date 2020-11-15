@@ -91,6 +91,7 @@ visual = {
 //Player melee attack properties, most of the weapon stats will be imparted to the actual hitbox
 melee = {
 	dur : 0,
+	dir : 0,
 	strike : 0,
 	combo : 0,
 	comboComplete : false,
@@ -573,14 +574,14 @@ function resetShots() {
 function performMelee() {
 	if (!melee.htbx) {
 		setAttackMovement(curMeleeWeapon.slide[melee.combo - 1]);
-		var dir = getAttackDir();
+		var dir = melee.dir;
 		
 		if (curMeleeWeapon.amount[melee.combo - 1] > 1) {
-			//If delay is 0, deal all strikes simultaneosly
+			//If delay is 0, deal all strikes simultaneously
 			if (curMeleeWeapon.delay[melee.combo - 1] == 0) {
 				repeat(curMeleeWeapon.amount[melee.combo - 1]) {
 					if (curMeleeWeapon.multiSpread[melee.combo - 1] > 0) {
-						dir = getAttackDir() + (curMeleeWeapon.multiSpread[melee.combo - 1] / (curMeleeWeapon.amount[melee.combo - 1] - 1) * melee.strike) - curMeleeWeapon.multiSpread[melee.combo - 1] * .5;
+						dir = melee.dir + (curMeleeWeapon.multiSpread[melee.combo - 1] / (curMeleeWeapon.amount[melee.combo - 1] - 1) * melee.strike) - curMeleeWeapon.multiSpread[melee.combo - 1] * .5;
 					}
 					
 					spawnHitbox(curMeleeWeapon, dir);
@@ -590,7 +591,7 @@ function performMelee() {
 			} else {
 				//If delay is over 0, spawn hitboxes in succession
 				if (curMeleeWeapon.multiSpread[melee.combo - 1] > 0) {
-					dir = getAttackDir() + (curMeleeWeapon.multiSpread[melee.combo - 1] / (curMeleeWeapon.amount[melee.combo - 1] - 1) * melee.strike) - curMeleeWeapon.multiSpread[melee.combo - 1] * .5;
+					dir = melee.dir + (curMeleeWeapon.multiSpread[melee.combo - 1] / (curMeleeWeapon.amount[melee.combo - 1] - 1) * melee.strike) - curMeleeWeapon.multiSpread[melee.combo - 1] * .5;
 				}
 				
 				if (melee.strike < curMeleeWeapon.amount[melee.combo - 1] && melee.dur < curMeleeWeapon.dur[melee.combo - 1] - curMeleeWeapon.delay[melee.combo - 1]) {
@@ -602,8 +603,7 @@ function performMelee() {
 				}
 			}
 		} else {
-			var dir = getAttackDir();
-			spawnHitbox(curMeleeWeapon, dir);
+			spawnHitbox(curMeleeWeapon, melee.dir);
 			melee.htbx = true;
 		}
 	}
@@ -638,7 +638,8 @@ function performShot() {
 }
 
 function incrementCombo(meleeStruct) {
-	melee.dur = meleeStruct.dur[melee.combo];
+	melee.dur = meleeStruct.dur[melee.combo] - meleeStruct.delay[melee.combo];
+	melee.dir = getAttackDir();
 	
 	//Increment combo counter
 	melee.combo++;
