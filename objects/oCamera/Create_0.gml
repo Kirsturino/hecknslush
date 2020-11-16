@@ -79,8 +79,8 @@ function followPlayer() {
 	var posX = oPlayer.x  - finalWidth / 2;
 	var posY = oPlayer.y - finalHeight / 2;
 	
-	xx = clamp(posX, 0, room_width - finalWidth / 2);
-	yy = clamp(posY, 0, room_height - finalHeight / 2);
+	xx = clamp(posX, 0, room_width - finalWidth);
+	yy = clamp(posY, 0, room_height - finalHeight);
 	
 	applyCameraPos(spd, finalWidth, finalHeight);
 }
@@ -94,8 +94,8 @@ function followPlayerAim() {
 	var posX = oPlayer.x  - finalWidth / 2 + lengthdir_x(dist, oPlayer.ranged.aimDir);
 	var posY = oPlayer.y - finalHeight / 2 + lengthdir_y(dist, oPlayer.ranged.aimDir);
 	
-	xx = clamp(posX, 0, room_width - finalWidth / 2);
-	yy = clamp(posY, 0, room_height - finalHeight / 2);
+	xx = clamp(posX, 0, room_width - finalWidth);
+	yy = clamp(posY, 0, room_height - finalHeight);
 	
 	applyCameraPos(spd, finalWidth, finalHeight);
 }

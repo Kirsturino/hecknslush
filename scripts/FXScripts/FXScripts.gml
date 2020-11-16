@@ -9,5 +9,5 @@ function freeze(amount) {
 	
 	}
 	
-	delta = 1;
+	delta = defaultFramesPerSecond / game_get_speed(gamespeed_fps);
 }

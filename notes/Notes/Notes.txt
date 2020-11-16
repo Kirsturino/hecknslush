@@ -3,23 +3,20 @@ FEATURES:
 - Weighted camera
 - Perk/Buff system
 - Dungeon generation
-- Frustum culling
-- Add last seen player location to enemies
+- Frustum culling to walls and enemies
 
 ---------------------------------------------------------------------------
 REFACTOR:
 Yes
 - Clean melee code with local variables instead of mega if statements
 - Calculate hitbox animation to match the timing of hitbox lifetime
-- State machine rework
-- Cap hitstop to single enemy
-	- Melee should have consistent hitstop because combos
-	- Ranged can maybe stay as is (?)
+- Player state machine rework
 
 Maybe
 - Optimize multispread calculation
 - Move hitbox collision checks to enemies (?)
-- Maybe refactor the way combos are incremented?
+	- This depends on how many enemies we want to have on screen at a time
+- Redo whole attacking code base from scratch
 
 ---------------------------------------------------------------------------
 KNOWN BUGS:

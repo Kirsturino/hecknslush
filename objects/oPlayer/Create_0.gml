@@ -135,30 +135,31 @@ ranged = {
 }
 
 curRangedWeapon = {
-	name :			"testRanged",
-	type :			weapons.ranged,
-	clr :			c_red,
-	htbx :			oHitbox,
-	spr :			sGun,
-	projSpr :		sProjectile,
-	amount :		10,
-	delay :			5,
-	burstAmount :	0,
-	burstDelay :	20,
-	spread :		10,
-	multiSpread :	40,
-	reach :			12,
-	spd :			6,
-	life :			180,
-	destroyOnStop :	true,
-	fric :			0.06,
-	knockback :		0.2,
-	piercing :		true,
-	dmg:			0.3,
-	dur :			30,
-	size :			1,
-	zoom :			0.4,
-	cooldown :		60
+	name :					"testRanged",
+	type :					weapons.ranged,
+	clr :					c_red,
+	htbx :					oHitbox,
+	spr :					sGun,
+	projSpr :				sProjectile,
+	amount :				10,
+	delay :					5,
+	burstAmount :			0,
+	burstDelay :			20,
+	spread :				10,
+	multiSpread :			40,
+	reach :					12,
+	spd :					6,
+	life :					180,
+	destroyOnStop :			true,
+	destroyOnCollision :	true,
+	fric :					0.06,
+	knockback :				0.2,
+	piercing :				true,
+	dmg:					0.3,
+	dur :					30,
+	size :					1,
+	zoom :					0.4,
+	cooldown :				60
 }
 
 //Dodge properties, not sure what to put here, really, or how it will work yet
@@ -454,6 +455,8 @@ function groundedMovement() {
 	} else {
 		move.hsp = approach(move.hsp, 0, move.fric);
 	}
+	
+	horizontalCollision(sPlayerWallCollisionMask);
 
 	//If up/down is held, accelerate, if not, decelerate
 	if (mv[1] != 0) {
@@ -461,6 +464,8 @@ function groundedMovement() {
 	} else {
 		move.vsp = approach(move.vsp, 0, move.fric);
 	}
+	
+	verticalCollision(sPlayerWallCollisionMask);
 	
 	//Set last direction player was going
 	if (mv[0] != 0 || mv[1] != 0) {
@@ -504,11 +509,25 @@ function sprintMovement() {
 	move.dir -= min(abs(dd), sprint.turnSpd) * sign(dd);
 	
 	//Apply momentum
-	moveInDirection(move.curMaxSpd, move.dir);
+	move.hsp = lengthdir_x(move.curMaxSpd, move.dir);
+	horizontalCollision(sPlayerWallCollisionMask);
+	
+	move.vsp = lengthdir_y(move.curMaxSpd, move.dir);
+	verticalCollision(sPlayerWallCollisionMask);
+	
+	x += move.hsp * delta;
+	y += move.vsp * delta;
 }
 
 function dodgeMovement() {
-	moveInDirection(dodge.spd, dodge.dir);
+	move.hsp = lengthdir_x(dodge.spd, dodge.dir);
+	horizontalCollision(sPlayerWallCollisionMask);
+	
+	move.vsp = lengthdir_y(dodge.spd, dodge.dir);
+	verticalCollision(sPlayerWallCollisionMask);
+	
+	x += move.hsp * delta;
+	y += move.vsp * delta;
 }
 
 function getMovementInput() {
@@ -752,6 +771,7 @@ switch (struct.type) {
 			htbx.atk.knockback = struct.knockback;
 			htbx.atk.piercing = struct.piercing;
 			htbx.atk.destroyOnStop = struct.destroyOnStop;
+			htbx.atk.destroyOnCollision = struct.destroyOnCollision;
 			htbx.visuals.type = weapons.ranged;
 			htbx.image_blend = struct.clr;
 			
@@ -769,7 +789,10 @@ switch (struct.type) {
 
 function attackMovement() {
 	move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.fric, move.dir)));
+	horizontalCollision(sPlayerWallCollisionMask);
+	
 	move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.fric, move.dir)));
+	verticalCollision(sPlayerWallCollisionMask);
 	
 	x += move.hsp * delta;
 	y += move.vsp * delta;

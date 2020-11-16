@@ -4,6 +4,7 @@ move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.fric, move.dir)));
 move.dir = point_direction(0, 0, move.hsp, move.vsp);
 
 if (atk.destroyOnStop && move.hsp == 0 && move.vsp == 0) destroySelf();
+if (atk.destroyOnCollision && place_meeting(x, y, parCollision)) destroySelf();
 
 x += move.hsp * delta;
 y += move.vsp * delta;

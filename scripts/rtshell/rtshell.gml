@@ -180,10 +180,21 @@ function sh_script_execute(args) {
 	script_execute(scr);
 }
 
+//Print a global value to console
+function sh_get_global(args) {
+	if (variable_global_exists(args[1])) {
+		return string(args[1]) + " is equal to " + string(variable_global_get(args[1]));
+		show_debug_message("ye");
+	} else {
+		return "Invalid global variable: " + string(args[1]);
+	}
+}
+
 //BE CAREFUL WITH THIS! DOESN'T LIMIT WHAT YOU CAN SET THE VALUES TO AND WILL CRASH IF YOU SET A WRONG VALUE
 function sh_set_global(args) {
 	if (variable_global_exists(args[1])) {
 		variable_global_set(args[1], args[2]);
+		return "Set " + string(args[1]) + " to " + string(args[2]);
 	} else {
 		return "Invalid global variable: " + string(args[1]);
 	}

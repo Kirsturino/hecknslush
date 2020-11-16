@@ -29,8 +29,3 @@ function isOutsideRoom(objectID) {
 		else															{ return false; }
 	}
 }
-
-function moveInDirection(amount, direction) {
-	x += lengthdir_x(amount * delta, direction);
-	y += lengthdir_y(amount * delta, direction);
-}

@@ -5,7 +5,7 @@ combat = {
 	hp : 5,
 	detectionRadius : 200,
 	attackRadius : 124,
-	chaseRadius : 280,
+	chaseRadius : 240,
 	stunDur : 0,
 	stunnable : true,
 	weight : 1
@@ -49,21 +49,37 @@ visual = {
 	spd : 0.01
 }
 
+//Declare state
+state = 0;
+DoLater(1,
+            function(data)
+            {
+                state = idle;
+            },
+            0,
+            true);
+
 
 //States
 function idle() {
 	staticMovement();
 
-	if (distance_to_object(oPlayer) <= combat.detectionRadius) toChasing();
+	var los = canSee(oPlayer);
+	if (distance_to_object(oPlayer) <= combat.detectionRadius && los) toChasing();
 }
 
 function chasing() {
-	chaseMovement();
+	var dist = distance_to_object(oPlayer);
+	var lastSeenDist = distance_to_point(move.lastSeen[0], move.lastSeen[1]);
+	var los = canSee(oPlayer);
+	
+	chaseMovement(oPlayer.x, oPlayer.y, los, dist);
 	move.aggroTimer = approach(move.aggroTimer, 0, 1);
 	
-	var dist = distance_to_object(oPlayer);
-	if (dist <= combat.attackRadius && attack.cooldown == 0) { toAttacking(); }
-	else if (dist >= combat.chaseRadius && move.aggroTimer == 0) { toIdle(); }
+	if (dist <= combat.attackRadius && los && attack.cooldown == 0) { toAttacking(); }
+	else if ((dist >= combat.chaseRadius || !los) && move.aggroTimer == 0 && lastSeenDist < 10) {
+		toIdle();
+	}
 }
 
 function attacking() {
@@ -74,13 +90,18 @@ function attacking() {
 		if (attack.anticipationDur == 0) attack.dir = point_direction(x, y, oPlayer.x, oPlayer.y);
 	} else if (attack.dur > 0) {
 		sprite_index = sEnemyMeleeDashing;
-		moveInDirection(attack.spd, attack.dir);
+		move.hsp = lengthdir_x(attack.spd, attack.dir);
+		horizontalCollision(mask_index);
+			
+		move.vsp = lengthdir_y(attack.spd, attack.dir);
+		verticalCollision(mask_index);
 		
 		attack.dur = approach(attack.dur, 0, 1);
 		
-		if (attack.dur == 0) {
-			move.hsp = lengthdir_x(attack.spd, attack.dir);
-			move.vsp = lengthdir_y(attack.spd, attack.dir);
+		x += move.hsp * delta;
+		y += move.vsp * delta;
+		
+		if (attack.dur == 0) {			
 			attack.cooldown = dashAttack.cooldown;
 			attack.damaged = false;
 			
@@ -106,9 +127,6 @@ function stunned() {
 	combat.stunDur = approach(combat.stunDur, 0, 1);
 	if (combat.stunDur == 0) toIdle();
 }
-
-//Declare state
-state = idle;
 
 //State switches
 function toIdle() {
@@ -143,21 +161,26 @@ function toStunned(duration) {
 }
 
 //Movement
-function chaseMovement() {
-	//Placeholder movement
-	var dir = point_direction(x, y, oPlayer.x, oPlayer.y);
-	var moveDir = point_direction(x, y, move.hsp, move.vsp);
+function chaseMovement(xx, yy, lineOfSight, dist) {
+	//This will be updated later when collisions are in
+	if (lineOfSight && dist < combat.chaseRadius) {
+		move.lastSeen[0] = xx;
+		move.lastSeen[1] = yy;
+	}
 	
-	//This will be updated later when tile collisions are in
-	move.lastSeen[0] = oPlayer.x;
-	move.lastSeen[1] = oPlayer.y;
+	//Placeholder movement
+	var dir = point_direction(x, y, move.lastSeen[0], move.lastSeen[1]);
+	var moveDir = point_direction(x, y, move.hsp, move.vsp);
 	
 	//Correct direction when ending attack
 	if (abs(move.hsp) >  move.chaseSpd) move.hsp = approach(move.hsp, lengthdir_x(move.chaseSpd, dir), abs(lengthdir_x(move.fric, moveDir))); 
 	if (abs(move.vsp) >  move.chaseSpd) move.vsp = approach(move.vsp, lengthdir_y(move.chaseSpd, dir), abs(lengthdir_y(move.fric, moveDir))); 
 	
 	move.hsp = approach(move.hsp, lengthdir_x(move.chaseSpd, dir), move.axl);
+	horizontalCollision(mask_index);
+	
 	move.vsp = approach(move.vsp, lengthdir_y(move.chaseSpd, dir), move.axl);
+	verticalCollision(mask_index);
 	
 	x += move.hsp * delta;
 	y += move.vsp * delta;

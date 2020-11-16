@@ -1,3 +1,5 @@
+//Collection of functions most entities/actors ingame will most likely want to call at some point
+
 function depthSorting() {
 	depth = -bbox_bottom;
 }
@@ -10,8 +12,9 @@ function getTouchingObjects(list, object, func) {
 	//Go through list of enemies
 	var i = 0;
 	repeat(enemies) {
-		//If enemy isn't found in the list, deal damage and add it to the list of damaged enemies
+		//If enemy isn't found in the list, do something and add it to the list of things
 		var enemyInList = enemyList[| i];
+		
 		if (ds_list_find_index(list, enemyInList) == -1) {
 			ds_list_add(list, enemyInList);
 			
@@ -86,7 +89,10 @@ function negateMomentum() {
 function staticMovement() {
 	//Simple movement
 	move.hsp = approach(move.hsp, 0, move.fric);
+	horizontalCollision(mask_index);
+	
 	move.vsp = approach(move.vsp, 0, move.fric);
+	verticalCollision(mask_index);
 
 	x += move.hsp * delta;
 	y += move.vsp * delta;
@@ -101,4 +107,17 @@ function avoidOverlap() {
 		move.hsp += lengthdir_x(0.05, dir) * delta;
 		move.vsp += lengthdir_y(0.05, dir) * delta;
 	}
+}
+
+function moveInDirection(amount, direction) {
+	x += lengthdir_x(amount * delta, direction);
+	y += lengthdir_y(amount * delta, direction);
+}
+
+function canSee(instance) {
+	var los = collision_line(x, y, instance.x, instance.y, parCollision, false, false);
+	
+	if (los == noone) return true;
+	
+	return false;
 }

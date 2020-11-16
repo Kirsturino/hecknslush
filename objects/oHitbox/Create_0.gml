@@ -8,6 +8,7 @@ atk = {
 	piercing : true,
 	damagedEnemies : ds_list_create(),
 	destroyOnStop : false,
+	destroyOnCollision : false,
 	delay : 0
 }
 
