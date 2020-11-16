@@ -39,6 +39,7 @@ move = {
 	aggroTimer : 0,
 	axl : 0.02,
 	fric : 0.05,
+	collMask : sEnemyMeleeWallCollisionMask,
 	dir : 0
 }
 
@@ -91,10 +92,10 @@ function attacking() {
 	} else if (attack.dur > 0) {
 		sprite_index = sEnemyMeleeDashing;
 		move.hsp = lengthdir_x(attack.spd, attack.dir);
-		horizontalCollision(mask_index);
+		horizontalCollision(move.collMask);
 			
 		move.vsp = lengthdir_y(attack.spd, attack.dir);
-		verticalCollision(mask_index);
+		verticalCollision(move.collMask);
 		
 		attack.dur = approach(attack.dur, 0, 1);
 		
@@ -177,10 +178,10 @@ function chaseMovement(xx, yy, lineOfSight, dist) {
 	if (abs(move.vsp) >  move.chaseSpd) move.vsp = approach(move.vsp, lengthdir_y(move.chaseSpd, dir), abs(lengthdir_y(move.fric, moveDir))); 
 	
 	move.hsp = approach(move.hsp, lengthdir_x(move.chaseSpd, dir), move.axl);
-	horizontalCollision(mask_index);
+	horizontalCollision(move.collMask);
 	
 	move.vsp = approach(move.vsp, lengthdir_y(move.chaseSpd, dir), move.axl);
-	verticalCollision(mask_index);
+	verticalCollision(move.collMask);
 	
 	x += move.hsp * delta;
 	y += move.vsp * delta;
@@ -189,8 +190,4 @@ function chaseMovement(xx, yy, lineOfSight, dist) {
 //Other
 function incrementCooldowns() {
 	attack.cooldown = approach(attack.cooldown, 0, 1);
-}
-
-function damagePlayer() {
-	
 }

@@ -139,6 +139,7 @@
     {"id":{"name":"scribble_autotype_set_sound","path":"scripts/scribble_autotype_set_sound/scribble_autotype_set_sound.yy",},"order":6,},
     {"id":{"name":"fntConsole","path":"fonts/fntConsole/fntConsole.yy",},"order":2,},
     {"id":{"name":"scribble_set_glyph_property","path":"scripts/scribble_set_glyph_property/scribble_set_glyph_property.yy",},"order":7,},
+    {"id":{"name":"sEnemyMeleeWallCollisionMask","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"order":6,},
     {"id":{"name":"input_cursor_move","path":"scripts/input_cursor_move/input_cursor_move.yy",},"order":3,},
     {"id":{"name":"scribble_reset","path":"scripts/scribble_reset/scribble_reset.yy",},"order":6,},
     {"id":{"name":"fntScribble","path":"fonts/fntScribble/fntScribble.yy",},"order":0,},

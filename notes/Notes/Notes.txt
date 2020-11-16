@@ -4,6 +4,7 @@ FEATURES:
 - Perk/Buff system
 - Dungeon generation
 - Frustum culling to walls and enemies
+- Controller support
 
 ---------------------------------------------------------------------------
 REFACTOR:
@@ -11,6 +12,8 @@ Yes
 - Clean melee code with local variables instead of mega if statements
 - Calculate hitbox animation to match the timing of hitbox lifetime
 - Player state machine rework
+- Move melee weapon attacks to light & heavy
+	- Combos repeat light attack until heavy attack finishes combo
 
 Maybe
 - Optimize multispread calculation

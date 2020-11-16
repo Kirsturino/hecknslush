@@ -33,7 +33,7 @@ switch (state) {
 	break;
 }
 
-depthSorting();
+depth = -y - sprite_height / 2;
 
 //Things that should be done almost always
 if (state == states.dummy || state == states.dead) exit;
