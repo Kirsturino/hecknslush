@@ -1,3 +1,3 @@
-staticMovement();
+staticMovement(mask_index);
 
 depthSorting();

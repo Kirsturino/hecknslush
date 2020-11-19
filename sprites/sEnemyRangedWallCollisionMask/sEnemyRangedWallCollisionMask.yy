@@ -24,13 +24,13 @@
   "gridX": 0,
   "gridY": 0,
   "frames": [
-    {"compositeImage":{"FrameId":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"LayerId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},"images":[
-        {"FrameId":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"LayerId":{"name":"sEnemyMeleeWallCollisionMask","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
-        {"FrameId":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"LayerId":{"name":"dbf8dd4c-16d6-4308-bbeb-83d697e6a035","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
-      ],"parent":{"name":"sEnemyMeleeWallCollisionMask","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"resourceVersion":"1.0","name":"aaec9ead-a715-4550-945c-17655f92f1e6","tags":[],"resourceType":"GMSpriteFrame",},
+    {"compositeImage":{"FrameId":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyRangedWallCollisionMask/sEnemyRangedWallCollisionMask.yy",},"LayerId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},"images":[
+        {"FrameId":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyRangedWallCollisionMask/sEnemyRangedWallCollisionMask.yy",},"LayerId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
+        {"FrameId":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyRangedWallCollisionMask/sEnemyRangedWallCollisionMask.yy",},"LayerId":{"name":"dbf8dd4c-16d6-4308-bbeb-83d697e6a035","path":"sprites/sEnemyRangedWallCollisionMask/sEnemyRangedWallCollisionMask.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
+      ],"parent":{"name":"sEnemyRangedWallCollisionMask","path":"sprites/sEnemyRangedWallCollisionMask/sEnemyRangedWallCollisionMask.yy",},"resourceVersion":"1.0","name":"aaec9ead-a715-4550-945c-17655f92f1e6","tags":[],"resourceType":"GMSpriteFrame",},
   ],
   "sequence": {
-    "spriteId": {"name":"sEnemyMeleeWallCollisionMask","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},
+    "spriteId": {"name":"sEnemyRangedWallCollisionMask","path":"sprites/sEnemyRangedWallCollisionMask/sEnemyRangedWallCollisionMask.yy",},
     "timeUnits": 1,
     "playback": 1,
     "playbackSpeed": 2.0,
@@ -42,7 +42,7 @@
     "moments": {"Keyframes":[],"resourceVersion":"1.0","resourceType":"KeyframeStore<MomentsEventKeyframe>",},
     "tracks": [
       {"name":"frames","spriteId":null,"keyframes":{"Keyframes":[
-            {"id":"700aa500-3c39-433f-8dcf-a96e82ef9369","Key":0.0,"Length":1.0,"Stretch":false,"Disabled":false,"IsCreationKey":false,"Channels":{"0":{"Id":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"resourceVersion":"1.0","resourceType":"SpriteFrameKeyframe",},},"resourceVersion":"1.0","resourceType":"Keyframe<SpriteFrameKeyframe>",},
+            {"id":"6c173fef-cf65-4a25-a6c8-86a155ffecbb","Key":0.0,"Length":1.0,"Stretch":false,"Disabled":false,"IsCreationKey":false,"Channels":{"0":{"Id":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyRangedWallCollisionMask/sEnemyRangedWallCollisionMask.yy",},"resourceVersion":"1.0","resourceType":"SpriteFrameKeyframe",},},"resourceVersion":"1.0","resourceType":"Keyframe<SpriteFrameKeyframe>",},
           ],"resourceVersion":"1.0","resourceType":"KeyframeStore<SpriteFrameKeyframe>",},"trackColour":0,"inheritsTrackColour":true,"builtinName":0,"traits":0,"interpolation":1,"tracks":[],"events":[],"modifiers":[],"isCreationTrack":false,"resourceVersion":"1.0","tags":[],"resourceType":"GMSpriteFramesTrack",},
     ],
     "visibleRange": null,
@@ -59,9 +59,9 @@
     "yorigin": 16,
     "eventToFunction": {},
     "eventStubScript": null,
-    "parent": {"name":"sEnemyMeleeWallCollisionMask","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},
+    "parent": {"name":"sEnemyRangedWallCollisionMask","path":"sprites/sEnemyRangedWallCollisionMask/sEnemyRangedWallCollisionMask.yy",},
     "resourceVersion": "1.3",
-    "name": "sEnemyMeleeWallCollisionMask",
+    "name": "sEnemyRangedWallCollisionMask",
     "tags": [],
     "resourceType": "GMSequence",
   },
@@ -70,10 +70,10 @@
   ],
   "parent": {
     "name": "Sprites",
-    "path": "folders/Enemies/Swarmer/Sprites.yy",
+    "path": "folders/Enemies/Ranged/Sprites.yy",
   },
   "resourceVersion": "1.0",
-  "name": "sEnemyMeleeWallCollisionMask",
+  "name": "sEnemyRangedWallCollisionMask",
   "tags": [],
   "resourceType": "GMSprite",
 }

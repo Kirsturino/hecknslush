@@ -1,5 +1,5 @@
-staticMovement();
+staticMovement(mask_index);
 
-visual.flash = approach(visual.flash, 0, 1);
+visuals.flash = approach(visuals.flash, 0, 1);
 depthSorting();
 event_inherited();

@@ -1,4 +1,4 @@
-#macro hitFlash 6
+#macro hitFlash 14
 
 function freeze(amount) {
 	var time = current_time;

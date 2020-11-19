@@ -23,6 +23,7 @@ Maybe
 
 ---------------------------------------------------------------------------
 KNOWN BUGS:
+- Collisions are cronked
 
 COMBAT REWORK:
 - Remove combos

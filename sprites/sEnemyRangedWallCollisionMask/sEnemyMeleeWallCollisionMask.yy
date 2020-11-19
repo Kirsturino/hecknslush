@@ -25,7 +25,7 @@
   "gridY": 0,
   "frames": [
     {"compositeImage":{"FrameId":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"LayerId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},"images":[
-        {"FrameId":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"LayerId":{"name":"sEnemyMeleeWallCollisionMask","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
+        {"FrameId":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"LayerId":{"name":"d5134bbb-5af8-4461-95e0-d2c33dac526e","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
         {"FrameId":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"LayerId":{"name":"dbf8dd4c-16d6-4308-bbeb-83d697e6a035","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
       ],"parent":{"name":"sEnemyMeleeWallCollisionMask","path":"sprites/sEnemyMeleeWallCollisionMask/sEnemyMeleeWallCollisionMask.yy",},"resourceVersion":"1.0","name":"aaec9ead-a715-4550-945c-17655f92f1e6","tags":[],"resourceType":"GMSpriteFrame",},
   ],

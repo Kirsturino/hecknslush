@@ -9,7 +9,7 @@ move = {
 	dir : 0
 }
 
-visual = {
+visuals = {
 	flash : 0,
 	corpse: sEnemyMeleeCorpse,
 	frm : 0,
@@ -27,10 +27,10 @@ function destroySelf(corpseSprite) {
 }
 
 function incrementAnimationFrame() {
-	visual.frm += visual.spd * delta;
+	visuals.frm += visuals.spd * delta;
 	
-	if (visual.frm > image_number) {
-		visual.frm = frac(visual.frm);
+	if (visuals.frm > image_number) {
+		visuals.frm = frac(visuals.frm);
 	}
 	
 	//Reset squash

@@ -14,12 +14,11 @@ atk.delay = approach(atk.delay, 0, 1);
 
 if (atk.delay == 0) {
 	if (atk.piercing) {
-		getTouchingObjects(atk.damagedEnemies, oEnemyBase, dealDamage);
+		getTouchingObjects(atk.damagedEnemies, atk.target, dealDamage);
 	} else {
-		var enemy = instance_place(x, y, oEnemyBase);
+		var enemy = instance_place(x, y, atk.target);
 		if (enemy != noone) {
 			dealDamage(enemy);
-			destroySelf();
 		}
 	}
 }

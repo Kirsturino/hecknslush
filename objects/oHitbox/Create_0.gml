@@ -9,7 +9,8 @@ atk = {
 	damagedEnemies : ds_list_create(),
 	destroyOnStop : false,
 	destroyOnCollision : false,
-	delay : 0
+	delay : 0,
+	target : oEnemyBase
 }
 
 //Movement variables

@@ -43,7 +43,7 @@ move = {
 	dir : 0
 }
 
-visual = {
+visuals = {
 	flash : 0,
 	corpse: sEnemyMeleeCorpse,
 	frm : 0,
@@ -63,10 +63,10 @@ DoLater(1,
 
 //States
 function idle() {
-	staticMovement();
+	staticMovement(move.collMask);
 
 	var los = canSee(oPlayer);
-	if (distance_to_object(oPlayer) <= combat.detectionRadius && los) toChasing();
+	if ((distance_to_object(oPlayer) <= combat.detectionRadius && los) || move.aggroTimer != 0) toChasing();
 }
 
 function chasing() {
@@ -78,9 +78,7 @@ function chasing() {
 	move.aggroTimer = approach(move.aggroTimer, 0, 1);
 	
 	if (dist <= combat.attackRadius && los && attack.cooldown == 0) { toAttacking(); }
-	else if ((dist >= combat.chaseRadius || !los) && move.aggroTimer == 0 && lastSeenDist < 10) {
-		toIdle();
-	}
+	else if ((dist >= combat.chaseRadius || !los) && move.aggroTimer == 0 && lastSeenDist < 10) { toIdle(); }
 }
 
 function attacking() {
@@ -123,7 +121,7 @@ function attacking() {
 }
 
 function stunned() {
-	staticMovement();
+	staticMovement(move.collMask);
 	
 	combat.stunDur = approach(combat.stunDur, 0, 1);
 	if (combat.stunDur == 0) toIdle();
@@ -155,15 +153,13 @@ function toStunned(duration) {
 	attack.cooldown = dashAttack.cooldown;
 	combat.stunDur = duration;
 	
-	image_yscale = 4;
-	image_xscale = 0.25;
 	sprite_index = sEnemyMeleeStunned;
 	state = stunned;
 }
 
 //Movement
 function chaseMovement(xx, yy, lineOfSight, dist) {
-	//This will be updated later when collisions are in
+	//Get line of sight
 	if (lineOfSight && dist < combat.chaseRadius) {
 		move.lastSeen[0] = xx;
 		move.lastSeen[1] = yy;
