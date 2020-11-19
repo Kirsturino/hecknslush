@@ -159,6 +159,7 @@ curRangedWeapon = {
 	dur :					30,
 	size :					1,
 	zoom :					0.4,
+	aimSpeedModifier :		0.5,	
 	cooldown :				60
 }
 
@@ -352,7 +353,10 @@ function playerDodging() {
 }
 
 function playerAiming() {
-	attackMovement();
+	//Smooth transition between max speeds
+	var aimSpd = move.maxSpd * curRangedWeapon.aimSpeedModifier;
+	move.curMaxSpd = approach(move.curMaxSpd, aimSpd, sprint.axl);
+	groundedMovement();
 	
 	ranged.aimDir = getAttackDir();
 	
@@ -398,8 +402,6 @@ function toShooting() {
 }
 
 function toAiming() {
-	move.fric = move.fric;
-	
 	state = states.aiming;
 }
 

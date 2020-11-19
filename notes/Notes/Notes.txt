@@ -23,3 +23,10 @@ Maybe
 
 ---------------------------------------------------------------------------
 KNOWN BUGS:
+
+COMBAT REWORK:
+- Remove combos
+	- Replaced by light & heavy attacks
+	- Ranged also gets new heavy attack
+- Basic melee always available
+	- Hits from this recharge your other attacks based on damage dealt
