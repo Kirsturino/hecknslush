@@ -67,27 +67,19 @@ move = {
 	dir : 0
 }
 
-visuals = {
-	flash : 0,
-	corpse: sEnemyCorpse,
-	frm : 0,
-	spd : 0.01
-}
+visuals.curSprite = sEnemyRanged;
+visuals.corpse = sEnemyCorpse;
+
+//Set mask
+sprite_index = move.collMask;
 
 //Declare state
 state = 0;
-DoLater(1,
-            function(data)
-            {
-                state = idle;
-            },
-            0,
-            true);
-
+DoLater(1, function(data) {state = idle;},0,true);
 
 //States
 function idle() {
-	staticMovement(move.collMask);
+	staticMovement();
 
 	var los = canSee(oPlayer);
 	if ((distance_to_object(oPlayer) <= combat.detectionRadius && los) || move.aggroTimer != 0) toRepositioning();
@@ -119,9 +111,8 @@ function attacking() {
 	//When attack is over, go back to repositioning
 	if (attack.anticipationDur > 0) {
 		attack.anticipationDur = approach(attack.anticipationDur, 0, 1);
-		if (attack.anticipationDur == 0) attack.dir = point_direction(x, y, oPlayer.x, oPlayer.y);
 	} else if (attack.dur > 0) {
-		sprite_index = sEnemyRangedShooting;
+		visuals.curSprite = sEnemyRangedShooting;
 
 		if (attack.shot < rangedAttack.amount && attack.dur < rangedAttack.dur - rangedAttack.delay) {
 			performShot(rangedAttack, attack);
@@ -145,7 +136,7 @@ function attacking() {
 }
 
 function stunned() {
-	staticMovement(move.collMask);
+	staticMovement();
 	
 	combat.stunDur = approach(combat.stunDur, 0, 1);
 	if (combat.stunDur == 0) toIdle();
@@ -153,23 +144,26 @@ function stunned() {
 
 //State switches
 function toIdle() {
-	sprite_index = sEnemyRanged;
+	visuals.curSprite = sEnemyRanged;
 	state = idle;
 }
 
 function toRepositioning() {
-	sprite_index = sEnemyRanged;
+	visuals.curSprite = sEnemyRanged;
 	state = repositioning;
 }
 
 function toAttacking() {
-	//Impart dash attack qualities to current attack
+	//Impart attack qualities to current attack
 	attack.dur = rangedAttack.dur;
 	attack.anticipationDur = rangedAttack.anticipationDur;
 	attack.spd = rangedAttack.spd;
 	attack.dmg = rangedAttack.dmg;
+	
+	//Set attack direction
+	attack.dir = point_direction(x, y, oPlayer.x, oPlayer.y);
 
-	sprite_index = sEnemyRangedAnticipation;
+	visuals.curSprite = sEnemyRangedAnticipation;
 	state = attacking;
 }
 
@@ -177,23 +171,25 @@ function toStunned(duration) {
 	attack.cooldown = rangedAttack.cooldown;
 	combat.stunDur = duration;
 	
-	sprite_index = sEnemyRangedStunned;
+	visuals.curSprite = sEnemyRangedStunned;
 	state = stunned;
 }
 
 //Movement
 function repositioningMovement(dist, dir) {
-	if (dist < combat.fleeRadius || dist > combat.attackRadius) {
-	move.hsp = approach(move.hsp, lengthdir_x(move.chaseSpd, dir), move.axl);
-	horizontalCollision(move.collMask);
+	if (dist < combat.fleeRadius || dist > combat.attackRadius)
+	{
+		move.hsp = approach(move.hsp, lengthdir_x(move.chaseSpd, dir), move.axl);
+		horizontalCollision();
 	
-	move.vsp = approach(move.vsp, lengthdir_y(move.chaseSpd, dir), move.axl);
-	verticalCollision(move.collMask);
+		move.vsp = approach(move.vsp, lengthdir_y(move.chaseSpd, dir), move.axl);
+		verticalCollision();
 	
-	x += move.hsp * delta;
-	y += move.vsp * delta;
-	} else {
-		staticMovement(move.collMask);
+		x += move.hsp * delta;
+		y += move.vsp * delta;
+	} else 
+	{
+		staticMovement();
 	}
 }
 
@@ -208,7 +204,7 @@ function performShot(weaponStruct, attackStruct) {
 	if (weaponStruct.delay == 0) {
 		//Loop through all the bullets in the burst
 		repeat (weaponStruct.amount) {
-			var dir = point_direction(x, y, oPlayer.x, oPlayer.y);
+			var dir = attackStruct.dir;
 			
 			//If weapon has multispread, do some directional calculation for each projectile based on the multispread variable
 			if (weaponStruct.multiSpread > 0) {
@@ -222,7 +218,7 @@ function performShot(weaponStruct, attackStruct) {
 	} else { 
 		//This is where we go if we only shoot 1 bullet per frame, aka delay > 0
 		//Just shoot bullet in the direction, no directional shenanigans
-		var dir = point_direction(x, y, oPlayer.x, oPlayer.y);
+		var dir = attackStruct.dir;
 		spawnHitbox(weaponStruct, dir, false, oPlayer);
 		incrementShot(weaponStruct, attackStruct);
 	}

@@ -29,7 +29,6 @@ function getTouchingObjects(list, object, func) {
 	ds_list_destroy(enemyList);
 }
 
-
 function dealDamage(enemy) {
 	with (enemy) {
 		switch (other.atk.target) {
@@ -42,17 +41,19 @@ function dealDamage(enemy) {
 				combat.hp -= other.atk.dmg;
 		
 				//Inflict knockback
-				if (other.move.hsp != 0 || other.move.vsp != 0) { var dir = other.move.dir }
-				else											{ var dir = other.image_angle }
+				if (other.move.hsp != 0 || other.move.vsp != 0) { var dir = other.move.dir; }
+				else											{ var dir = other.image_angle; }
 		
 				move.hsp += lengthdir_x(other.atk.knockback, dir);
+				horizontalCollision();
 				move.vsp += lengthdir_y(other.atk.knockback, dir);
+				verticalCollision();
 				move.dir = dir;
 		
 				//visuals stuff
 				visuals.flash = max(hitFlash ,hitFlash * other.atk.dmg);
-				image_yscale += other.atk.dmg;
-				image_xscale -= other.atk.dmg;
+				visuals.yScale += other.atk.dmg;
+				visuals.xScale -= other.atk.dmg;
 		
 				//Hitstop & camera stuff
 				if (other.visuals.hitStop) {
@@ -99,13 +100,13 @@ function negateMomentum() {
 	move.vsp = 0;
 }
 
-function staticMovement(collMask) {
+function staticMovement() {
 	//Simple movement
 	move.hsp = approach(move.hsp, 0, move.fric);
-	horizontalCollision(collMask);
+	horizontalCollision();
 	
 	move.vsp = approach(move.vsp, 0, move.fric);
-	verticalCollision(collMask);
+	verticalCollision();
 
 	x += move.hsp * delta;
 	y += move.vsp * delta;

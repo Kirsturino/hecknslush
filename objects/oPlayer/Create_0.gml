@@ -63,8 +63,12 @@ move = {
 	fric : 0.04,
 	lastDir : 0,
 	dir : 0,
-	moving : false
+	moving : false,
+	collMask : sPlayerWallCollisionMask
 }
+
+//Set mask
+sprite_index = move.collMask;
 
 sprint = {
 	maxSpd : 2,
@@ -85,7 +89,10 @@ combat = {
 
 //visuals
 visuals = {
-	
+	curSprite : sPlayer,
+	xScale : 1,
+	yScale : 1,
+	rot : 0
 }
 
 //Player melee attack properties, most of the weapon stats will be imparted to the actual hitbox

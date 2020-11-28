@@ -43,12 +43,11 @@ move = {
 	dir : 0
 }
 
-visuals = {
-	flash : 0,
-	corpse: sEnemyMeleeCorpse,
-	frm : 0,
-	spd : 0.01
-}
+visuals.curSprite = sEnemyMelee;
+visuals.corpse = sEnemyMeleeCorpse;
+
+//Set mask
+sprite_index = move.collMask;
 
 //Declare state
 state = 0;
@@ -63,7 +62,7 @@ DoLater(1,
 
 //States
 function idle() {
-	staticMovement(move.collMask);
+	staticMovement();
 
 	var los = canSee(oPlayer);
 	if ((distance_to_object(oPlayer) <= combat.detectionRadius && los) || move.aggroTimer != 0) toChasing();
@@ -88,12 +87,12 @@ function attacking() {
 		attack.anticipationDur = approach(attack.anticipationDur, 0, 1);
 		if (attack.anticipationDur == 0) attack.dir = point_direction(x, y, oPlayer.x, oPlayer.y);
 	} else if (attack.dur > 0) {
-		sprite_index = sEnemyMeleeDashing;
+		visuals.curSprite = sEnemyMeleeDashing;
 		move.hsp = lengthdir_x(attack.spd, attack.dir);
-		horizontalCollision(move.collMask);
+		horizontalCollision();
 			
 		move.vsp = lengthdir_y(attack.spd, attack.dir);
-		verticalCollision(move.collMask);
+		verticalCollision();
 		
 		attack.dur = approach(attack.dur, 0, 1);
 		
@@ -121,7 +120,7 @@ function attacking() {
 }
 
 function stunned() {
-	staticMovement(move.collMask);
+	staticMovement();
 	
 	combat.stunDur = approach(combat.stunDur, 0, 1);
 	if (combat.stunDur == 0) toIdle();
@@ -129,12 +128,12 @@ function stunned() {
 
 //State switches
 function toIdle() {
-	sprite_index = sEnemyMelee;
+	visuals.curSprite = sEnemyMelee;
 	state = idle;
 }
 
 function toChasing() {
-	sprite_index = sEnemyMelee;
+	visuals.curSprite = sEnemyMelee;
 	state = chasing;
 }
 
@@ -145,7 +144,7 @@ function toAttacking() {
 	attack.spd = dashAttack.spd;
 	attack.dmg = dashAttack.dmg;
 
-	sprite_index = sEnemyMeleeAnticipation;
+	visuals.curSprite = sEnemyMeleeAnticipation;
 	state = attacking;
 }
 
@@ -153,7 +152,7 @@ function toStunned(duration) {
 	attack.cooldown = dashAttack.cooldown;
 	combat.stunDur = duration;
 	
-	sprite_index = sEnemyMeleeStunned;
+	visuals.curSprite = sEnemyMeleeStunned;
 	state = stunned;
 }
 
@@ -174,10 +173,10 @@ function chaseMovement(xx, yy, lineOfSight, dist) {
 	if (abs(move.vsp) >  move.chaseSpd) move.vsp = approach(move.vsp, lengthdir_y(move.chaseSpd, dir), abs(lengthdir_y(move.fric, moveDir))); 
 	
 	move.hsp = approach(move.hsp, lengthdir_x(move.chaseSpd, dir), move.axl);
-	horizontalCollision(move.collMask);
+	horizontalCollision();
 	
 	move.vsp = approach(move.vsp, lengthdir_y(move.chaseSpd, dir), move.axl);
-	verticalCollision(move.collMask);
+	verticalCollision();
 	
 	x += move.hsp * delta;
 	y += move.vsp * delta;

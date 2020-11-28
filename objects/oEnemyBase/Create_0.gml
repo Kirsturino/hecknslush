@@ -11,9 +11,13 @@ move = {
 
 visuals = {
 	flash : 0,
+	curSprite : sEnemy,
 	corpse: sEnemyMeleeCorpse,
 	frm : 0,
-	spd : 1
+	spd : 1,
+	xScale : 1,
+	yScale : 1,
+	rot : 0
 }
 
 function destroySelf(corpseSprite) {
@@ -34,6 +38,6 @@ function incrementAnimationFrame() {
 	}
 	
 	//Reset squash
-	image_xscale = lerp(image_xscale, 1, 0.1 * delta);
-	image_yscale = lerp(image_yscale, 1, 0.1 * delta);
+	visuals.xScale = lerp(visuals.xScale, 1, 0.1 * delta);
+	visuals.yScale = lerp(visuals.yScale, 1, 0.1 * delta);
 }
