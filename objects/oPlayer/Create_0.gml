@@ -128,7 +128,8 @@ ranged = {
 	shot : 0,
 	burst : 0,
 	aimDir : 0,
-	recoil : 0
+	recoil : 0,
+	bulletDir : 0
 }
 
 curRangedWeapon = {
@@ -143,7 +144,7 @@ curRangedWeapon = {
 	burstAmount :			0,
 	burstDelay :			20,
 	spread :				10,
-	multiSpread :			40,
+	multiSpread :			0,
 	reach :					12,
 	spd :					6,
 	life :					180,
@@ -152,7 +153,7 @@ curRangedWeapon = {
 	fric :					0.06,
 	knockback :				0.2,
 	piercing :				true,
-	dmg:					0.3,
+	dmg:					0.4,
 	dur :					30,
 	size :					1,
 	zoom :					0.4,
@@ -280,8 +281,9 @@ function playerShooting() {
 	if (ranged.shot < curRangedWeapon.amount && ranged.dur < curRangedWeapon.dur - curRangedWeapon.delay) {
 		performShot();
 	} else if (ranged.shot == curRangedWeapon.amount && ranged.burst < curRangedWeapon.burstAmount) {
-		//If we have multiple bursts, reset shots between bursts, increment burst counter
+		//If we have multiple bursts, reset shots between bursts, increment burst counter and start new burst
 		ranged.shot = 0;
+		ranged.dir = getAttackDir();
 		ranged.burst++;
 		ranged.dur = curRangedWeapon.dur + curRangedWeapon.burstDelay;
 	}
@@ -395,6 +397,7 @@ function toShooting() {
 	resetCombo();
 	
 	//Instant shot when transitioning
+	ranged.dir = getAttackDir();
 	performShot();
 	
 	if (curRangedWeapon.cooldown != 0) input_consume(verbs.attack);
@@ -640,14 +643,14 @@ function performShot() {
 	if (curRangedWeapon.delay == 0) {
 		//Loop through all the bullets in the burst
 		repeat (curRangedWeapon.amount) {
-			var dir = getAttackDir();
+			ranged.bulletDir = ranged.dir;
 			
 			//If weapon has multispread, do some directional calculation for each projectile based on the multispread variable
 			if (curRangedWeapon.multiSpread > 0) {
-				dir += (curRangedWeapon.multiSpread / (curRangedWeapon.amount - 1) * ranged.shot) - curRangedWeapon.multiSpread * .5;
+				ranged.bulletDir += (curRangedWeapon.multiSpread / (curRangedWeapon.amount - 1) * ranged.shot) - curRangedWeapon.multiSpread * .5;
 			}
 		
-			spawnHitbox(curRangedWeapon, dir, true, oEnemyBase);
+			spawnHitbox(curRangedWeapon, ranged.bulletDir, true, oEnemyBase);
 			incrementShot(curRangedWeapon);
 		}
 		
@@ -655,8 +658,14 @@ function performShot() {
 	} else { 
 		//This is where we go if we only shoot 1 bullet per frame, aka delay > 0
 		//Just shoot bullet in the direction, no directional shenanigans
-		var dir = getAttackDir();
-		spawnHitbox(curRangedWeapon, dir, true, oEnemyBase);
+		
+		ranged.bulletDir = ranged.dir;
+		
+		if (curRangedWeapon.multiSpread > 0) {
+			ranged.bulletDir = ranged.dir + (curRangedWeapon.multiSpread / (curRangedWeapon.amount - 1) * ranged.shot) - curRangedWeapon.multiSpread * .5;
+		}
+				
+		spawnHitbox(curRangedWeapon, ranged.bulletDir, true, oEnemyBase);
 		incrementShot(curRangedWeapon);
 		setAttackMovement(-curRangedWeapon.knockback);
 	}
@@ -743,7 +752,15 @@ function setAttackMovement(amount) {
 }
 
 function drawAimIndicator() {
-	var dir = getAttackDir();
+	if (state == playerAiming) 
+	{
+		var dir = getAttackDir();
+	} else if (state == playerShooting)
+	{
+		var dir = ranged.bulletDir;
+		if (ranged.shot != curRangedWeapon.amount) dir += random_range(-curRangedWeapon.spread, curRangedWeapon.spread) * 0.2;
+	}
+	
 	var drawX = x + lengthdir_x(curRangedWeapon.reach - ranged.recoil, dir);
 	var drawY = y + lengthdir_y(curRangedWeapon.reach - ranged.recoil, dir);
 	//if (dir < 180) { var yScale = 1; } else { var yScale = -1; }

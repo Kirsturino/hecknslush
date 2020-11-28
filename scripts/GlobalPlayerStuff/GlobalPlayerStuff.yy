@@ -6,7 +6,7 @@
     "path": "folders/Player.yy",
   },
   "resourceVersion": "1.0",
-  "name": "GlobalPlayerScripts",
+  "name": "GlobalPlayerStuff",
   "tags": [],
   "resourceType": "GMScript",
 }

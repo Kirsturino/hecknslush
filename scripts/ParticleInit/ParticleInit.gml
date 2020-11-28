@@ -57,3 +57,11 @@ part_type_sprite(p, sPlayer, false, false, false);
 part_type_alpha2(p, 0.5, 0);
 part_type_life(p, 10, 10);
 part_type_size(p, 1, 1, 0, 0);
+
+global.currencyTrail = part_type_create();
+var p = global.currencyTrail;
+part_type_shape(p, pt_shape_disk);
+part_type_life(p, 30, 60);
+part_type_size(p, 0.05, 0.1, -0.01, 0);
+part_type_color1(p, c_red);
+ 

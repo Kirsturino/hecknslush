@@ -26,7 +26,7 @@ rangedAttack = {
 	spread :				20,
 	multiSpread :			40,
 	reach :					4,
-	spd :					1.5,
+	spd :					2,
 	life :					180,
 	destroyOnStop :			true,
 	destroyOnCollision :	true,

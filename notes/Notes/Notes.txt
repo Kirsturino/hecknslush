@@ -1,6 +1,7 @@
 ---------------------------------------------------------------------------
 FEATURES:
 - Weighted camera
+- Modify attacks ingame
 - Perk/Buff system
 - Dungeon generation
 - Culling to walls and enemies
@@ -11,6 +12,7 @@ REFACTOR:
 Yes
 - Clean melee code with local variables instead of mega if statements
 - Calculate hitbox animation to match the timing of hitbox lifetime
+- Move attack code to global status, so it's usable by both enemies and player
 - Add multispread with delay functionality to ranged attacks (copy from melee)
 
 Maybe
