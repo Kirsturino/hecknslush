@@ -85,8 +85,8 @@ function attacking() {
 	//When dash is over, go back to chasing player
 	if (attack.anticipationDur > 0) {
 		attack.anticipationDur = approach(attack.anticipationDur, 0, 1);
-		if (attack.anticipationDur == 0) attack.dir = point_direction(x, y, oPlayer.x, oPlayer.y);
 	} else if (attack.dur > 0) {
+		drawFunction = nothing;
 		visuals.curSprite = sEnemyMeleeDashing;
 		move.hsp = lengthdir_x(attack.spd, attack.dir);
 		horizontalCollision();
@@ -130,11 +130,13 @@ function stunned() {
 function toIdle() {
 	visuals.curSprite = sEnemyMelee;
 	state = idle;
+	drawFunction = nothing;
 }
 
 function toChasing() {
 	visuals.curSprite = sEnemyMelee;
 	state = chasing;
+	drawFunction = nothing;
 }
 
 function toAttacking() {
@@ -143,9 +145,11 @@ function toAttacking() {
 	attack.anticipationDur = dashAttack.anticipationDur;
 	attack.spd = dashAttack.spd;
 	attack.dmg = dashAttack.dmg;
+	attack.dir = point_direction(x, y, oPlayer.x, oPlayer.y);
 
 	visuals.curSprite = sEnemyMeleeAnticipation;
 	state = attacking;
+	drawFunction = drawAttackIndicator;
 }
 
 function toStunned(duration) {
@@ -154,6 +158,7 @@ function toStunned(duration) {
 	
 	visuals.curSprite = sEnemyMeleeStunned;
 	state = stunned;
+	drawFunction = nothing;
 }
 
 //Movement
@@ -185,4 +190,12 @@ function chaseMovement(xx, yy, lineOfSight, dist) {
 //Other
 function incrementCooldowns() {
 	attack.cooldown = approach(attack.cooldown, 0, 1);
+}
+
+function drawAttackIndicator()
+{
+	var drawX = x + lengthdir_x(128, attack.dir);
+	var drawY = y + lengthdir_y(128, attack.dir);
+	var c = make_color_hsv(0, 255, 50);
+	draw_line_width_color(x, y, drawX, drawY, 10, c, c);
 }

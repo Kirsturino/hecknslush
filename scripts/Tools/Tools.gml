@@ -29,3 +29,8 @@ function isOutsideRoom(objectID) {
 		else															{ return false; }
 	}
 }
+
+function nothing()
+{
+	
+}

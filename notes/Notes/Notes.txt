@@ -3,7 +3,7 @@ FEATURES:
 - Weighted camera
 - Perk/Buff system
 - Dungeon generation
-- Frustum culling to walls and enemies
+- Culling to walls and enemies
 - Controller support
 
 ---------------------------------------------------------------------------
@@ -11,19 +11,17 @@ REFACTOR:
 Yes
 - Clean melee code with local variables instead of mega if statements
 - Calculate hitbox animation to match the timing of hitbox lifetime
-- Player state machine rework
-- Move melee weapon attacks to light & heavy
-	- Combos repeat light attack until heavy attack finishes combo
+- Add multispread with delay functionality to ranged attacks (copy from melee)
 
 Maybe
 - Optimize multispread calculation
 - Move hitbox collision checks to enemies (?)
-	- This depends on how many enemies we want to have on screen at a time
+	- This depends on how many enemies/bullets we want to have on screen at a time
 - Redo whole attacking code base from scratch
+	- Or just organize it so it's more readable
 
 ---------------------------------------------------------------------------
 KNOWN BUGS:
-- Collisions are cronked
 
 COMBAT REWORK:
 - Remove combos

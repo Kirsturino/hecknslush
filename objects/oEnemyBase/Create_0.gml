@@ -20,6 +20,9 @@ visuals = {
 	rot : 0
 }
 
+state = 0;
+drawFunction = 0;
+
 function destroySelf(corpseSprite) {
 	var corpse = instance_create_layer(x, y, "Instances", oCorpse);
 	corpse.sprite_index = corpseSprite;

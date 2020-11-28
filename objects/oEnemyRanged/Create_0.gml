@@ -76,6 +76,8 @@ sprite_index = move.collMask;
 //Declare state
 state = 0;
 DoLater(1, function(data) {state = idle;},0,true);
+drawFunction = 0;
+DoLater(1, function(data) {drawFunction = 0;},0,true);
 
 //States
 function idle() {
@@ -113,7 +115,7 @@ function attacking() {
 		attack.anticipationDur = approach(attack.anticipationDur, 0, 1);
 	} else if (attack.dur > 0) {
 		visuals.curSprite = sEnemyRangedShooting;
-
+		drawFunction = nothing;
 		if (attack.shot < rangedAttack.amount && attack.dur < rangedAttack.dur - rangedAttack.delay) {
 			performShot(rangedAttack, attack);
 		} else if (attack.shot == rangedAttack.amount && attack.burst < rangedAttack.burstAmount) {
@@ -146,11 +148,13 @@ function stunned() {
 function toIdle() {
 	visuals.curSprite = sEnemyRanged;
 	state = idle;
+	drawFunction = nothing;
 }
 
 function toRepositioning() {
 	visuals.curSprite = sEnemyRanged;
 	state = repositioning;
+	drawFunction = nothing;
 }
 
 function toAttacking() {
@@ -165,6 +169,7 @@ function toAttacking() {
 
 	visuals.curSprite = sEnemyRangedAnticipation;
 	state = attacking;
+	drawFunction = drawAttackIndicator;
 }
 
 function toStunned(duration) {
@@ -173,6 +178,7 @@ function toStunned(duration) {
 	
 	visuals.curSprite = sEnemyRangedStunned;
 	state = stunned;
+	drawFunction = nothing;
 }
 
 //Movement
@@ -235,4 +241,12 @@ function incrementShot(rangedStruct, attackStruct) {
 function resetShots(attackStruct) {
 	attackStruct.shot = 0;
 	attackStruct.burst = 0;
+}
+
+function drawAttackIndicator()
+{
+	var drawX = x + lengthdir_x(128, attack.dir);
+	var drawY = y + lengthdir_y(128, attack.dir);
+	var c = make_color_hsv(0, 255, 50);
+	draw_line_width_color(x, y, drawX, drawY, 10, c, c);
 }

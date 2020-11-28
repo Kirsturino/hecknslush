@@ -119,7 +119,9 @@ function avoidOverlap() {
 		var dir = point_direction(phys.x, phys.y, x, y);
 
 		move.hsp += lengthdir_x(0.05, dir) * delta;
+		horizontalCollision();
 		move.vsp += lengthdir_y(0.05, dir) * delta;
+		verticalCollision();
 	}
 }
 
@@ -193,7 +195,7 @@ switch (struct.type) {
 	
 			htbx.move.hsp = lengthdir_x(struct.spd, dir);
 			htbx.move.vsp = lengthdir_y(struct.spd, dir);
-			htbx.move.fric = struct.fric;
+			htbx.move.fric = struct.fric + random(struct.spread) * 0.001;
 	
 			htbx.atk.dur = struct.life;	
 			htbx.atk.dmg = struct.dmg;

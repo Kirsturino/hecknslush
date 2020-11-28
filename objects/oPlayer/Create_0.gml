@@ -31,20 +31,10 @@ input_default_mouse_button(mb_right, verbs.aim, true);
 input_consume(verbs.attack);
 input_consume(verbs.dodge);
 
-//Init states
-enum states {
-	dummy,
-	grounded,
-	sprinting,
-	dodging,
-	meleeing,
-	aiming,
-	shooting,
-	stunned,
-	dead
-}
-
-state = states.grounded;
+state = 0;
+DoLater(1, function(data) {state = playerGrounded;},0,true);
+drawFunction = 0;
+DoLater(1, function(data) {drawFunction = nothing;},0,true);
 
 //Circular buffer for states, normalize size for different target framerates
 //This will be used to add some leniency to combos and various actions
@@ -378,23 +368,26 @@ function playerAiming() {
 }
 
 function toDummy() {
-	state = states.dummy;
+	state = playerDummy;
+	drawFunction = nothing;
 }
 
 function toGrounded() {
 	move.curMaxSpd = move.maxSpd;
-	state = states.grounded;
+	state = playerGrounded;
+	drawFunction = nothing;
 }
 
 function toMeleeing() {
-	if (!checkBufferForState(states.meleeing)) resetCombo();
+	if (!checkBufferForState(playerMeleeing)) resetCombo();
 		
 	//Perform melee when transitioning for instant feedback
 	incrementCombo(curMeleeWeapon);
 	performMelee();
 	
 	input_consume(verbs.attack);
-	state = states.meleeing;
+	state = playerMeleeing;
+	drawFunction = nothing;
 }
 	
 function toShooting() {
@@ -405,11 +398,13 @@ function toShooting() {
 	performShot();
 	
 	if (curRangedWeapon.cooldown != 0) input_consume(verbs.attack);
-	state = states.shooting;
+	state = playerShooting;
+	drawFunction = drawAimIndicator;
 }
 
 function toAiming() {
-	state = states.aiming;
+	state = playerAiming;
+	drawFunction = drawAimIndicator;
 }
 
 function toDodging() {
@@ -426,8 +421,8 @@ function toDodging() {
 	dodge.dir = dir;
 	move.dir = dir;
 	
-	//input_consume(verbs.dodge);
-	state = states.dodging;
+	state = playerDodging;
+	drawFunction = nothing;
 	
 	//FX
 	part_type_direction(global.hangingDustPart, dodge.dir - 220, dodge.dir - 140, 0, 0);
@@ -445,11 +440,13 @@ function toDodging() {
 }
 
 function toSprinting() {
-	state = states.sprinting;
+	state = playerSprinting;
+	drawFunction = nothing;
 }
 
 function toDead() {
-	
+	//Add stuff here eventually
+	drawFunction = nothing;
 }
 
 function groundedMovement() {
@@ -465,7 +462,7 @@ function groundedMovement() {
 		move.hsp = approach(move.hsp, 0, move.fric);
 	}
 	
-	horizontalCollision(sPlayerWallCollisionMask);
+	horizontalCollision();
 
 	//If up/down is held, accelerate, if not, decelerate
 	if (mv[1] != 0) {
@@ -474,7 +471,7 @@ function groundedMovement() {
 		move.vsp = approach(move.vsp, 0, move.fric);
 	}
 	
-	verticalCollision(sPlayerWallCollisionMask);
+	verticalCollision();
 	
 	//Set last direction player was going
 	if (mv[0] != 0 || mv[1] != 0) {
@@ -519,10 +516,10 @@ function sprintMovement() {
 	
 	//Apply momentum
 	move.hsp = lengthdir_x(move.curMaxSpd, move.dir);
-	horizontalCollision(sPlayerWallCollisionMask);
+	horizontalCollision();
 	
 	move.vsp = lengthdir_y(move.curMaxSpd, move.dir);
-	verticalCollision(sPlayerWallCollisionMask);
+	verticalCollision();
 	
 	x += move.hsp * delta;
 	y += move.vsp * delta;
@@ -530,10 +527,10 @@ function sprintMovement() {
 
 function dodgeMovement() {
 	move.hsp = lengthdir_x(dodge.spd, dodge.dir);
-	horizontalCollision(sPlayerWallCollisionMask);
+	horizontalCollision();
 	
 	move.vsp = lengthdir_y(dodge.spd, dodge.dir);
-	verticalCollision(sPlayerWallCollisionMask);
+	verticalCollision();
 	
 	x += move.hsp * delta;
 	y += move.vsp * delta;
@@ -721,10 +718,10 @@ function incrementVerbCooldowns() {
 
 function attackMovement() {
 	move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.fric, move.dir)));
-	horizontalCollision(sPlayerWallCollisionMask);
+	horizontalCollision();
 	
 	move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.fric, move.dir)));
-	verticalCollision(sPlayerWallCollisionMask);
+	verticalCollision();
 	
 	x += move.hsp * delta;
 	y += move.vsp * delta;
