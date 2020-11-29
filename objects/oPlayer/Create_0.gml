@@ -17,15 +17,13 @@ input_default_key(ord("A"), verbs.left);
 input_default_key(ord("D"), verbs.right);
 input_default_key(ord("W"), verbs.up);
 input_default_key(ord("S"), verbs.down);
-input_default_key(ord("J"), verbs.attack);
-input_default_key(ord("K"), verbs.attack);
 input_default_key(vk_space, verbs.dodge);
 input_default_mouse_button(mb_left, verbs.attack, true);
 input_default_mouse_button(mb_right, verbs.aim, true);
 
-#macro meleeBufferSize 100
-#macro shootBufferSize 100
-#macro dodgeBufferSize 200
+#macro MELEE_BUFFER 100
+#macro SHOOT_BUFFER 100
+#macro DODGE_BUFFER 200
 
 //Input jank
 input_consume(verbs.attack);
@@ -54,7 +52,8 @@ move = {
 	lastDir : 0,
 	dir : 0,
 	moving : false,
-	collMask : sPlayerWallCollisionMask
+	collMask : sPlayerWallCollisionMask,
+	aimSpeedModifier : 0.5
 }
 
 //Set mask
@@ -72,17 +71,24 @@ sprint = {
 
 //Combat variables
 combat = {
+	maxHP : 5,
 	hp : 5,
 	iframesMax : 144,
-	iframes : 0
+	iframes : 0,
+	aimDir : 0,
+	curAttack : 0
 }
+
+//This will be used a lot so here's a shorthand
+#macro ATK combat.curAttack
 
 //visuals
 visuals = {
 	curSprite : sPlayer,
 	xScale : 1,
 	yScale : 1,
-	rot : 0
+	rot : 0,
+	recoil : 0
 }
 
 //Player melee attack properties, most of the weapon stats will be imparted to the actual hitbox
@@ -97,30 +103,6 @@ melee = {
 	htbx : false
 }
 
-//Testing weapon struct idea. Data from a list of weapons would be pulled here to be used locally
-curMeleeWeapon = {
-	name :			"testMelee",
-	type :			weapons.melee,
-	clr :			c_red,
-	htbx :			oHitbox,
-	baseDmg :		1,
-	comboLength :	3,
-	cooldown :		60,
-	amount :		[1, 1, 3],
-	delay  :		[0, 0, 5],
-	multiSpread :	[0, 0, 120],
-	spr :			[sSlash, sSlashInverse, sThrust],
-	htbxStart :		[2, 2, 5],
-	htbxLength :	[10, 10, 20],
-	htbxSlide :		[0, 0, 0],
-	htbxFric :		[0.05, 0.05, 0.1],
-	reach :			[32, 32, 48],
-	dmgMultiplier:	[1.5, 1.5, 1.25],
-	dur :			[32, 32, 36],
-	slide :			[1, 1, -1],
-	knockback :		[1, 1, 2.5]
-}
-
 //Player ranged attack properties, most of the weapon stats will be imparted to the actual projectile
 ranged = {
 	dur : 0,
@@ -131,6 +113,40 @@ ranged = {
 	recoil : 0,
 	bulletDir : 0
 }
+
+//Create generic attack structs for each of your abilities
+//THIS IS WIP and some stuff is hardcoded atm
+var abilityAmount = 2;
+for (var i = 0; i < abilityAmount; ++i) {
+    attack[i] = new createAttackStruct();
+}
+
+attackSlots = array_create(abilityAmount, 0);
+
+//Testing weapon struct idea. Data from a list of weapons would be pulled here to be used locally
+curMeleeWeapon = {
+	name :			"testMelee",
+	type :			weapons.melee,
+	clr :			c_red,
+	htbx :			oHitbox,
+	baseDmg :		1,
+	comboLength :	3,
+	cooldown :		60,
+	amount :		1,
+	delay  :		0,
+	multiSpread :	0,
+	spr :			sSlash,
+	htbxStart :		2,
+	htbxLength :	10, 
+	htbxSlide :		0,
+	htbxFric :		0.05,
+	reach :			32, 
+	dmgMultiplier:	1.5,
+	dur :			32,
+	slide :			1,
+	knockback :		1
+}
+attackSlots[0] = curMeleeWeapon;
 
 curRangedWeapon = {
 	name :					"testRanged",
@@ -156,10 +172,10 @@ curRangedWeapon = {
 	dmg:					0.4,
 	dur :					30,
 	size :					1,
-	zoom :					0.4,
-	aimSpeedModifier :		0.5,	
+	zoom :					0.4,	
 	cooldown :				60
 }
+attackSlots[1] = curRangedWeapon;
 
 //Dodge properties, not sure what to put here, really, or how it will work yet
 dodge = {
@@ -180,8 +196,8 @@ function playerGrounded() {
 	groundedMovement();
 	
 	//State switches
-	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, dodgeBufferSize)) toDodging();
-	if (melee.cooldown == 0 && input_check_press(verbs.attack, 0, meleeBufferSize)) toMeleeing();
+	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER)) toDodging();
+	if (melee.cooldown == 0 && input_check_press(verbs.attack, 0, MELEE_BUFFER)) toMeleeing();
 	if (ranged.cooldown == 0 && input_check(verbs.aim)) toAiming();
 	
 	//Player can sprint by holding dodge button for long enough
@@ -214,7 +230,7 @@ function playerSprinting() {
 	part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 1);
 	
 	//State switches
-	if (melee.cooldown == 0 && input_check_press(verbs.attack, 0, meleeBufferSize)) {
+	if (melee.cooldown == 0 && input_check_press(verbs.attack, 0, MELEE_BUFFER)) {
 		sprint.buildup = 0;
 		move.lastDir = move.dir;
 		toMeleeing();
@@ -244,72 +260,39 @@ function playerMeleeing() {
 	
 	attackMovement();
 	
-	//Spawn hitboxes for each melee strike here
-	performMelee();
-	
-	//Work out if player wants to keep attacking or not
-	//If dur reaches zero and player hasn't pressed attack again, go back to normal state and reset combo
-	//Otherwise, increment combo and start new attack 
-	//If at end of combo, go back to normal state anyway
-	if (melee.dur <= 0) {
-		if (melee.queued) {
-			incrementCombo(curMeleeWeapon);
-		} else {
-			if (melee.comboComplete) {
-				melee.cooldown = curMeleeWeapon.cooldown;
-				resetCombo();
-			}
-			toGrounded();
-		}
-	} else if (input_check_press(verbs.attack, 0, 0) && !melee.comboComplete) {
-		melee.queued = true;
-	}
+	//attackLogic();
 	
 	//Make player be able to break out of melee at will
-	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, dodgeBufferSize)) {
+	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER)) {
 		resetCombo();
 		toDodging();
 	}
 }
 
 function playerShooting() {
-	ranged.aimDir = getAttackDir();
-	ranged.dur = approach(ranged.dur, 0, 1);
+	combat.aimDir = getAttackDir();
+	attack[ATK].dur = approach(attack[ATK].dur, 0, 1);
 	
-	//If we have a burst weapon (it has > 0 delay and more than 1 bullet), repeat shot
-	//It resets the shot dur until max amount of bullets have been shot
-	if (ranged.shot < curRangedWeapon.amount && ranged.dur < curRangedWeapon.dur - curRangedWeapon.delay) {
-		performShot();
-	} else if (ranged.shot == curRangedWeapon.amount && ranged.burst < curRangedWeapon.burstAmount) {
-		//If we have multiple bursts, reset shots between bursts, increment burst counter and start new burst
-		ranged.shot = 0;
-		ranged.dir = getAttackDir();
-		ranged.burst++;
-		ranged.dur = curRangedWeapon.dur + curRangedWeapon.burstDelay;
-	}
+	attackLogic(attackSlots[ATK], attack[ATK]);
 
 	attackMovement();
 	
 	//visuals
-	ranged.recoil = lerp(ranged.recoil, 0, 0.1);
+	visuals.recoil = lerp(visuals.recoil, 0, 0.1);
 	
 	//State switch
-	//If current weapon is full auto (aka has 0 cooldown), holding down fire button will keep firing
-	if (ranged.dur <= 0 && curRangedWeapon.cooldown == 0 && input_check(verbs.attack)) {
-		resetShots();
-	} else if (ranged.dur <= 0) {
-		ranged.cooldown = curRangedWeapon.cooldown;
-		resetShots();
-		if (input_check(verbs.aim)) {
-			toAiming();
-		} else {
-			toGrounded();
-		}	
+	if (attack[ATK].dur <= 0)
+	{
+		attack[ATK].cooldown = attackSlots[ATK].cooldown;
+		resetAttack(attackSlots[ATK], attack[ATK]);
+		
+		if (input_check(verbs.aim)) { toAiming(); }
+		else						{ toGrounded(); }	
 	}
 	
-	//Make player be able to break out of melee at will
-	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, dodgeBufferSize)) {
-		resetShots();
+	//Make player be able to break out of attack at will
+	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER)) {
+		resetAttack(attackSlots[ATK], attack[ATK]);
 		toDodging();
 	}
 }
@@ -353,18 +336,18 @@ function playerDodging() {
 
 function playerAiming() {
 	//Smooth transition between max speeds
-	var aimSpd = move.maxSpd * curRangedWeapon.aimSpeedModifier;
+	var aimSpd = move.maxSpd * move.aimSpeedModifier;
 	move.curMaxSpd = approach(move.curMaxSpd, aimSpd, sprint.axl);
 	groundedMovement();
 	
-	ranged.aimDir = getAttackDir();
+	combat.aimDir = getAttackDir();
 	
 	//State switch
 	if (input_check_release(verbs.aim)) {
 		toGrounded();
-	} else if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, dodgeBufferSize)) {
-		 toDodging();
-	} else if (ranged.cooldown == 0 && input_check_press(verbs.attack, 0, shootBufferSize)) {
+	} else if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER)) {
+		toDodging();
+	} else if (attack[ATK].cooldown == 0 && input_check_press(verbs.attack, 0, SHOOT_BUFFER)) {
 		toShooting();
 	}
 }
@@ -381,6 +364,7 @@ function toGrounded() {
 }
 
 function toMeleeing() {
+	ATK = 0;
 	if (!checkBufferForState(playerMeleeing)) resetCombo();
 		
 	//Perform melee when transitioning for instant feedback
@@ -397,15 +381,16 @@ function toShooting() {
 	resetCombo();
 	
 	//Instant shot when transitioning
-	ranged.dir = getAttackDir();
-	performShot();
+	attack[ATK].dir = getAttackDir();
+	performAttack(curRangedWeapon, attack[ATK]);
 	
-	if (curRangedWeapon.cooldown != 0) input_consume(verbs.attack);
+	input_consume(verbs.attack);
 	state = playerShooting;
 	drawFunction = drawAimIndicator;
 }
 
 function toAiming() {
+	ATK = 1;
 	state = playerAiming;
 	drawFunction = drawAimIndicator;
 }
@@ -716,9 +701,13 @@ function checkBufferForState(state) {
 
 function incrementVerbCooldowns() {
 	//Short pause after doing verbs
+	
+	var length = array_length(attack);
+	for (var i = 0; i < length; ++i) {
+	    attack[i].cooldown = approach(attack[i].cooldown, 0, 1);
+	}
+	
 	dodge.cooldown = approach(dodge.cooldown, 0, 1);
-	melee.cooldown = approach(melee.cooldown, 0, 1);
-	ranged.cooldown = approach(ranged.cooldown, 0, 1);
 	
 	//Iframes
 	combat.iframes = approach(combat.iframes, 0, 1);
@@ -752,22 +741,25 @@ function setAttackMovement(amount) {
 }
 
 function drawAimIndicator() {
+	var wpn = attackSlots[ATK];
+	var atk = attack[ATK];
+	
 	if (state == playerAiming) 
 	{
 		var dir = getAttackDir();
 	} else if (state == playerShooting)
 	{
-		var dir = ranged.bulletDir;
-		if (ranged.shot != curRangedWeapon.amount) dir += random_range(-curRangedWeapon.spread, curRangedWeapon.spread) * 0.2;
+		var dir = atk.htbxDir;
+		if (atk.count != wpn.amount) dir += random_range(-wpn.spread, wpn.spread) * 0.2;
 	}
 	
-	var drawX = x + lengthdir_x(curRangedWeapon.reach - ranged.recoil, dir);
-	var drawY = y + lengthdir_y(curRangedWeapon.reach - ranged.recoil, dir);
+	var drawX = x + lengthdir_x(wpn.reach - visuals.recoil, dir);
+	var drawY = y + lengthdir_y(wpn.reach - visuals.recoil, dir);
 	//if (dir < 180) { var yScale = 1; } else { var yScale = -1; }
 	
 	var yScale = (dir > 90 && dir < 270) ? -1 : 1;
 	
-	draw_sprite_ext(curRangedWeapon.spr, 0, drawX, drawY, 1, yScale, dir, c_white, 1);
+	draw_sprite_ext(wpn.spr, 0, drawX, drawY, 1, yScale, dir, c_white, 1);
 }
 
 function cameraStateSwitch() {
@@ -801,4 +793,72 @@ function pushEnemies() {
 			toStunned(144);
 		}
 	}
+}
+
+function attackLogic(weapon, attack)
+{
+	if (attack.count < weapon.amount && attack.dur < weapon.dur - weapon.delay)
+	{
+		performAttack(weapon, attack);
+	} else if (attack.count == weapon.amount && attack.burstCount < weapon.burstAmount)
+	{
+		//If we have multiple bursts, reset attacks between bursts, increment burst counter and start new burst
+		attack.count = 0;
+		attack.dir = getAttackDir();
+		attack.burstCount++;
+		attack.dur = weapon.dur + weapon.burstDelay;
+	}
+}
+
+function performAttack(weapon, attack) {
+	//If delay is 0, it shoots multiple bullets per dur cycle
+	//Bullets in burst can have multispread
+	if (weapon.delay == 0)
+	{
+		//Loop through all the bullets in the burst
+		repeat (weapon.amount)
+		{
+			attack.htbxDir = attack.dir;
+			
+			//If weapon has multispread, do some directional calculation for each projectile based on the multispread variable
+			if (weapon.multiSpread > 0)
+			{
+				attack.htbxDir += (weapon.multiSpread / (weapon.amount - 1) * attack.count) - weapon.multiSpread * .5;
+			}
+		
+			spawnHitbox(weapon, attack.htbxDir, true, oEnemyBase);
+			incrementAttack(weapon, attack);
+		}
+		
+		setAttackMovement(-weapon.knockback * weapon.amount);
+	} else
+	{ 
+		//This is where we go if we only shoot 1 bullet per frame, aka delay > 0
+		//Just shoot bullet in the direction, no directional shenanigans
+		
+		attack.htbxDir = attack.dir;
+		
+		if (weapon.multiSpread > 0)
+		{
+			attack.htbxDir = attack.dir + (weapon.multiSpread / (weapon.amount - 1) * attack.count) - weapon.multiSpread * .5;
+		}
+				
+		spawnHitbox(weapon, attack.htbxDir, true, oEnemyBase);
+		incrementAttack(weapon, attack);
+		setAttackMovement(-weapon.knockback);
+	}
+}
+
+function incrementAttack(weapon, attack) {
+	//Increment shot count for burst weapons
+	attack.count++;
+		
+	//Set time before player is able to move again
+	attack.dur = weapon.dur;
+}
+
+function resetAttack(weapon, attack) {
+	//Reset individual attack values
+	attack.count = 0;
+	attack.burstCount = 0;
 }

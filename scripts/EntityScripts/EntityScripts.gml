@@ -1,10 +1,12 @@
 //Collection of functions most entities/actors ingame will most likely want to call at some point
 
-function depthSorting() {
+function depthSorting()
+{
 	depth = -bbox_bottom;
 }
 
-function getTouchingObjects(list, object, func) {
+function getTouchingObjects(list, object, func)
+{
 	//Populate list of currently colliding enemies
 	var enemyList = ds_list_create();
 	var enemies = instance_place_list(x, y, object, enemyList, false);
@@ -29,7 +31,8 @@ function getTouchingObjects(list, object, func) {
 	ds_list_destroy(enemyList);
 }
 
-function dealDamage(enemy) {
+function dealDamage(enemy)
+{
 	with (enemy) {
 		switch (other.atk.target) {
 			case oEnemyBase:
@@ -95,12 +98,14 @@ function dealDamage(enemy) {
 	}
 }
 
-function negateMomentum() {
+function negateMomentum()
+{
 	move.hsp = 0;
 	move.vsp = 0;
 }
 
-function staticMovement() {
+function staticMovement()
+{
 	//Simple movement
 	move.hsp = approach(move.hsp, 0, move.fric);
 	horizontalCollision();
@@ -112,7 +117,8 @@ function staticMovement() {
 	y += move.vsp * delta;
 }
 
-function avoidOverlap() {
+function avoidOverlap()
+{
 	var phys = instance_place(x, y, parPhysical);
 	
 	if (phys != noone) {
@@ -125,12 +131,14 @@ function avoidOverlap() {
 	}
 }
 
-function moveInDirection(amount, direction) {
+function moveInDirection(amount, direction)
+{
 	x += lengthdir_x(amount * delta, direction);
 	y += lengthdir_y(amount * delta, direction);
 }
 
-function canSee(instance) {
+function canSee(instance)
+{
 	var los = collision_line(x, y, instance.x, instance.y, parCollision, false, false);
 	
 	if (los == noone) return true;
@@ -138,7 +146,8 @@ function canSee(instance) {
 	return false;
 }
 
-function spawnHitbox(struct, dir, applyScreenFX, target) {
+function spawnHitbox(struct, dir, applyScreenFX, target)
+{
 switch (struct.type) {
 		case weapons.melee:
 			var spawnX = x + lengthdir_x(struct.reach[melee.combo - 1], dir);
@@ -164,8 +173,9 @@ switch (struct.type) {
 			htbx.atk.destroyOnStop = false;
 			htbx.atk.piercing = true;
 			
-			if (applyScreenFX) {
-				//FX
+			//FX
+			if (applyScreenFX)
+			{
 				shakeCamera(curRangedWeapon.dmg * 20, 2, 4);
 				pushCamera(curRangedWeapon.dmg * 100, dir);
 			}
@@ -206,8 +216,9 @@ switch (struct.type) {
 			htbx.visuals.type = weapons.ranged;
 			htbx.image_blend = struct.clr;
 			
-			if (applyScreenFX) {
-				//FX
+			//FX
+			if (applyScreenFX) 
+			{
 				shakeCamera(curRangedWeapon.dmg * 60, 2, 4);
 				pushCamera(curRangedWeapon.dmg * 50, dir + 180);
 				ranged.recoil = curRangedWeapon.dmg * 10;
