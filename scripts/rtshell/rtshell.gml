@@ -190,6 +190,11 @@ function sh_get_global(args) {
 	}
 }
 
+function sh_delete_objects(args) {
+	var obj = asset_get_index(args[1]);
+	instance_destroy(obj);
+}
+
 //BE CAREFUL WITH THIS! DOESN'T LIMIT WHAT YOU CAN SET THE VALUES TO AND WILL CRASH IF YOU SET A WRONG VALUE
 function sh_set_global(args) {
 	if (variable_global_exists(args[1])) {

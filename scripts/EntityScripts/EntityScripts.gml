@@ -48,9 +48,7 @@ function dealDamage(enemy)
 				else											{ var dir = other.image_angle; }
 		
 				move.hsp += lengthdir_x(other.atk.knockback, dir);
-				horizontalCollision();
 				move.vsp += lengthdir_y(other.atk.knockback, dir);
-				verticalCollision();
 				move.dir = dir;
 		
 				//visuals stuff
@@ -125,9 +123,7 @@ function avoidOverlap()
 		var dir = point_direction(phys.x, phys.y, x, y);
 
 		move.hsp += lengthdir_x(0.05, dir) * delta;
-		horizontalCollision();
 		move.vsp += lengthdir_y(0.05, dir) * delta;
-		verticalCollision();
 	}
 }
 
@@ -146,89 +142,204 @@ function canSee(instance)
 	return false;
 }
 
-function spawnHitbox(struct, dir, applyScreenFX, target)
+#region ATTACKING
+
+function spawnHitbox(weapon, attack)
 {
-switch (struct.type) {
+	switch (weapon.type) {
 		case weapons.melee:
-			var spawnX = x + lengthdir_x(struct.reach[melee.combo - 1], dir);
-			var spawnY = y + lengthdir_y(struct.reach[melee.combo - 1], dir);
+		#region
+			var spawnX = x + lengthdir_x(weapon.reach, attack.htbxDir);
+			var spawnY = y + lengthdir_y(weapon.reach, attack.htbxDir);
 	
 			//Impart weapon stats to hitbox
-			var htbx = instance_create_layer(spawnX, spawnY, "Instances", struct.htbx);
-			htbx.sprite_index = struct.spr[melee.combo - 1];
-			htbx.image_angle = dir;
+			var htbx = instance_create_layer(spawnX, spawnY, "Instances", weapon.htbx);
+			htbx.sprite_index = weapon.spr;
+			htbx.image_angle = attack.htbxDir;
+			if (weapon.mirror) htbx.image_yscale = attack.mirror;
 	
-			htbx.move.hsp = lengthdir_x(struct.htbxSlide[melee.combo - 1], dir);
-			htbx.move.vsp = lengthdir_y(struct.htbxSlide[melee.combo - 1], dir);
-			htbx.move.fric = struct.htbxFric[melee.combo - 1];
+			htbx.move.hsp = lengthdir_x(weapon.spd, attack.htbxDir);
+			htbx.move.vsp = lengthdir_y(weapon.spd, attack.htbxDir);
+			htbx.move.fric = weapon.fric;
 	
-			htbx.atk.dur = struct.htbxLength[melee.combo - 1];	
-			htbx.atk.dmg = struct.baseDmg * struct.dmgMultiplier[melee.combo - 1];
-			htbx.atk.knockback = struct.knockback[melee.combo - 1];
-			htbx.atk.delay = struct.htbxStart[melee.combo - 1];
+			htbx.atk.dur = weapon.life;	
+			htbx.atk.dmg = weapon.dmg;
+			htbx.atk.knockback = weapon.knockback;
+			htbx.atk.delay = weapon.start;
+			
+			//Visuals
 			htbx.visuals.type = weapons.melee;
-			htbx.image_blend = struct.clr;
+			htbx.image_blend = weapon.clr;
 		
 			//All melee weapons can cleave and persist
 			htbx.atk.destroyOnStop = false;
 			htbx.atk.piercing = true;
 			
 			//FX
-			if (applyScreenFX)
+			if (object_index == oPlayer)
 			{
-				shakeCamera(curRangedWeapon.dmg * 20, 2, 4);
-				pushCamera(curRangedWeapon.dmg * 100, dir);
+				shakeCamera(weapon.dmg * 20, 2, 4);
+				pushCamera(weapon.dmg * 20, attack.htbxDir);
 			}
 			
-			if (struct.multiSpread[melee.combo - 1] == 0) {
+			if (weapon.multiSpread == 0) {
 				var sprd = 40;
 			} else {
-				var sprd = struct.multiSpread[melee.combo - 1] * .5;
+				var sprd = weapon.multiSpread * .5;
 			}
 			
-			part_type_direction(global.shootPart, dir - sprd, dir + sprd, 0, 0);
+			part_type_direction(global.shootPart, attack.htbxDir - sprd, attack.htbxDir + sprd, 0, 0);
 			part_particles_create(global.ps, spawnX, spawnY, global.shootPart, 5);
+			#endregion
 		break;
 		
 		case weapons.ranged:	
-			var spawnX = x + lengthdir_x(struct.reach + sprite_get_width(struct.spr), dir);
-			var spawnY = y + lengthdir_y(struct.reach + sprite_get_width(struct.spr), dir);
+		#region
+			var spawnX = x + lengthdir_x(weapon.reach + sprite_get_width(weapon.spr), attack.htbxDir);
+			var spawnY = y + lengthdir_y(weapon.reach + sprite_get_width(weapon.spr), attack.htbxDir);
 		
 			//Apply random spread
-			dir += irandom_range(-struct.spread, struct.spread);
+			attack.htbxDir += irandom_range(-weapon.spread, weapon.spread);
 	
 			//Impart weapon stats to hitbox
-			var htbx = instance_create_layer(spawnX, spawnY, "Instances", struct.htbx);
-			htbx.sprite_index = struct.projSpr;
-			htbx.image_angle = dir;
-			htbx.visuals.size = struct.size;
+			var htbx = instance_create_layer(spawnX, spawnY, "Instances", weapon.htbx);
+			htbx.sprite_index = weapon.projSpr;
+			htbx.image_angle = attack.htbxDir;
+			htbx.visuals.size = weapon.size;
 	
-			htbx.move.hsp = lengthdir_x(struct.spd, dir);
-			htbx.move.vsp = lengthdir_y(struct.spd, dir);
-			htbx.move.fric = struct.fric + random(struct.spread) * 0.001;
+			//Movement
+			htbx.move.hsp = lengthdir_x(weapon.spd, attack.htbxDir);
+			htbx.move.vsp = lengthdir_y(weapon.spd, attack.htbxDir);
+			htbx.move.fric = weapon.fric + random(weapon.spread) * 0.001;
 	
-			htbx.atk.dur = struct.life;	
-			htbx.atk.dmg = struct.dmg;
-			htbx.atk.knockback = struct.knockback;
-			htbx.atk.piercing = struct.piercing;
-			htbx.atk.destroyOnStop = struct.destroyOnStop;
-			htbx.atk.destroyOnCollision = struct.destroyOnCollision;
+			//Combat stuff
+			htbx.atk.dur = weapon.life;	
+			htbx.atk.dmg = weapon.dmg;
+			htbx.atk.knockback = weapon.knockback;
+			htbx.atk.piercing = weapon.piercing;
+			htbx.atk.destroyOnStop = weapon.destroyOnStop;
+			htbx.atk.destroyOnCollision = weapon.destroyOnCollision;
 			htbx.visuals.type = weapons.ranged;
-			htbx.image_blend = struct.clr;
+			htbx.image_blend = weapon.clr;
 			
 			//FX
-			if (applyScreenFX) 
+			if (object_index == oPlayer) 
 			{
-				shakeCamera(curRangedWeapon.dmg * 60, 2, 4);
-				pushCamera(curRangedWeapon.dmg * 50, dir + 180);
-				ranged.recoil = curRangedWeapon.dmg * 10;
+				shakeCamera(weapon.dmg * 60, 2, 4);
+				pushCamera(weapon.dmg * 50, attack.htbxDir + 180);
+				visuals.recoil = weapon.dmg * 20;
 			}
 			
 			part_particles_create(global.ps, spawnX, spawnY, global.muzzleFlashPart, 1);
-			part_type_direction(global.shootPart, dir - struct.spread * 2, dir + struct.spread * 2, 0, 0);
+			part_type_direction(global.shootPart, attack.htbxDir - weapon.spread * 2, attack.htbxDir + weapon.spread * 2, 0, 0);
 			part_particles_create(global.ps, spawnX, spawnY, global.shootPart, 10);
+			#endregion
 		break;
 	}
 	
-	htbx.atk.target = target;
+	//Determine if this should hit enemies or player
+	if (object_index == oPlayer)	{ htbx.atk.target = oEnemyBase; }
+	else							{ htbx.atk.target = oPlayer; }
 }
+
+function attackLogic(weapon, attack)
+{
+	if (attack.count < weapon.amount && attack.dur < weapon.dur - weapon.delay)
+	{
+		performAttack(weapon, attack);
+	} else if (attack.count == weapon.amount && attack.burstCount < weapon.burstAmount)
+	{
+		//If we have multiple bursts, reset attacks between bursts, increment burst counter and start new burst
+		attack.count = 0;
+		attack.dir = getAttackDir();
+		attack.burstCount++;
+		attack.dur = weapon.dur + weapon.burstDelay;
+	}
+}
+
+function performAttack(weapon, attack) {
+	//If delay is 0, it shoots multiple bullets per dur cycle
+	//Bullets in burst can have multispread
+	if (weapon.delay == 0)
+	{
+		//Loop through all the bullets in the burst
+		repeat (weapon.amount)
+		{
+			attack.htbxDir = attack.dir;
+			
+			//If weapon has multispread, do some directional calculation for each projectile based on the multispread variable
+			if (weapon.multiSpread > 0)
+			{
+				attack.htbxDir += (weapon.multiSpread / (weapon.amount - 1) * attack.count) - weapon.multiSpread * .5;
+			}
+		
+			spawnHitbox(weapon, attack);
+			incrementAttack(weapon, attack);
+		}
+		
+		setAttackMovement(weapon.push * weapon.amount);
+	} else
+	{ 
+		//This is where we go if we only shoot 1 bullet per frame, aka delay > 0
+		//Just shoot bullet in the direction, no directional shenanigans
+		attack.htbxDir = attack.dir;
+		
+		if (weapon.multiSpread > 0)
+		{
+			attack.htbxDir = attack.dir + (weapon.multiSpread / (weapon.amount - 1) * attack.count) - weapon.multiSpread * .5;
+		}
+				
+		spawnHitbox(weapon, attack);
+		incrementAttack(weapon, attack);
+		setAttackMovement(weapon.push);
+	}
+}
+
+function incrementAttack(weapon, attack) {
+	//Increment shot count for burst weapons
+	attack.count++;
+		
+	//Set time before player is able to move again
+	attack.dur = weapon.dur;
+}
+
+function resetAttack(weapon, attack) {
+	//Reset individual attack values
+	attack.count = 0;
+	attack.burstCount = 0;
+	
+	if (weapon.mirror) attack.mirror *= -1;
+}
+	
+function attackMovement() {
+	move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.fric, move.dir)));
+	horizontalCollision();
+	
+	move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.fric, move.dir)));
+	verticalCollision();
+	
+	x += move.hsp * delta;
+	y += move.vsp * delta;
+}
+	
+function setAttackMovement(amount) {
+	switch (object_index)
+	{
+		case oPlayer:
+			if (input_player_source_get(0) == INPUT_SOURCE.KEYBOARD_AND_MOUSE)	{ move.dir = point_direction(x, y, mouse_x, mouse_y); }
+			else if (!isHoldingDirection())										{ move.dir = move.lastDir; }
+			else																{ move.dir = getMovementInputDirection(); }
+	
+			part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
+		break;
+		
+		case oEnemyBase:
+			//Soon
+		break;
+	}
+	
+	move.hsp = lengthdir_x(amount, move.dir);
+	move.vsp = lengthdir_y(amount, move.dir);
+}
+
+#endregion

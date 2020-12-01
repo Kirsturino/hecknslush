@@ -1,9 +1,11 @@
+//Execute current state
 state();
 
-depth = -y - sprite_height / 2;
+depthSorting();
 
 //Things that should be done almost always
-if (state == playerDummy()) exit;
+if (state == playerDummy) exit;
+
 cameraStateSwitch();
 updateStateBuffer();
 incrementVerbCooldowns();

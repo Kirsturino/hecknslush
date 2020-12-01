@@ -1,5 +1,5 @@
 {
-  "bboxMode": 2,
+  "bboxMode": 0,
   "collisionKind": 1,
   "type": 0,
   "origin": 4,
@@ -25,7 +25,6 @@
   "gridY": 0,
   "frames": [
     {"compositeImage":{"FrameId":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyRangedWallCollisionMask/sEnemyRangedWallCollisionMask.yy",},"LayerId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},"images":[
-        {"FrameId":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyRangedWallCollisionMask/sEnemyRangedWallCollisionMask.yy",},"LayerId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
         {"FrameId":{"name":"aaec9ead-a715-4550-945c-17655f92f1e6","path":"sprites/sEnemyRangedWallCollisionMask/sEnemyRangedWallCollisionMask.yy",},"LayerId":{"name":"dbf8dd4c-16d6-4308-bbeb-83d697e6a035","path":"sprites/sEnemyRangedWallCollisionMask/sEnemyRangedWallCollisionMask.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
       ],"parent":{"name":"sEnemyRangedWallCollisionMask","path":"sprites/sEnemyRangedWallCollisionMask/sEnemyRangedWallCollisionMask.yy",},"resourceVersion":"1.0","name":"aaec9ead-a715-4550-945c-17655f92f1e6","tags":[],"resourceType":"GMSpriteFrame",},
   ],

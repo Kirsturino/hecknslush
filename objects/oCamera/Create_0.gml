@@ -90,9 +90,11 @@ function followPlayerAim() {
 	var finalWidth = viewWidth * zoomMultiplier;
 	var finalHeight = viewHeight * zoomMultiplier;
 	
-	var dist = min(point_distance(oPlayer.x, oPlayer.y, mouse_x, mouse_y) * oPlayer.curRangedWeapon.zoom, 100);
-	var posX = oPlayer.x  - finalWidth / 2 + lengthdir_x(dist, oPlayer.ranged.aimDir);
-	var posY = oPlayer.y - finalHeight / 2 + lengthdir_y(dist, oPlayer.ranged.aimDir);
+	var playerGun = oPlayer.attackSlots[oPlayer.combat.curAttack];
+	var playerAim = oPlayer.combat.aimDir;
+	var dist = min(point_distance(oPlayer.x, oPlayer.y, mouse_x, mouse_y) * playerGun.zoom, 100);
+	var posX = oPlayer.x  - finalWidth / 2 + lengthdir_x(dist, playerAim);
+	var posY = oPlayer.y - finalHeight / 2 + lengthdir_y(dist, playerAim);
 	
 	xx = clamp(posX, 0, room_width - finalWidth);
 	yy = clamp(posY, 0, room_height - finalHeight);

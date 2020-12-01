@@ -2,7 +2,7 @@
 event_inherited();
 
 combat = {
-	hp : 5,
+	hp : 3,
 	detectionRadius : 200,
 	attackRadius : 124,
 	chaseRadius : 240,
@@ -51,14 +51,8 @@ sprite_index = move.collMask;
 
 //Declare state
 state = 0;
-DoLater(1,
-            function(data)
-            {
-                state = idle;
-            },
-            0,
-            true);
-
+DoLater(1, function(data) {state = idle;},0,true);
+drawFunction = nothing;
 
 //States
 function idle() {

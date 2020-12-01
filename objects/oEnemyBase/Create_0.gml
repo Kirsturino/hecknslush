@@ -30,7 +30,7 @@ visuals = {
 }
 
 state = 0;
-drawFunction = 0;
+drawFunction = nothing;
 
 function destroySelf(corpseSprite)
 {
