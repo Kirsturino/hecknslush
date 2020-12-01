@@ -12,10 +12,9 @@ REFACTOR:
 Yes
 - Clean melee code with local variables instead of mega if statements
 - Calculate hitbox animation to match the timing of hitbox lifetime
-- Move attack code to global status, so it's usable by both enemies and player
 - Standardize movement structs
-- Optimize enemy AI
-	- Pretty sure they will tank performance on a potato, lol
+- Generalise state switches for different attacks
+
 
 Maybe
 - Optimize multispread calculation
@@ -26,6 +25,7 @@ Maybe
 
 ---------------------------------------------------------------------------
 KNOWN BUGS:
+- Ranged ability aiming is broken
 
 COMBAT REWORK:
 - Remove combos

@@ -12,6 +12,7 @@ enum verbs {
 	down,
 	up,
 	attack,
+	attack2,
 	dodge,
 	aim
 }
@@ -23,10 +24,10 @@ input_default_key(ord("W"), verbs.up);
 input_default_key(ord("S"), verbs.down);
 input_default_key(vk_space, verbs.dodge);
 input_default_mouse_button(mb_left, verbs.attack, true);
+input_default_mouse_button(mb_middle, verbs.attack2, true);
 input_default_mouse_button(mb_right, verbs.aim, true);
 
-#macro MELEE_BUFFER 100
-#macro SHOOT_BUFFER 100
+#macro ATTACK_BUFFER 200
 #macro DODGE_BUFFER 200
 
 //Input jank
@@ -120,7 +121,7 @@ curDodge = {
 
 //Create generic attack structs for each of your abilities
 //THIS IS WIP and some stuff is hardcoded atm
-abilityAmount = 2;
+abilityAmount = 4;
 for (var i = 0; i < abilityAmount; ++i)
 {
     attack[i] = new attackStruct();
@@ -179,8 +180,59 @@ attackSlots[0] = {
 	zoom :					0.4,
 	spread :				0,
 }	
-
+	
 attackSlots[1] = {
+	//Info
+	name :					"Melee Weapon",
+	type :					weapons.melee,
+	clr :					c_red,
+	htbx :					oHitbox,
+	spr :					sSlash,
+	
+	//Hitbox pattern stuff
+	amount :				1,
+	delay :					0,
+	burstAmount :			0,
+	burstDelay :			0,
+	multiSpread :			0,
+	
+	//Hitbox movement 
+	fric :					0,
+	spd :					0,
+	
+	//Hitbox active start and end
+	start :					2,
+	length :				10,
+	
+	//Important values
+	dmg:					1,
+	life :					12,
+	size :					1,
+	
+	//Misc. values
+	destroyOnStop :			true,
+	destroyOnCollision :	true,
+	knockback :				2,
+	piercing :				true,
+	
+	//Values that affect player while attacking
+	push :					1,
+	
+	//Cooldowns and timing
+	dur :					32,
+	cooldown :				1,
+	
+	//Melee exclusive
+	reach :					32, //Ranged reach is also tied to gun sprite
+	mirror :				true,
+	
+	//Ranged exclusive
+	projSpr :				sProjectile,
+	zoom :					0.4,
+	spread :				0,
+}	
+
+attackSlots[2] = {
 	//Info
 	name :					"Ranged Weapon",
 	type :					weapons.ranged,
@@ -220,7 +272,7 @@ attackSlots[1] = {
 	
 	//Cooldowns and timing
 	dur :					30,
-	cooldown :				60,
+	cooldown :				180,
 	
 	//Melee exclusive
 	reach :					12, //Ranged reach is also tied to gun sprite
@@ -230,6 +282,58 @@ attackSlots[1] = {
 	projSpr :				sProjectile,
 	zoom :					0.4,
 }
+	
+attackSlots[3] = {
+	//Info
+	name :					"Ranged Weapon",
+	type :					weapons.ranged,
+	clr :					c_red,
+	htbx :					oHitbox,
+	spr :					sGun,
+	
+	//Hitbox pattern stuff
+	amount :				10,
+	delay :					5,
+	burstAmount :			0,
+	burstDelay :			20,
+	spread :				10,
+	multiSpread :			0,
+	
+	//Hitbox movement 
+	fric :					0.06,
+	spd :					6,
+	
+	//Hitbox active start and end
+	start :					2,
+	length :				10,
+	
+	//Important values
+	dmg:					0.4,
+	life :					180,
+	size :					1,
+	
+	//Misc. values
+	destroyOnStop :			true,
+	destroyOnCollision :	true,
+	knockback :				0.2,
+	piercing :				true,
+	
+	//Values that affect player while attacking
+	push :					-0.2,
+	
+	//Cooldowns and timing
+	dur :					30,
+	cooldown :				180,
+	
+	//Melee exclusive
+	reach :					12, //Ranged reach is also tied to gun sprite
+	mirror :				true,
+	
+	//Ranged exclusive
+	projSpr :				sProjectile,
+	zoom :					0.4,
+}
+	
 	
 #endregion
 
@@ -258,8 +362,9 @@ function playerGrounded() {
 	
 	//State switches
 	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER)) toDodging();
-	if (attack[0].cooldown == 0 && input_check_press(verbs.attack, 0, MELEE_BUFFER)) toAttacking();
-	if (attack[1].cooldown == 0 && input_check(verbs.aim)) toAiming();
+	if (attack[0].cooldown == 0 && input_check_press(verbs.attack, 0, ATTACK_BUFFER)) { toAttacking(); ATK = 0; }
+	if (attack[1].cooldown == 0 && input_check_press(verbs.attack2, 0, ATTACK_BUFFER)) { toAttacking(); ATK = 1; }
+	if (input_check(verbs.aim)) toAiming();
 	
 	//Player can sprint by holding dodge button for long enough
 	if (input_check(verbs.dodge)) {
@@ -291,7 +396,7 @@ function playerSprinting() {
 	part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 1);
 	
 	//State switches
-	if (attack[0].cooldown == 0 && input_check_press(verbs.attack, 0, MELEE_BUFFER)) {
+	if (attack[0].cooldown == 0 && input_check_press(verbs.attack, 0, ATTACK_BUFFER)) {
 		sprint.buildup = 0;
 		move.lastDir = move.dir;
 		toAttacking();
@@ -351,8 +456,9 @@ function playerAiming() {
 	
 	//State switch
 	if (input_check_release(verbs.aim)) { toGrounded(); }
-	else if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER)) { toDodging(); } 
-	else if (attack[ATK].cooldown == 0 && input_check_press(verbs.attack, 0, SHOOT_BUFFER)) { toAttacking(); }
+	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER)) { toDodging(); } 
+	if (attack[2].cooldown == 0 && input_check_press(verbs.attack, 0, ATTACK_BUFFER)) { toAttacking(); ATK = 2; }
+	if (attack[3].cooldown == 0 && input_check_press(verbs.attack2, 0, ATTACK_BUFFER)) { toAttacking(); ATK = 3; }
 }
 
 function playerDodging() {
@@ -407,11 +513,7 @@ function toGrounded() {
 	drawFunction = nothing;
 }
 	
-function toAttacking() {
-	//Hardcoded while working out new system
-	if (state == playerAiming)	{ATK = 1;}
-	else						{ATK = 0;}
-	
+function toAttacking() {	
 	//Instant attack when transitioning
 	attack[ATK].dir = getAttackDir();
 	performAttack(attackSlots[ATK], attack[ATK]);
@@ -421,7 +523,6 @@ function toAttacking() {
 }
 
 function toAiming() {
-	ATK = 1;
 	state = playerAiming;
 	drawFunction = drawAimIndicator;
 }
@@ -663,7 +764,7 @@ function drawAimIndicator() {
 	if (state == playerAiming) 
 	{
 		var dir = getAttackDir();
-	} else if (state == playerAttacking && attackSlots[ATK].type == weapons.ranged)
+	} else if (state == playerAttacking && wpn.type == weapons.ranged)
 	{
 		var dir = atk.htbxDir;
 		if (atk.count != wpn.amount) dir += random_range(-wpn.spread, wpn.spread) * 0.2;
@@ -675,7 +776,8 @@ function drawAimIndicator() {
 	
 	var yScale = (dir > 90 && dir < 270) ? -1 : 1;
 	
-	draw_sprite_ext(wpn.spr, 0, drawX, drawY, 1, yScale, dir, c_white, 1);
+	//Currently hardcoded to always hold this slot's specific gun sprite due to ambiquity when aiming
+	draw_sprite_ext(attackSlots[2].spr, 0, drawX, drawY, 1, yScale, dir, c_white, 1);
 }
 
 function cameraStateSwitch() {
