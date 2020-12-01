@@ -3,13 +3,15 @@
 
 atk = {
 	dur : 0,
+	maxDur : 0,
 	dmg : 0,
 	knockback : 0,
 	piercing : true,
 	damagedEnemies : ds_list_create(),
 	destroyOnStop : false,
 	destroyOnCollision : false,
-	delay : 0,
+	hitDelay : 0,
+	hitEnd : 0,
 	target : oEnemyBase
 }
 

@@ -21,3 +21,13 @@ for (var i = 0; i < combat.hp; ++i)
 }
 
 //Draw ability indicators
+for (var i = 0; i < abilityAmount; ++i)
+{
+	c = c_white;
+	draw_rectangle_color(margin + i * space - size-2, viewHeight - margin*2 - size-2, margin + i * space + size+2, viewHeight - margin*2 + size+2, c, c, c, c, true);
+	
+	c = c_red;
+	var rectBottom = viewHeight - margin*2 + size;
+	var rectFill = size*2 *  (1 - attack[i].cooldown / attackSlots[i].cooldown);
+	draw_rectangle_color(margin + i * space - size, rectBottom - rectFill, margin + i * space + size, rectBottom, c, c, c, c, false);
+}

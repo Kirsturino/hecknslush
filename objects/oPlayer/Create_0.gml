@@ -120,7 +120,7 @@ curDodge = {
 
 //Create generic attack structs for each of your abilities
 //THIS IS WIP and some stuff is hardcoded atm
-var abilityAmount = 2;
+abilityAmount = 2;
 for (var i = 0; i < abilityAmount; ++i)
 {
     attack[i] = new attackStruct();
@@ -160,7 +160,7 @@ attackSlots[0] = {
 	//Misc. values
 	destroyOnStop :			true,
 	destroyOnCollision :	true,
-	knockback :				1,
+	knockback :				2,
 	piercing :				true,
 	
 	//Values that affect player while attacking
@@ -168,7 +168,7 @@ attackSlots[0] = {
 	
 	//Cooldowns and timing
 	dur :					32,
-	cooldown :				0,
+	cooldown :				1,
 	
 	//Melee exclusive
 	reach :					32, //Ranged reach is also tied to gun sprite

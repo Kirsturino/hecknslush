@@ -162,10 +162,12 @@ function spawnHitbox(weapon, attack)
 			htbx.move.vsp = lengthdir_y(weapon.spd, attack.htbxDir);
 			htbx.move.fric = weapon.fric;
 	
-			htbx.atk.dur = weapon.life;	
+			htbx.atk.dur = weapon.life;
+			htbx.atk.maxDur = weapon.life;	
 			htbx.atk.dmg = weapon.dmg;
 			htbx.atk.knockback = weapon.knockback;
-			htbx.atk.delay = weapon.start;
+			htbx.atk.hitDelay = weapon.start;
+			htbx.atk.hitEnd = weapon.length;
 			
 			//Visuals
 			htbx.visuals.type = weapons.melee;

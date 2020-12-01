@@ -10,16 +10,17 @@ x += move.hsp * delta;
 y += move.vsp * delta;
 
 //Hitbox only becomes active when delay is over
-atk.delay = approach(atk.delay, 0, 1);
+atk.hitDelay = approach(atk.hitDelay, 0, 1);
 
-if (atk.delay == 0) {
-	if (atk.piercing) {
+if (atk.hitDelay == 0 && atk.dur > atk.maxDur - atk.hitEnd)
+{
+	if (atk.piercing)
+	{
 		getTouchingObjects(atk.damagedEnemies, atk.target, dealDamage);
-	} else {
+	} else
+	{
 		var enemy = instance_place(x, y, atk.target);
-		if (enemy != noone) {
-			dealDamage(enemy);
-		}
+		if (enemy != noone) { dealDamage(enemy); }
 	}
 }
 
