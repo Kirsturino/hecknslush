@@ -156,6 +156,9 @@ function spawnHitbox(weapon, attack)
 			var htbx = instance_create_layer(spawnX, spawnY, "Instances", weapon.htbx);
 			htbx.sprite_index = weapon.spr;
 			htbx.image_angle = attack.htbxDir;
+			htbx.visuals.size = weapon.size;
+			htbx.image_xscale = weapon.size;
+			htbx.image_yscale = weapon.size;
 			if (weapon.mirror) htbx.image_yscale = attack.mirror;
 	
 			htbx.move.hsp = lengthdir_x(weapon.spd, attack.htbxDir);
@@ -208,6 +211,8 @@ function spawnHitbox(weapon, attack)
 			htbx.sprite_index = weapon.projSpr;
 			htbx.image_angle = attack.htbxDir;
 			htbx.visuals.size = weapon.size;
+			htbx.image_xscale = weapon.size;
+			htbx.image_yscale = weapon.size;
 	
 			//Movement
 			htbx.move.hsp = lengthdir_x(weapon.spd + random(weapon.spread) * 0.01, attack.htbxDir);

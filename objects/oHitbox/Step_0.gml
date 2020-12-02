@@ -34,10 +34,10 @@ if (atk.dur <= 0) destroySelf();
 visuals.frm = approach(visuals.frm, image_number - 1, visuals.animSpd);
 image_index = floor(visuals.frm);
 
-if (atk.destroyOnStop) {
-	var size = (abs(move.hsp) + abs(move.vsp))/4;
-	image_xscale = size;
-}
+//if (atk.destroyOnStop) {
+//	var size = (abs(move.hsp) + abs(move.vsp))/4 * visuals.size;
+//	image_xscale = size;
+//}
 
 //Particles
 if (visuals.type = weapons.ranged) {
