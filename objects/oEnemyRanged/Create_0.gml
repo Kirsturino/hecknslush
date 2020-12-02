@@ -89,7 +89,7 @@ visuals.corpse = sEnemyCorpse;
 sprite_index = move.collMask;
 
 //Declare state
-state = 0;
+state = nothing;
 DoLater(1, function(data) {state = idle;},0,true);
 drawFunction = nothing;
 

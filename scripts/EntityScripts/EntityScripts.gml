@@ -210,9 +210,9 @@ function spawnHitbox(weapon, attack)
 			htbx.visuals.size = weapon.size;
 	
 			//Movement
-			htbx.move.hsp = lengthdir_x(weapon.spd, attack.htbxDir);
-			htbx.move.vsp = lengthdir_y(weapon.spd, attack.htbxDir);
-			htbx.move.fric = weapon.fric + random(weapon.spread) * 0.001;
+			htbx.move.hsp = lengthdir_x(weapon.spd + random(weapon.spread) * 0.01, attack.htbxDir);
+			htbx.move.vsp = lengthdir_y(weapon.spd + random(weapon.spread) * 0.01, attack.htbxDir);
+			htbx.move.fric = weapon.fric;
 	
 			//Combat stuff
 			htbx.atk.dur = weapon.life;	

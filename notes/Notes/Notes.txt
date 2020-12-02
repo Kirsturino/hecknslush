@@ -20,12 +20,10 @@ Maybe
 - Optimize multispread calculation
 - Move hitbox collision checks to enemies (?)
 	- This depends on how many enemies/bullets we want to have on screen at a time
-- Redo whole attacking code base from scratch
-	- Or just organize it so it's more readable
+- Add possibility for anticipation time for attacking (currently kinda hardcoded into enemies)?
 
 ---------------------------------------------------------------------------
 KNOWN BUGS:
-- Ranged ability aiming is broken
 
 COMBAT REWORK:
 - Remove combos

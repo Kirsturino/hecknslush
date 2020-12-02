@@ -29,7 +29,7 @@ visuals = {
 	rot : 0
 }
 
-state = 0;
+state = nothing;
 drawFunction = nothing;
 
 function destroySelf(corpseSprite)

@@ -38,9 +38,9 @@ input_consume(verbs.dodge);
 
 #region PLAYER STATES
 //Set player state jank :)
-state = 0;
+state = nothing;
 DoLater(1, function(data) {state = playerGrounded;},0,true);
-drawFunction = 0;
+drawFunction = nothing;
 DoLater(1, function(data) {drawFunction = nothing;},0,true);
 
 //Circular buffer for states, normalize size for different target framerates
@@ -362,9 +362,9 @@ function playerGrounded() {
 	
 	//State switches
 	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER)) toDodging();
-	if (attack[0].cooldown == 0 && input_check_press(verbs.attack, 0, ATTACK_BUFFER)) { toAttacking(); ATK = 0; }
-	if (attack[1].cooldown == 0 && input_check_press(verbs.attack2, 0, ATTACK_BUFFER)) { toAttacking(); ATK = 1; }
-	if (input_check(verbs.aim)) toAiming();
+	else if (attack[0].cooldown == 0 && input_check_press(verbs.attack, 0, ATTACK_BUFFER)) { ATK = 0; toAttacking(); }
+	else if (attack[1].cooldown == 0 && input_check_press(verbs.attack2, 0, ATTACK_BUFFER)) { ATK = 1; toAttacking(); }
+	else if (input_check(verbs.aim)) { toAiming(); }
 	
 	//Player can sprint by holding dodge button for long enough
 	if (input_check(verbs.dodge)) {
@@ -374,9 +374,7 @@ function playerGrounded() {
 			move.dir = move.lastDir;
 			toSprinting();
 		}
-	} else {
-		sprint.buildup = 0;
-	}
+	} else { sprint.buildup = 0; }
 }
 
 function playerSprinting() {
@@ -396,11 +394,20 @@ function playerSprinting() {
 	part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 1);
 	
 	//State switches
-	if (attack[0].cooldown == 0 && input_check_press(verbs.attack, 0, ATTACK_BUFFER)) {
+	if (attack[0].cooldown == 0 && input_check_press(verbs.attack, 0, ATTACK_BUFFER))
+	{
 		sprint.buildup = 0;
 		move.lastDir = move.dir;
+		ATK = 0;
+		toAttacking();
+	} else if (attack[1].cooldown == 0 && input_check_press(verbs.attack2, 0, ATTACK_BUFFER))
+	{
+		sprint.buildup = 0;
+		move.lastDir = move.dir;
+		ATK = 1;
 		toAttacking();
 	}
+
 	
 	if (input_check(verbs.aim)) {
 		sprint.buildup = 0;
@@ -456,9 +463,9 @@ function playerAiming() {
 	
 	//State switch
 	if (input_check_release(verbs.aim)) { toGrounded(); }
-	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER)) { toDodging(); } 
-	if (attack[2].cooldown == 0 && input_check_press(verbs.attack, 0, ATTACK_BUFFER)) { toAttacking(); ATK = 2; }
-	if (attack[3].cooldown == 0 && input_check_press(verbs.attack2, 0, ATTACK_BUFFER)) { toAttacking(); ATK = 3; }
+	else if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER)) { toDodging(); } 
+	else if (attack[2].cooldown == 0 && input_check_press(verbs.attack, 0, ATTACK_BUFFER)) { ATK = 2; toAttacking(); }
+	else if (attack[3].cooldown == 0 && input_check_press(verbs.attack2, 0, ATTACK_BUFFER)) { ATK = 3; toAttacking(); }
 }
 
 function playerDodging() {
@@ -470,19 +477,10 @@ function playerDodging() {
 	if (dodge.dur <= 0) {
 		move.hsp = lengthdir_x(move.curMaxSpd, dodge.dir);
 		move.vsp = lengthdir_y(move.curMaxSpd, dodge.dir);
+		dodge.cooldown = curDodge.cooldown;
 		
-		if (input_check(verbs.aim)) {
-			dodge.cooldown = curDodge.cooldown;
-			toAiming();
-		} else {
-			dodge.cooldown = curDodge.cooldown;
-			if (input_check(verbs.dodge)) {
-				move.curMaxSpd = sprint.maxSpd;
-				move.hsp = lengthdir_x(move.curMaxSpd, dodge.dir);
-				move.vsp = lengthdir_y(move.curMaxSpd, dodge.dir);
-			}
-			toGrounded();
-		}
+		if (input_check(verbs.aim)) { toAiming(); }
+		else						{ toGrounded(); }
 	}
 	
 	//FX
