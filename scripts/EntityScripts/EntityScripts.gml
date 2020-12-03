@@ -97,7 +97,8 @@ function dealDamage(enemy)
 			break;
 		
 			case oPlayer:
-				if (oPlayer.combat.iframes == 0) {
+				if (oPlayer.combat.iframes <= 0)
+				{
 					takeDamage(htbx.atk.dmg);
 					with (htbx) destroySelf();
 					if (combat.hp <= 0) toDead();
@@ -151,6 +152,36 @@ function canSee(instance)
 	if (los == noone) return true;
 	
 	return false;
+}
+
+//Enemy functions
+function drawAttackIndicator(visuals, weapon, attack)
+{
+	var camX = camera_get_view_x(view);
+	var camY = camera_get_view_y(view);
+	var c = c_red;
+	var c2 = transparent;
+	
+	switch (visuals.indicatorType)
+	{
+		case indicator.line:
+			var drawX = x + lengthdir_x(visuals.indicatorLength, attack.dir) - camX;
+			var drawY = y + lengthdir_y(visuals.indicatorLength, attack.dir) - camY;
+			
+			draw_line_width_color(x - camX, y - camY, drawX, drawY, 10, c, c2);
+		break;
+		
+		case indicator.triangle:
+			var drawX = x - camX;
+			var drawY = y - camY;
+			var drawX2 = x + lengthdir_x(visuals.indicatorLength, attack.dir - weapon.spread) - camX;
+			var drawY2 = y + lengthdir_y(visuals.indicatorLength, attack.dir - weapon.spread) - camY;
+			var drawX3 = x + lengthdir_x(visuals.indicatorLength, attack.dir + weapon.spread) - camX;
+			var drawY3 = y + lengthdir_y(visuals.indicatorLength, attack.dir + weapon.spread) - camY;
+			
+			draw_triangle_color(drawX, drawY, drawX2, drawY2, drawX3, drawY3, c, c2, c2, false);
+		break;
+	}
 }
 
 #region ATTACKING

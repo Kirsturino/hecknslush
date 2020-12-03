@@ -210,7 +210,7 @@ function burstBlaster() constructor {
 	length =				10;
 	
 	//Important values
-	dmg=					0.4;
+	dmg=					0.6;
 	life =					180;
 	size =					1;
 	
@@ -318,7 +318,7 @@ function rangedEnemyWeapon() constructor {
 	length =				10;
 	
 	//Important values
-	dmg=					0.4;
+	dmg=					1;
 	life =					180;
 	size =					1;
 	

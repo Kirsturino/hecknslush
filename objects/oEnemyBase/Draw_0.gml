@@ -1,4 +1,4 @@
-drawFunction();
+//drawFunction();
 
 if (visuals.flash > 0) {
 	shader_set(shdDrawWhite);

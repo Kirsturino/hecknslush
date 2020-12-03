@@ -26,7 +26,9 @@ visuals = {
 	spd : 1,
 	xScale : 1,
 	yScale : 1,
-	rot : 0
+	rot : 0,
+	indicatorLength : 128,
+	indicatorType : indicator.line,
 }
 
 state = nothing;

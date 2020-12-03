@@ -9,7 +9,7 @@ combat = {
 	fleeRadius : 160,
 	stunDur : 0,
 	stunnable : true,
-	weight : 1
+	weight : 1,
 }
 
 weapon = new rangedEnemyWeapon();
@@ -32,6 +32,8 @@ move = {
 
 visuals.curSprite = sEnemyRanged;
 visuals.corpse = sEnemyCorpse;
+visuals.indicatorLength = 240;
+visuals.indicatorType = indicator.triangle;
 
 //Set mask
 sprite_index = move.collMask;
@@ -160,12 +162,4 @@ function repositioningMovement(dist, dir) {
 //Other
 function incrementCooldowns() {
 	attack.cooldown = approach(attack.cooldown, 0, 1);
-}
-
-function drawAttackIndicator()
-{
-	var drawX = x + lengthdir_x(128, attack.dir);
-	var drawY = y + lengthdir_y(128, attack.dir);
-	var c = make_color_hsv(0, 255, 50);
-	draw_line_width_color(x, y, drawX, drawY, 10, c, c);
 }

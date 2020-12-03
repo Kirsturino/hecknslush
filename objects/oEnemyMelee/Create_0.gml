@@ -8,10 +8,12 @@ combat = {
 	chaseRadius : 240,
 	stunDur : 0,
 	stunnable : true,
-	weight : 1
+	weight : 1,
+	indicatorLength : 128,
+	indicatorType : indicator.line,
 }
 
-dashAttack = {
+weapon = {
 	dur : 32,
 	anticipationDur : 64,
 	spd : 2.5,
@@ -94,7 +96,7 @@ function attacking() {
 		y += move.vsp * delta;
 		
 		if (attack.dur == 0) {			
-			attack.cooldown = dashAttack.cooldown;
+			attack.cooldown = weapon.cooldown;
 			attack.damaged = false;
 			
 			toChasing();
@@ -135,10 +137,10 @@ function toChasing() {
 
 function toAttacking() {
 	//Impart dash attack qualities to current attack
-	attack.dur = dashAttack.dur;
-	attack.anticipationDur = dashAttack.anticipationDur;
-	attack.spd = dashAttack.spd;
-	attack.dmg = dashAttack.dmg;
+	attack.dur = weapon.dur;
+	attack.anticipationDur = weapon.anticipationDur;
+	attack.spd = weapon.spd;
+	attack.dmg = weapon.dmg;
 	attack.dir = point_direction(x, y, oPlayer.x, oPlayer.y);
 
 	visuals.curSprite = sEnemyMeleeAnticipation;
@@ -147,7 +149,7 @@ function toAttacking() {
 }
 
 function toStunned(duration) {
-	attack.cooldown = dashAttack.cooldown;
+	attack.cooldown = weapon.cooldown;
 	combat.stunDur = duration;
 	
 	visuals.curSprite = sEnemyMeleeStunned;
@@ -184,12 +186,4 @@ function chaseMovement(xx, yy, lineOfSight, dist) {
 //Other
 function incrementCooldowns() {
 	attack.cooldown = approach(attack.cooldown, 0, 1);
-}
-
-function drawAttackIndicator()
-{
-	var drawX = x + lengthdir_x(128, attack.dir);
-	var drawY = y + lengthdir_y(128, attack.dir);
-	var c = make_color_hsv(0, 255, 50);
-	draw_line_width_color(x, y, drawX, drawY, 10, c, c);
 }
