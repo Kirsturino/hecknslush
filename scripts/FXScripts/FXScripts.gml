@@ -1,3 +1,4 @@
+//Default hitflash duration
 #macro hitFlash 14
 
 function freeze(amount) {

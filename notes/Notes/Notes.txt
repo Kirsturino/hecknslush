@@ -6,24 +6,28 @@ FEATURES:
 - Dungeon generation
 - Culling to walls and enemies
 - Controller support
+- Global tuning values
 
 ---------------------------------------------------------------------------
 REFACTOR:
 Yes
-- Clean melee code with local variables instead of mega if statements
+- Clean attack code with local variables instead of mega if statements
 - Calculate hitbox animation to match the timing of hitbox lifetime
-- Standardize movement structs
-- Generalise state switches for different attacks
-
+- Standardize movement and combat structs
+- Remove switch case from spawnHitbox, add particle functions to ability structs
+- Generalize dealDamage funtion
+- Instead of having a billion if statement in hitbox object, add extra functionality as functions when spawning hitbox
+	- These will be pushed into a behaviour array where they will be ran by the hitbox
 
 Maybe
 - Optimize multispread calculation
 - Move hitbox collision checks to enemies (?)
 	- This depends on how many enemies/bullets we want to have on screen at a time
-- Add possibility for anticipation time for attacking (currently kinda hardcoded into enemies)?
+- Add possibility for anticipation time for attacking? (currently kinda hardcoded into enemies)
 
 ---------------------------------------------------------------------------
 KNOWN BUGS:
+- None C:
 
 COMBAT REWORK:
 - Remove combos

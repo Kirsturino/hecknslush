@@ -122,217 +122,18 @@ curDodge = {
 //Create generic attack structs for each of your abilities
 //THIS IS WIP and some stuff is hardcoded atm
 abilityAmount = 4;
-for (var i = 0; i < abilityAmount; ++i)
-{
-    attack[i] = new attackStruct();
-}
+for (var i = 0; i < abilityAmount; ++i) { attack[i] = new attackStruct(); }
 
 attackSlots = array_create(abilityAmount, 0);
 
 //Testing weapon struct idea. Data from a list of weapons would be pulled here to be used locally
-attackSlots[0] = {
-	//Info
-	name :					"Melee Weapon",
-	type :					weapons.melee,
-	clr :					c_red,
-	htbx :					oHitbox,
-	spr :					sSlash,
-	
-	//Hitbox pattern stuff
-	amount :				1,
-	delay :					0,
-	burstAmount :			0,
-	burstDelay :			0,
-	multiSpread :			0,
-	
-	//Hitbox movement 
-	fric :					0,
-	spd :					0,
-	
-	//Hitbox active start and end
-	start :					2,
-	length :				10,
-	
-	//Important values
-	dmg:					1,
-	life :					12,
-	size :					1,
-	
-	//Misc. values
-	destroyOnStop :			false,
-	destroyOnCollision :	false,
-	knockback :				2,
-	piercing :				true,
-	
-	//Values that affect player while attacking
-	push :					1,
-	
-	//Cooldowns and timing
-	dur :					32,
-	cooldown :				1,
-	
-	//Melee exclusive
-	reach :					32, //Ranged reach is also tied to gun sprite
-	mirror :				true,
-	
-	//Ranged exclusive
-	projSpr :				sProjectile,
-	zoom :					0.4,
-	spread :				0,
-}	
-	
-attackSlots[1] = {
-	//Info
-	name :					"Spinslash",
-	type :					weapons.melee,
-	clr :					c_red,
-	htbx :					oHitbox,
-	spr :					sThrust,
-	
-	//Hitbox pattern stuff
-	amount :				36,
-	delay :					2,
-	burstAmount :			0,
-	burstDelay :			0,
-	multiSpread :			1080,
-	
-	//Hitbox movement 
-	fric :					0,
-	spd :					0,
-	
-	//Hitbox active start and end
-	start :					0,
-	length :				12,
-	
-	//Important values
-	dmg:					0.4,
-	life :					12,
-	size :					1,
-	
-	//Misc. values
-	destroyOnStop :			false,
-	destroyOnCollision :	false,
-	knockback :				0.2,
-	piercing :				true,
-	
-	//Values that affect player while attacking
-	push :					2,
-	
-	//Cooldowns and timing
-	dur :					64,
-	cooldown :				240,
-	
-	//Melee exclusive
-	reach :					48, //Ranged reach is also tied to gun sprite
-	mirror :				false,
-	
-	//Ranged exclusive
-	projSpr :				sProjectile,
-	zoom :					0.4,
-	spread :				0,
-}	
+attackSlots[0] = new basicSlash();
 
-attackSlots[2] = {
-	//Info
-	name :					"Ranged Weapon",
-	type :					weapons.ranged,
-	clr :					c_red,
-	htbx :					oHitbox,
-	spr :					sGun,
+attackSlots[1] = new spinSlash();	
+
+attackSlots[2] = new burstBlaster();
 	
-	//Hitbox pattern stuff
-	amount :				10,
-	delay :					5,
-	burstAmount :			0,
-	burstDelay :			20,
-	spread :				10,
-	multiSpread :			0,
-	
-	//Hitbox movement 
-	fric :					0.06,
-	spd :					6,
-	
-	//Hitbox active start and end
-	start :					2,
-	length :				10,
-	
-	//Important values
-	dmg:					0.4,
-	life :					180,
-	size :					1,
-	
-	//Misc. values
-	destroyOnStop :			true,
-	destroyOnCollision :	true,
-	knockback :				0.2,
-	piercing :				true,
-	
-	//Values that affect player while attacking
-	push :					-0.2,
-	
-	//Cooldowns and timing
-	dur :					30,
-	cooldown :				180,
-	
-	//Melee exclusive
-	reach :					12, //Ranged reach is also tied to gun sprite
-	mirror :				true,
-	
-	//Ranged exclusive
-	projSpr :				sProjectile,
-	zoom :					0.4,
-}
-	
-attackSlots[3] = {
-	//Info
-	name :					"Double Burst",
-	type :					weapons.ranged,
-	clr :					c_red,
-	htbx :					oHitbox,
-	spr :					sGun,
-	
-	//Hitbox pattern stuff
-	amount :				10,
-	delay :					0,
-	burstAmount :			1,
-	burstDelay :			20,
-	spread :				0,
-	multiSpread :			090,
-	
-	//Hitbox movement 
-	fric :					0.03,
-	spd :					3,
-	
-	//Hitbox active start and end
-	start :					2,
-	length :				10,
-	
-	//Important values
-	dmg:					1,
-	life :					180,
-	size :					2,
-	
-	//Misc. values
-	destroyOnStop :			true,
-	destroyOnCollision :	true,
-	knockback :				0.2,
-	piercing :				false,
-	
-	//Values that affect player while attacking
-	push :					-0.2,
-	
-	//Cooldowns and timing
-	dur :					60,
-	cooldown :				240,
-	
-	//Melee exclusive
-	reach :					12, //Ranged reach is also tied to gun sprite
-	mirror :				true,
-	
-	//Ranged exclusive
-	projSpr :				sProjectile,
-	zoom :					0.4,
-}
+attackSlots[3] = new doubleWave();
 	
 	
 #endregion
@@ -451,6 +252,7 @@ function playerAttacking() {
 	
 	//Make player be able to break out of attack at will
 	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER)) {
+		attack[ATK].cooldown = attackSlots[ATK].cooldown;
 		resetAttack(attackSlots[ATK], attack[ATK]);
 		toDodging();
 	}
@@ -484,16 +286,17 @@ function playerDodging() {
 	}
 	
 	//FX
+	var offset = sprite_height / 2;
 	part_type_direction(global.hangingDustPart, dodge.dir - 20, dodge.dir + 20 , 0, 0);
 	part_type_speed(global.hangingDustPart, 2, 3, -0.01, 0);
-	if (random(1) > 0.7) part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 1);
+	if (random(1) > 0.7) part_particles_create(global.ps, x, bbox_bottom - offset, global.hangingDustPart, 1);
 	
-	part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
-	part_particles_create(global.ps, x, y, global.dodgePart, 1);
+	part_particles_create(global.ps, x, bbox_bottom - offset, global.bulletTrail, 1);
+	part_particles_create(global.ps, x, y - offset, global.dodgePart, 1);
 	
 	part_type_direction(global.hangingDustPart, dodge.dir - 90, dodge.dir + 90, 0, 0);
 	part_type_speed(global.hangingDustPart, 0.1, 0.2, -0.01, 0);
-	part_particles_create(global.ps, x, bbox_bottom, global.hangingDustPart, 1);
+	part_particles_create(global.ps, x, bbox_bottom - offset, global.hangingDustPart, 1);
 }
 	
 #endregion
@@ -746,7 +549,7 @@ function incrementVerbCooldowns() {
 	
 	var length = array_length(attack);
 	for (var i = 0; i < length; ++i) {
-	    attack[i].cooldown = approach(attack[i].cooldown, 0, 1);
+	    if (attackSlots[i].cooldownType == recharge.time) attack[i].cooldown = approach(attack[i].cooldown, 0, 1);
 	}
 	
 	dodge.cooldown = approach(dodge.cooldown, 0, 1);
@@ -756,21 +559,31 @@ function incrementVerbCooldowns() {
 }
 
 function drawAimIndicator() {
-	var wpn = attackSlots[ATK];
+	//Third ability will determine gun visuals
+	var wpn = attackSlots[2];
 	var atk = attack[ATK];
 	
 	if (state == playerAiming) 
 	{
 		var dir = getAttackDir();
-	} else if (state == playerAttacking && wpn.type == weapons.ranged)
+		
+	} else if (wpn.aimable)
+	{
+		var dir = point_direction(x, y, mouse_x, mouse_y);
+	} else if (state == playerAttacking && wpn.type == weapons.ranged && wpn.delay != 0 && wpn.multiSpread == 0 && wpn.spread == 0)
 	{
 		var dir = atk.htbxDir;
 		if (atk.count != wpn.amount) dir += random_range(-wpn.spread, wpn.spread) * 0.2;
+		
+	} else if (state == playerAttacking && wpn.type == weapons.ranged)
+	{
+		var dir = atk.dir;
+		if (atk.count != wpn.amount) dir += random_range(-wpn.spread, wpn.spread) * 0.2;
 	}
 	
+	var offset = sprite_height / 2;
 	var drawX = x + lengthdir_x(wpn.reach - visuals.recoil, dir);
-	var drawY = y + lengthdir_y(wpn.reach - visuals.recoil, dir);
-	//if (dir < 180) { var yScale = 1; } else { var yScale = -1; }
+	var drawY = y + lengthdir_y(wpn.reach - visuals.recoil, dir) - offset;
 	
 	var yScale = (dir > 90 && dir < 270) ? -1 : 1;
 	

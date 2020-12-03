@@ -1,4 +1,5 @@
 //When using this collision, make sure that the origin on collision masks is set to middle center
+//This is to be used with objects that WILL NOT ROTATE
 
 function horizontalCollision() 
 {

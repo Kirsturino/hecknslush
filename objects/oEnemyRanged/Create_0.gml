@@ -12,59 +12,7 @@ combat = {
 	weight : 1
 }
 
-weapon = {
-	//Info
-	name :					"Burst Blaster",
-	type :					weapons.ranged,
-	clr :					c_red,
-	htbx :					oHitbox,
-	spr :					sGun,
-	
-	//Hitbox pattern stuff
-	amount :				5,
-	delay :					5,
-	burstAmount :			0,
-	burstDelay :			20,
-	spread :				10,
-	multiSpread :			0,
-	
-	//Hitbox movement 
-	fric :					0.02,
-	spd :					3,
-	
-	//Hitbox active start and end
-	start :					2,
-	length :				10,
-	
-	//Important values
-	dmg:					0.4,
-	life :					180,
-	size :					1,
-	
-	//Misc. values
-	destroyOnStop :			true,
-	destroyOnCollision :	true,
-	knockback :				0.2,
-	piercing :				true,
-	
-	//Values that affect player while attacking
-	push :					0.4,
-	
-	//Cooldowns and timing
-	dur :					30,
-	cooldown :				60,
-	
-	//Melee exclusive
-	reach :					12, //Ranged reach is also tied to gun sprite
-	mirror :				true,
-	
-	//Ranged exclusive
-	projSpr :				sProjectile,
-	zoom :					0.4,
-	
-	//Enemy exclusive
-	anticipationDur :		64,
-}
+weapon = new rangedEnemyWeapon();
 
 attack = new attackStruct();
 

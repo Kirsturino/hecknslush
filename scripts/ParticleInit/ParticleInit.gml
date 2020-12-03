@@ -63,5 +63,5 @@ var p = global.currencyTrail;
 part_type_shape(p, pt_shape_disk);
 part_type_life(p, 30, 60);
 part_type_size(p, 0.05, 0.1, -0.01, 0);
-part_type_color1(p, c_red);
+part_type_color1(p, c_white);
  

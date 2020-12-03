@@ -34,61 +34,72 @@ function getTouchingObjects(list, object, func)
 function dealDamage(enemy)
 {
 	with (enemy) {
+		var htbx = other.id;
 		switch (other.atk.target) {
 			case oEnemyBase:
+			
+				//Hardcoded to give the player cooldowns, maybe refactor later
+				with  (oPlayer)
+				{
+					var length = array_length(attack);
+					for (var i = 0; i < length; ++i) {
+					    if (attackSlots[i].cooldownType == recharge.damage) attack[i].cooldown = approach(attack[i].cooldown, 0, htbx.atk.dmg * global.damageRechargeMultiplier);
+					}
+				}
+				
 				if (state == idle) {
 					move.aggroTimer = move.aggroTimerMax;
 				}
 		
 				//Reduce hp
-				combat.hp -= other.atk.dmg;
+				combat.hp -= htbx.atk.dmg;
 		
 				//Inflict knockback
-				if (other.move.hsp != 0 || other.move.vsp != 0) { var dir = other.move.dir; }
-				else											{ var dir = other.image_angle; }
+				if (htbx.move.hsp != 0 || htbx.move.vsp != 0) { var dir = htbx.move.dir; }
+				else											{ var dir = htbx.image_angle; }
 		
-				move.hsp += lengthdir_x(other.atk.knockback, dir);
-				move.vsp += lengthdir_y(other.atk.knockback, dir);
+				move.hsp += lengthdir_x(htbx.atk.knockback, dir);
+				move.vsp += lengthdir_y(htbx.atk.knockback, dir);
 				move.dir = dir;
 		
 				//visuals stuff
-				visuals.flash = max(hitFlash ,hitFlash * other.atk.dmg);
-				visuals.yScale += other.atk.dmg;
-				visuals.xScale -= other.atk.dmg;
+				visuals.flash = max(hitFlash ,hitFlash * htbx.atk.dmg);
+				visuals.yScale += htbx.atk.dmg;
+				visuals.xScale -= htbx.atk.dmg;
 		
 				//Hitstop & camera stuff
-				if (other.visuals.hitStop) {
-					freeze(other.atk.dmg * 40);
-					other.visuals.hitStop = false;
+				if (htbx.visuals.hitStop) {
+					freeze(htbx.atk.dmg * 40);
+					htbx.visuals.hitStop = false;
 				}
 		
-				shakeCamera(other.atk.dmg * 40, other.atk.dmg * 2, 4);
-				pushCamera(other.atk.dmg * 20, dir);
-				zoomCamera(1 - other.atk.dmg * 0.03);
+				shakeCamera(htbx.atk.dmg * 40, htbx.atk.dmg * 2, 4);
+				pushCamera(htbx.atk.dmg * 20, dir);
+				zoomCamera(1 - htbx.atk.dmg * 0.03);
 		
 				//Particles
-				part_particles_create(global.ps, x, y, global.hitPart, other.atk.dmg * 10);
+				part_particles_create(global.ps, x, y, global.hitPart, htbx.atk.dmg * 10);
 		
-				part_type_size(global.hitPart2, other.atk.dmg * 3.2, other.atk.dmg * 3.4, -other.atk.dmg * 0.3, 0);
+				part_type_size(global.hitPart2, htbx.atk.dmg * 3.2, htbx.atk.dmg * 3.4, -htbx.atk.dmg * 0.3, 0);
 				part_particles_create(global.ps, x, y, global.hitPart2, 1);
 
 				//Stun enemy if applicable
-				if (combat.stunnable && other.visuals.type == weapons.melee) toStunned(other.atk.dmg * 40);
+				if (combat.stunnable && htbx.visuals.type == weapons.melee) toStunned(htbx.atk.dmg * 40);
 		
 				//If enemy hp 0, kill 'em
 				if (combat.hp <= 0) {
 					destroySelf(visuals.corpse);
 				}
 				
-				with (other) {
+				with (htbx) {
 					if (!atk.piercing) destroySelf();
 				}
 			break;
 		
 			case oPlayer:
 				if (oPlayer.combat.iframes == 0) {
-					takeDamage(other.atk.dmg);
-					with (other) destroySelf();
+					takeDamage(htbx.atk.dmg);
+					with (htbx) destroySelf();
 					if (combat.hp <= 0) toDead();
 				}
 			break;
@@ -202,9 +213,6 @@ function spawnHitbox(weapon, attack)
 		#region
 			var spawnX = x + lengthdir_x(weapon.reach + sprite_get_width(weapon.spr), attack.htbxDir);
 			var spawnY = y + lengthdir_y(weapon.reach + sprite_get_width(weapon.spr), attack.htbxDir);
-		
-			//Apply random spread
-			attack.htbxDir += irandom_range(-weapon.spread, weapon.spread);
 	
 			//Impart weapon stats to hitbox
 			var htbx = instance_create_layer(spawnX, spawnY, "Instances", weapon.htbx);
@@ -253,12 +261,12 @@ function attackLogic(weapon, attack)
 {
 	if (attack.count < weapon.amount && attack.dur < weapon.dur - weapon.delay)
 	{
+		if (weapon.aimable) attack.dir = getAttackDir();
 		performAttack(weapon, attack);
 	} else if (attack.count == weapon.amount && attack.burstCount < weapon.burstAmount)
 	{
 		//If we have multiple bursts, reset attacks between bursts, increment burst counter and start new burst
 		attack.count = 0;
-		attack.dir = getAttackDir();
 		attack.burstCount++;
 		attack.dur = weapon.dur + weapon.burstDelay;
 	}
@@ -279,12 +287,14 @@ function performAttack(weapon, attack) {
 			{
 				attack.htbxDir += (weapon.multiSpread / (weapon.amount - 1) * attack.count) - weapon.multiSpread * .5;
 			}
+			
+			attack.htbxDir += irandom_range(-weapon.spread, weapon.spread);
 		
 			spawnHitbox(weapon, attack);
 			incrementAttack(weapon, attack);
 		}
 		
-		setAttackMovement(weapon.push * weapon.amount);
+		setAttackMovement(weapon.push * weapon.amount, weapon, attack);
 	} else
 	{ 
 		//This is where we go if we only shoot 1 bullet per frame, aka delay > 0
@@ -295,10 +305,12 @@ function performAttack(weapon, attack) {
 		{
 			attack.htbxDir = attack.dir + (weapon.multiSpread / (weapon.amount - 1) * attack.count) - weapon.multiSpread * .5;
 		}
+		
+		attack.htbxDir += irandom_range(-weapon.spread, weapon.spread);
 				
 		spawnHitbox(weapon, attack);
 		incrementAttack(weapon, attack);
-		setAttackMovement(weapon.push);
+		setAttackMovement(weapon.push, weapon, attack);
 	}
 }
 
@@ -329,13 +341,16 @@ function attackMovement() {
 	y += move.vsp * delta;
 }
 	
-function setAttackMovement(amount) {
+function setAttackMovement(amount, weapon, attack) {
 	switch (object_index)
 	{
 		case oPlayer:
-			if (input_player_source_get(0) == INPUT_SOURCE.KEYBOARD_AND_MOUSE)	{ move.dir = point_direction(x, y, mouse_x, mouse_y); }
-			else if (!isHoldingDirection())										{ move.dir = move.lastDir; }
-			else																{ move.dir = getMovementInputDirection(); }
+			//if (input_player_source_get(0) == INPUT_SOURCE.KEYBOARD_AND_MOUSE)	{ move.dir = point_direction(x, y, mouse_x, mouse_y); }
+			//else if (!isHoldingDirection())										{ move.dir = move.lastDir; }
+			//else																	{ move.dir = getMovementInputDirection(); }
+			
+			if (!weapon.aimable)	{ move.dir = attack.dir; }
+			else					{ move.dir = point_direction(x, y, mouse_x, mouse_y); }
 	
 			part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
 		break;

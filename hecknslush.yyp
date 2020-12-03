@@ -39,7 +39,7 @@
     {"id":{"name":"input_player_gamepad_get","path":"scripts/input_player_gamepad_get/input_player_gamepad_get.yy",},"order":1,},
     {"id":{"name":"input_players_connected","path":"scripts/input_players_connected/input_players_connected.yy",},"order":5,},
     {"id":{"name":"sEnemy","path":"sprites/sEnemy/sEnemy.yy",},"order":1,},
-    {"id":{"name":"ParticleInit","path":"scripts/ParticleInit/ParticleInit.yy",},"order":2,},
+    {"id":{"name":"ParticleInit","path":"scripts/ParticleInit/ParticleInit.yy",},"order":6,},
     {"id":{"name":"input_cursor_limit_circle","path":"scripts/input_cursor_limit_circle/input_cursor_limit_circle.yy",},"order":2,},
     {"id":{"name":"scribble_autotype_skip","path":"scripts/scribble_autotype_skip/scribble_autotype_skip.yy",},"order":8,},
     {"id":{"name":"input_bindings_copy","path":"scripts/input_bindings_copy/input_bindings_copy.yy",},"order":1,},

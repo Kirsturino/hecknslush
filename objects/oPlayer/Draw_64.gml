@@ -28,6 +28,11 @@ for (var i = 0; i < abilityAmount; ++i)
 	
 	c = c_red;
 	var rectBottom = viewHeight - margin*2 + size;
-	var rectFill = size*2 *  (1 - attack[i].cooldown / attackSlots[i].cooldown);
+	var rectFill = size*2;
+	if (attackSlots[i].cooldown != 0) rectFill *= (1 - attack[i].cooldown / attackSlots[i].cooldown);
+	
+	//Some extra stuff to indicate ability is fully charged
+	if (attack[i].cooldown != 0) c = merge_color(c_red, c_white, wave(0, 1, 1, 0, true));
+	
 	draw_rectangle_color(margin + i * space - size, rectBottom - rectFill, margin + i * space + size, rectBottom, c, c, c, c, false);
 }
