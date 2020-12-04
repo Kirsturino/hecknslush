@@ -198,7 +198,7 @@ function burstBlaster() constructor {
 	delay =					5;
 	burstAmount =			0;
 	burstDelay =			20;
-	spread =				7;
+	spread =				5;
 	multiSpread =			0;
 	
 	//Hitbox movement 

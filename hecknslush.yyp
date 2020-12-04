@@ -158,6 +158,7 @@
     {"id":{"name":"Notes","path":"notes/Notes/Notes.yy",},"order":19,},
     {"id":{"name":"scribble_set_animation","path":"scripts/scribble_set_animation/scribble_set_animation.yy",},"order":1,},
     {"id":{"name":"oCorpse","path":"objects/oCorpse/oCorpse.yy",},"order":2,},
+    {"id":{"name":"sCursor","path":"sprites/sCursor/sCursor.yy",},"order":0,},
     {"id":{"name":"DoLater","path":"scripts/DoLater/DoLater.yy",},"order":0,},
     {"id":{"name":"Collisions","path":"scripts/Collisions/Collisions.yy",},"order":4,},
     {"id":{"name":"scribble_set_wrap","path":"scripts/scribble_set_wrap/scribble_set_wrap.yy",},"order":11,},
@@ -230,6 +231,7 @@
     {"folderPath":"folders/Walls.yy","order":20,"resourceVersion":"1.0","name":"Walls","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Enemies/Ranged.yy","order":6,"resourceVersion":"1.0","name":"Ranged","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Enemies/Ranged/Sprites.yy","order":2,"resourceVersion":"1.0","name":"Sprites","tags":[],"resourceType":"GMFolder",},
+    {"folderPath":"folders/UI Graphics.yy","order":21,"resourceVersion":"1.0","name":"UI Graphics","tags":[],"resourceType":"GMFolder",},
   ],
   "AudioGroups": [
     {"targets":461609314234257646,"resourceVersion":"1.0","name":"audiogroup_default","resourceType":"GMAudioGroup",},

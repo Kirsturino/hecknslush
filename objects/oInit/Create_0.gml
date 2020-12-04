@@ -13,11 +13,12 @@ scribble_add_font("fntScribble");
 scribble_add_font("fntDebug");
 
 //Debug
-show_debug_overlay(true);
+//show_debug_overlay(true);
+window_set_cursor(cr_none);
+cursor_sprite = sCursor;
 
 //Init colors
-globalvar transparent;
-transparent = thisIsNothing;
+
 
 //Move to next room automatically
 room_goto_next();

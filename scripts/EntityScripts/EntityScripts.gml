@@ -160,7 +160,7 @@ function drawAttackIndicator(visuals, weapon, attack)
 	var camX = camera_get_view_x(view);
 	var camY = camera_get_view_y(view);
 	var c = c_red;
-	var c2 = transparent;
+	var c2 = c_black;
 	
 	switch (visuals.indicatorType)
 	{
