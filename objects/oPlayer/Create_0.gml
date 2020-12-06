@@ -147,7 +147,9 @@ visuals = {
 	xScale : 1,
 	yScale : 1,
 	rot : 0,
-	recoil : 0
+	recoil : 0,
+	frm : 0,
+	spd : 1,
 }
 
 #endregion
@@ -601,16 +603,13 @@ function cameraStateSwitch() {
 }
 
 function takeDamage(amount) {
-	if (combat.iframes <= 0)
-	{
-		combat.hp -= amount;
-		combat.iframes = combat.iframesMax;
+	combat.hp -= amount;
+	combat.iframes = combat.iframesMax;
 	
-		freeze(200);
-		pushEnemies();
+	freeze(200);
+	pushEnemies();
 		
-		if (combat.hp <= 0) toDead();
-	}
+	if (combat.hp <= 0) toDead();
 }
 
 function pushEnemies() {

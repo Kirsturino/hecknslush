@@ -34,23 +34,27 @@ function getTouchingObjects(list, object, func)
 function dealDamage(enemy)
 {
 	//All of this is executed in the hit object to reduce the amount of object. calls
-	with (enemy) {
+	with (enemy)
+	{
 		var htbx = other.id;
-			
-		//Hardcoded to give the player cooldowns, maybe refactor later
-		if (htbx.atk.target == oEnemyBase)
+		
+		if (enemy.combat.iframes <= 0)
 		{
-			refreshPlayerCooldowns(htbx.atk.dmg);
+			//Hardcoded to give the player cooldowns, maybe refactor later
+			if (htbx.atk.target == oEnemyBase)
+			{
+				refreshPlayerCooldowns(htbx.atk.dmg);
+			}
+		
+			//Reduce hp
+			takeDamage(htbx.atk.dmg);
+		
+			//Inflict knockback
+			inflictKnockback(htbx);
+		
+			//FX
+			hitFX(htbx);
 		}
-		
-		//Reduce hp
-		takeDamage(htbx.atk.dmg);
-		
-		//Inflict knockback
-		inflictKnockback(htbx);
-		
-		//FX
-		hitFX(htbx);
 	}
 	
 	//Destroy projectile if it's not piercing
@@ -150,6 +154,19 @@ function hitFX(htbx)
 
 	//Stun enemy if applicable
 	if (combat.stunnable) toStunned(htbx.atk.dmg * 40);
+}
+
+function incrementAnimationFrame()
+{
+	visuals.frm += visuals.spd * delta;
+	
+	if (visuals.frm > image_number) {
+		visuals.frm = frac(visuals.frm);
+	}
+	
+	//Reset squash
+	visuals.xScale = lerp(visuals.xScale, 1, 0.1 * delta);
+	visuals.yScale = lerp(visuals.yScale, 1, 0.1 * delta);
 }
 
 //Enemy functions

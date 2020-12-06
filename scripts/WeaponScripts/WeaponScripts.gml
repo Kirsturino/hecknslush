@@ -330,7 +330,7 @@ function rangedEnemyWeapon() constructor
 	type =					weapons.ranged;
 	clr =					c_red;
 	htbx =					oHitbox;
-	spr =					sGun;
+	projSpr =				sProjectile;
 	
 	//Hitbox pattern stuff
 	amount =				5;
@@ -345,11 +345,11 @@ function rangedEnemyWeapon() constructor
 	spd =					3;
 	
 	//Hitbox active start and end
-	start =					2;
-	length =				10;
+	start =					0;
+	length =				9999;
 	
 	//Important values
-	dmg=					1;
+	dmg =					1;
 	life =					180;
 	size =					1;
 	
@@ -373,8 +373,8 @@ function rangedEnemyWeapon() constructor
 	mirror =				true;
 	
 	//Ranged exclusive
-	projSpr =				sProjectile;
 	zoom =					0.4;
+	spr =					sGun;
 	
 	//Enemy exclusive
 	anticipationDur =		64;

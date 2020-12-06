@@ -9,3 +9,4 @@ if (state == playerDummy) exit;
 cameraStateSwitch();
 updateStateBuffer();
 incrementVerbCooldowns();
+incrementAnimationFrame();

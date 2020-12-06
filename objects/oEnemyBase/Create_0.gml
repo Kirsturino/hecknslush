@@ -55,27 +55,11 @@ function destroySelf(corpseSprite)
 	instance_destroy();
 }
 
-function incrementAnimationFrame()
-{
-	visuals.frm += visuals.spd * delta;
-	
-	if (visuals.frm > image_number) {
-		visuals.frm = frac(visuals.frm);
-	}
-	
-	//Reset squash
-	visuals.xScale = lerp(visuals.xScale, 1, 0.1 * delta);
-	visuals.yScale = lerp(visuals.yScale, 1, 0.1 * delta);
-}
-
 function takeDamage(amount) {
-	if (combat.iframes <= 0)
-	{
-		combat.hp -= amount;
-		combat.iframes = combat.iframesMax;
+	combat.hp -= amount;
+	combat.iframes = combat.iframesMax;
 		
-		if (combat.hp <= 0) destroySelf(visuals.corpse);
+	if (combat.hp <= 0) destroySelf(visuals.corpse);
 		
-		if (state == idle) { move.aggroTimer = move.aggroTimerMax; }
-	}
+	if (state == idle) { move.aggroTimer = move.aggroTimerMax; }
 }
