@@ -94,7 +94,8 @@ combat = {
 	iframesMax : 144,
 	iframes : 0,
 	aimDir : 0,
-	curAttack : 0
+	curAttack : 0,
+	stunnable : false,
 }
 
 //This will be used a lot so here's a lil' shorthand
@@ -600,11 +601,16 @@ function cameraStateSwitch() {
 }
 
 function takeDamage(amount) {
-	combat.hp -= amount;
-	combat.iframes = combat.iframesMax;
+	if (combat.iframes <= 0)
+	{
+		combat.hp -= amount;
+		combat.iframes = combat.iframesMax;
 	
-	freeze(200);
-	pushEnemies();
+		freeze(200);
+		pushEnemies();
+		
+		if (combat.hp <= 0) toDead();
+	}
 }
 
 function pushEnemies() {

@@ -3,21 +3,25 @@ FEATURES:
 - Weighted camera
 - Modify attacks ingame
 - Perk/Buff system
+	- Maybe just add to weapon stats, consuming the upgrade irrevocably
+	- Weapons would probably have like a max upgrade amount
+		- Could be increased by consuming upgrade instead of infusing it to the weapon
+	- Buffs that apply to player are probably easiest to implement by adding extra functions to an array that gets run
 - Dungeon generation
 - Culling to walls and enemies
 - Controller support
-- Global tuning values
+- Global tuning knobs
 
 ---------------------------------------------------------------------------
 REFACTOR:
 Yes
 - Clean attack code with local variables instead of mega if statements
 - Calculate hitbox animation to match the timing of hitbox lifetime
-- Standardize movement and combat structs
-- Remove switch case from spawnHitbox, add particle functions to ability structs
-- Generalize dealDamage funtion
+- Standardize movement, combat and visualize structs if possible
+	- Probably easiest done by making a parent object that inits all that shiz?
 - Instead of having a billion if statement in hitbox object, add extra functionality as functions when spawning hitbox
 	- These will be pushed into a behaviour array where they will be ran by the hitbox
+	- Maybe separate arrays, one that runs every frame, one that is ran when hitting enemy?
 
 Maybe
 - Optimize multispread calculation
@@ -28,10 +32,3 @@ Maybe
 ---------------------------------------------------------------------------
 KNOWN BUGS:
 - None C:
-
-COMBAT REWORK:
-- Remove combos
-	- Replaced by light & heavy attacks
-	- Ranged also gets new heavy attack
-- Basic melee always available
-	- Hits from this recharge your other attacks based on damage dealt

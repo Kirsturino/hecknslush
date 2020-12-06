@@ -14,8 +14,8 @@ scribble_add_font("fntDebug");
 
 //Debug
 //show_debug_overlay(true);
-window_set_cursor(cr_none);
-cursor_sprite = sCursor;
+//window_set_cursor(cr_none);
+//cursor_sprite = sCursor;
 
 //Init colors
 

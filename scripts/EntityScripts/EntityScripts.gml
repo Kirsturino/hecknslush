@@ -33,79 +33,28 @@ function getTouchingObjects(list, object, func)
 
 function dealDamage(enemy)
 {
+	//All of this is executed in the hit object to reduce the amount of object. calls
 	with (enemy) {
 		var htbx = other.id;
-		switch (other.atk.target) {
-			case oEnemyBase:
 			
-				//Hardcoded to give the player cooldowns, maybe refactor later
-				with  (oPlayer)
-				{
-					var length = array_length(attack);
-					for (var i = 0; i < length; ++i) {
-					    if (attackSlots[i].cooldownType == recharge.damage) attack[i].cooldown = approach(attack[i].cooldown, 0, htbx.atk.dmg * global.damageRechargeMultiplier);
-					}
-				}
-				
-				if (state == idle) {
-					move.aggroTimer = move.aggroTimerMax;
-				}
-		
-				//Reduce hp
-				combat.hp -= htbx.atk.dmg;
-		
-				//Inflict knockback
-				if (htbx.move.hsp != 0 || htbx.move.vsp != 0) { var dir = htbx.move.dir; }
-				else											{ var dir = htbx.image_angle; }
-		
-				move.hsp += lengthdir_x(htbx.atk.knockback, dir);
-				move.vsp += lengthdir_y(htbx.atk.knockback, dir);
-				move.dir = dir;
-		
-				//visuals stuff
-				visuals.flash = max(hitFlash ,hitFlash * htbx.atk.dmg);
-				visuals.yScale += htbx.atk.dmg;
-				visuals.xScale -= htbx.atk.dmg;
-		
-				//Hitstop & camera stuff
-				if (htbx.visuals.hitStop) {
-					freeze(htbx.atk.dmg * 40);
-					htbx.visuals.hitStop = false;
-				}
-		
-				shakeCamera(htbx.atk.dmg * 40, htbx.atk.dmg * 2, 4);
-				pushCamera(htbx.atk.dmg * 20, dir);
-				zoomCamera(1 - htbx.atk.dmg * 0.03);
-		
-				//Particles
-				part_particles_create(global.ps, x, y, global.hitPart, htbx.atk.dmg * 10);
-		
-				part_type_size(global.hitPart2, htbx.atk.dmg * 3.2, htbx.atk.dmg * 3.4, -htbx.atk.dmg * 0.3, 0);
-				part_particles_create(global.ps, x, y, global.hitPart2, 1);
-
-				//Stun enemy if applicable
-				if (combat.stunnable && htbx.visuals.type == weapons.melee) toStunned(htbx.atk.dmg * 40);
-		
-				//If enemy hp 0, kill 'em
-				if (combat.hp <= 0) {
-					destroySelf(visuals.corpse);
-				}
-				
-				with (htbx) {
-					if (!atk.piercing) destroySelf();
-				}
-			break;
-		
-			case oPlayer:
-				if (oPlayer.combat.iframes <= 0)
-				{
-					takeDamage(htbx.atk.dmg);
-					with (htbx) destroySelf();
-					if (combat.hp <= 0) toDead();
-				}
-			break;
+		//Hardcoded to give the player cooldowns, maybe refactor later
+		if (htbx.atk.target == oEnemyBase)
+		{
+			refreshPlayerCooldowns(htbx.atk.dmg);
 		}
+		
+		//Reduce hp
+		takeDamage(htbx.atk.dmg);
+		
+		//Inflict knockback
+		inflictKnockback(htbx);
+		
+		//FX
+		hitFX(htbx);
 	}
+	
+	//Destroy projectile if it's not piercing
+	if (!atk.piercing) destroySelf();
 }
 
 function negateMomentum()
@@ -154,6 +103,55 @@ function canSee(instance)
 	return false;
 }
 
+function refreshPlayerCooldowns(amount)
+{
+	with  (oPlayer)
+	{
+		var length = array_length(attack);
+		for (var i = 0; i < length; ++i) {
+			if (attackSlots[i].cooldownType == recharge.damage) attack[i].cooldown = approach(attack[i].cooldown, 0, amount * global.damageRechargeMultiplier);
+		}
+	}
+}
+
+function inflictKnockback(htbx)
+{
+	if (htbx.move.hsp != 0 || htbx.move.vsp != 0)	{ var dir = htbx.move.dir; }
+	else											{ var dir = htbx.image_angle; }
+		
+		move.hsp = lengthdir_x(htbx.atk.knockback, dir);
+		move.vsp = lengthdir_y(htbx.atk.knockback, dir);
+		move.dir = dir;
+}
+
+function hitFX(htbx)
+{
+	//Hitflash
+	visuals.flash = max(hitFlash, hitFlash * htbx.atk.dmg);
+	
+	//Squash and stretch
+	visuals.yScale += htbx.atk.dmg;
+	visuals.xScale -= htbx.atk.dmg;
+		
+	//Hitstop & camera stuff
+	if (htbx.visuals.hitStop) {
+		freeze(min(htbx.atk.dmg * 40, 200));
+			
+		//This prevents hitstop from happening when hitting multiple enemies
+		htbx.visuals.hitStop = false;
+	}
+		
+	shakeCamera(htbx.atk.dmg * 40, htbx.atk.dmg * 2, 4);
+	pushCamera(htbx.atk.dmg * 20, htbx.move.dir);
+	zoomCamera(1 - htbx.atk.dmg * 0.05);
+		
+	//Particles
+	htbx.visuals.damageFX(htbx.atk.dmg);
+
+	//Stun enemy if applicable
+	if (combat.stunnable) toStunned(htbx.atk.dmg * 40);
+}
+
 //Enemy functions
 function drawAttackIndicator(visuals, weapon, attack)
 {
@@ -188,100 +186,53 @@ function drawAttackIndicator(visuals, weapon, attack)
 
 function spawnHitbox(weapon, attack)
 {
-	switch (weapon.type) {
-		case weapons.melee:
-		#region
-			var spawnX = x + lengthdir_x(weapon.reach, attack.htbxDir);
-			var spawnY = y + lengthdir_y(weapon.reach, attack.htbxDir);
+	var spawnX = x + lengthdir_x(weapon.reach, attack.htbxDir);
+	var spawnY = y + lengthdir_y(weapon.reach, attack.htbxDir);
 	
-			//Impart weapon stats to hitbox
-			var htbx = instance_create_layer(spawnX, spawnY, "Instances", weapon.htbx);
-			htbx.sprite_index = weapon.spr;
-			htbx.image_angle = attack.htbxDir;
-			htbx.visuals.size = weapon.size;
-			htbx.image_xscale = weapon.size;
-			htbx.image_yscale = weapon.size;
-			if (weapon.mirror) htbx.image_yscale = attack.mirror;
-	
-			htbx.move.hsp = lengthdir_x(weapon.spd, attack.htbxDir);
-			htbx.move.vsp = lengthdir_y(weapon.spd, attack.htbxDir);
-			htbx.move.fric = weapon.fric;
-	
-			htbx.atk.dur = weapon.life;
-			htbx.atk.maxDur = weapon.life;	
-			htbx.atk.dmg = weapon.dmg;
-			htbx.atk.knockback = weapon.knockback;
-			htbx.atk.hitDelay = weapon.start;
-			htbx.atk.hitEnd = weapon.length;
-			
-			//Visuals
-			htbx.visuals.type = weapons.melee;
-			htbx.image_blend = weapon.clr;
-		
-			//All melee weapons can cleave and persist
-			htbx.atk.destroyOnStop = false;
-			htbx.atk.piercing = true;
-			
-			//FX
-			if (object_index == oPlayer)
-			{
-				shakeCamera(weapon.dmg * 20, 2, 4);
-				pushCamera(weapon.dmg * 20, attack.htbxDir);
-			}
-			
-			if (weapon.multiSpread == 0) {
-				var sprd = 40;
-			} else {
-				var sprd = weapon.multiSpread * .5;
-			}
-			
-			part_type_direction(global.shootPart, attack.htbxDir - sprd, attack.htbxDir + sprd, 0, 0);
-			part_particles_create(global.ps, spawnX, spawnY, global.shootPart, 5);
-			#endregion
-		break;
-		
-		case weapons.ranged:	
-		#region
-			var spawnX = x + lengthdir_x(weapon.reach + sprite_get_width(weapon.spr), attack.htbxDir);
-			var spawnY = y + lengthdir_y(weapon.reach + sprite_get_width(weapon.spr), attack.htbxDir);
-	
-			//Impart weapon stats to hitbox
-			var htbx = instance_create_layer(spawnX, spawnY, "Instances", weapon.htbx);
-			htbx.sprite_index = weapon.projSpr;
-			htbx.image_angle = attack.htbxDir;
-			htbx.visuals.size = weapon.size;
-			htbx.image_xscale = weapon.size;
-			htbx.image_yscale = weapon.size;
-	
-			//Movement
-			htbx.move.hsp = lengthdir_x(weapon.spd + random(weapon.spread) * 0.01, attack.htbxDir);
-			htbx.move.vsp = lengthdir_y(weapon.spd + random(weapon.spread) * 0.01, attack.htbxDir);
-			htbx.move.fric = weapon.fric;
-	
-			//Combat stuff
-			htbx.atk.dur = weapon.life;	
-			htbx.atk.dmg = weapon.dmg;
-			htbx.atk.knockback = weapon.knockback;
-			htbx.atk.piercing = weapon.piercing;
-			htbx.atk.destroyOnStop = weapon.destroyOnStop;
-			htbx.atk.destroyOnCollision = weapon.destroyOnCollision;
-			htbx.visuals.type = weapons.ranged;
-			htbx.image_blend = weapon.clr;
-			
-			//FX
-			if (object_index == oPlayer) 
-			{
-				shakeCamera(weapon.dmg * 60, 2, 4);
-				pushCamera(weapon.dmg * 50, attack.htbxDir + 180);
-				visuals.recoil = weapon.dmg * 20;
-			}
-			
-			part_particles_create(global.ps, spawnX, spawnY, global.muzzleFlashPart, 1);
-			part_type_direction(global.shootPart, attack.htbxDir - weapon.spread * 2, attack.htbxDir + weapon.spread * 2, 0, 0);
-			part_particles_create(global.ps, spawnX, spawnY, global.shootPart, 10);
-			#endregion
-		break;
+	if (weapon.type = weapons.ranged)
+	{
+		//Ranged hitboxes spawn at the end of the gun sprite
+		spawnX += lengthdir_x(sprite_get_width(weapon.spr), attack.htbxDir);
+		spawnY += lengthdir_y(sprite_get_width(weapon.spr), attack.htbxDir);
 	}
+	
+	//Impart weapon stats to hitbox
+	var htbx = instance_create_layer(spawnX, spawnY, "Instances", weapon.htbx);
+	
+	//Hitbox qualities that are shared
+	
+	//Visual stuff
+	htbx.sprite_index = weapon.projSpr;
+	htbx.image_angle = attack.htbxDir;
+	htbx.visuals.size = weapon.size;
+	htbx.image_xscale = weapon.size;
+	htbx.image_yscale = weapon.size;
+	if (weapon.mirror) htbx.image_yscale = attack.mirror;
+	htbx.image_blend = weapon.clr;
+	visuals.recoil = weapon.dmg * 20;
+	htbx.visuals.type = weapon.type;
+	
+	//Determine effects
+	weapon.attackFX(weapon, attack, spawnX, spawnY);
+	htbx.visuals.trailFX = weapon.trailFX;
+	htbx.visuals.explosionFX = weapon.explosionFX;
+	htbx.visuals.damageFX = weapon.damageFX;
+	
+	//Movement
+	htbx.move.hsp = lengthdir_x(weapon.spd * (1 + random(weapon.spread) * 0.01), attack.htbxDir);
+	htbx.move.vsp = lengthdir_y(weapon.spd * (1 + random(weapon.spread) * 0.01), attack.htbxDir);
+	htbx.move.fric = weapon.fric;
+	
+	//Combat stuff
+	htbx.atk.dur = weapon.life;
+	htbx.atk.maxDur = weapon.life;	
+	htbx.atk.dmg = weapon.dmg;
+	htbx.atk.knockback = weapon.knockback;
+	htbx.atk.hitDelay = weapon.start;
+	htbx.atk.hitEnd = weapon.length;
+	htbx.atk.piercing = weapon.piercing;
+	htbx.atk.destroyOnStop = weapon.destroyOnStop;
+	htbx.atk.destroyOnCollision = weapon.destroyOnCollision;
 	
 	//Determine if this should hit enemies or player
 	if (object_index == oPlayer)	{ htbx.atk.target = oEnemyBase; }

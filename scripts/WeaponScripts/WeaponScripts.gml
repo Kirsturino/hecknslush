@@ -29,7 +29,7 @@ function genericweaponStruct() constructor
 	type =					weapons.ranged;
 	clr =					c_red;
 	htbx =					oHitbox;
-	spr =					sGun;
+	projSpr =				sProjectile;
 	
 	//Hitbox pattern stuff
 	amount =				10;
@@ -72,11 +72,17 @@ function genericweaponStruct() constructor
 	mirror =				true;
 	
 	//Ranged exclusive
-	projSpr =				sProjectile;
+	spr =					sGun;
 	zoom =					0.4;
 	
 	//Enemy exclusive
 	anticipationDur =		64;
+	
+	//FX
+	attackFX =				baseMeleeFX;
+	trailFX =				nothing;
+	explosionFX =			nothing;
+	damageFX =				baseDamageFX;
 }
 
 function basicSlash() constructor {
@@ -85,7 +91,7 @@ function basicSlash() constructor {
 	type =					weapons.melee;
 	clr =					c_red;
 	htbx =					oHitbox;
-	spr =					sSlash;
+	projSpr =				sSlash;
 	
 	//Hitbox pattern stuff
 	amount =				1;
@@ -127,9 +133,15 @@ function basicSlash() constructor {
 	mirror =				true;
 	
 	//Ranged exclusive
-	projSpr =				sProjectile;
+	spr =					sSlash;
 	zoom =					0.4;
 	spread =				0;	
+	
+	//FX
+	attackFX =				baseMeleeFX;
+	trailFX =				nothing;
+	explosionFX =			nothing;
+	damageFX =				baseDamageFX;
 }
 
 function spinSlash() constructor {
@@ -138,7 +150,7 @@ function spinSlash() constructor {
 	type =					weapons.melee;
 	clr =					c_red;
 	htbx =					oHitbox;
-	spr =					sThrust;
+	projSpr =				sThrust;
 	
 	//Hitbox pattern stuff
 	amount =				36;
@@ -180,9 +192,15 @@ function spinSlash() constructor {
 	mirror =				false;
 	
 	//Ranged exclusive
-	projSpr =				sProjectile;
+	spr =					sThrust;
 	zoom =					0.4;
 	spread =				0;
+	
+	//FX
+	attackFX =				baseMeleeFX;
+	trailFX =				nothing;
+	explosionFX =			nothing;
+	damageFX =				baseDamageFX;
 }
 
 function burstBlaster() constructor {
@@ -191,7 +209,7 @@ function burstBlaster() constructor {
 	type =					weapons.ranged;
 	clr =					c_red;
 	htbx =					oHitbox;
-	spr =					sGun;
+	projSpr =				sProjectile;
 	
 	//Hitbox pattern stuff
 	amount =				10;
@@ -206,8 +224,8 @@ function burstBlaster() constructor {
 	spd =					5;
 	
 	//Hitbox active start and end
-	start =					2;
-	length =				10;
+	start =					0;
+	length =				9999;
 	
 	//Important values
 	dmg=					0.6;
@@ -234,8 +252,14 @@ function burstBlaster() constructor {
 	mirror =				true;
 	
 	//Ranged exclusive
-	projSpr =				sProjectile;
+	spr =					sGun;
 	zoom =					0.4;
+	
+	//FX
+	attackFX =				baseRangedFX;
+	trailFX =				baseProjectileTrail;
+	explosionFX =			baseProjectileExplosion;
+	damageFX =				baseDamageFX;
 }
 
 function doubleWave() constructor {
@@ -244,7 +268,7 @@ function doubleWave() constructor {
 	type =					weapons.ranged;
 	clr =					c_red;
 	htbx =					oHitbox;
-	spr =					sGun;
+	projSpr =				sProjectile;
 	
 	//Hitbox pattern stuff
 	amount =				10;
@@ -252,15 +276,15 @@ function doubleWave() constructor {
 	burstAmount =			1;
 	burstDelay =			20;
 	spread =				0;
-	multiSpread =			090;
+	multiSpread =			90;
 	
 	//Hitbox movement 
 	fric =					0.03;
 	spd =					3;
 	
 	//Hitbox active start and end
-	start =					2;
-	length =				10;
+	start =					0;
+	length =				9999;
 	
 	//Important values
 	dmg=					1;
@@ -287,13 +311,20 @@ function doubleWave() constructor {
 	mirror =				true;
 	
 	//Ranged exclusive
-	projSpr =				sProjectile;
+	spr =					sGun;
 	zoom =					0.4;
+	
+	//FX
+	attackFX =				baseRangedFX;
+	trailFX =				baseProjectileTrail;
+	explosionFX =			baseProjectileExplosion;
+	damageFX =				baseDamageFX;
 }
 	
 //Enemy abilities
 
-function rangedEnemyWeapon() constructor {
+function rangedEnemyWeapon() constructor
+{
 	//Info
 	name =					"Burst Blaster";
 	type =					weapons.ranged;
@@ -347,4 +378,55 @@ function rangedEnemyWeapon() constructor {
 	
 	//Enemy exclusive
 	anticipationDur =		64;
+	
+	//FX
+	attackFX =				nothing;
+	trailFX =				baseProjectileTrail;
+	explosionFX =			baseProjectileExplosion;
+	damageFX =				baseDamageFX;
+}
+	
+//Weapon FX
+function baseMeleeFX(weapon, attack, xx, yy)
+{
+	shakeCamera(weapon.dmg * 20, 2, 4);
+	pushCamera(weapon.dmg * 20, attack.htbxDir);
+			
+	if (weapon.multiSpread == 0) {
+		var sprd = 40;
+	} else {
+		var sprd = weapon.multiSpread * .5;
+	}
+			
+	part_type_direction(global.shootPart, attack.htbxDir - sprd, attack.htbxDir + sprd, 0, 0);
+	part_particles_create(global.ps, xx, yy, global.shootPart, 5);
+}
+
+function baseRangedFX(weapon, attack, xx, yy)
+{
+	shakeCamera(weapon.dmg * 60, 2, 4);
+	pushCamera(weapon.dmg * 50, attack.htbxDir + 180);
+			
+	part_particles_create(global.ps, xx, yy, global.muzzleFlashPart, 1);
+	part_type_direction(global.shootPart, attack.htbxDir - weapon.spread * 2, attack.htbxDir + weapon.spread * 2, 0, 0);
+	part_particles_create(global.ps, xx, yy, global.shootPart, 10);
+}
+
+function baseProjectileTrail(move)
+{
+	part_type_direction(global.bulletTrail, move.dir - 10, move.dir + 10, 0, 0);
+	part_particles_create(global.ps, other.x, other.y, global.bulletTrail, 1);
+}
+
+function baseProjectileExplosion()
+{
+	part_particles_create(global.ps, other.x, other.y, global.hitPart, 10);
+}
+	
+function baseDamageFX(amount)
+{
+	part_particles_create(global.ps, other.x, other.y, global.hitPart, amount * 10);
+		
+	part_type_size(global.hitPart2, amount * 3.2, amount * 3.4, -amount * 0.3, 0);
+	part_particles_create(global.ps, other.x, other.y, global.hitPart2, 1);
 }

@@ -28,14 +28,14 @@ visuals = {
 	frm : 0,
 	size : 1,
 	type : weapons.melee,
-	hitStop : true
+	hitStop : true,
+	trailFX : nothing,
+	damageFX : nothing,
+	explosionFX : nothing,
 }
-
-image_xscale = visuals.size;
-image_yscale = visuals.size;
-
 
 function destroySelf() {
 	ds_list_destroy(atk.damagedEnemies);
+	visuals.explosionFX();
 	instance_destroy();
 }

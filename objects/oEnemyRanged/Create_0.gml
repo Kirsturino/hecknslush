@@ -10,6 +10,8 @@ combat = {
 	stunDur : 0,
 	stunnable : true,
 	weight : 1,
+	iframes : 0,
+	iframesMax : 0,
 }
 
 weapon = new rangedEnemyWeapon();

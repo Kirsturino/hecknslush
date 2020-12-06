@@ -2,13 +2,15 @@
 event_inherited();
 
 combat = {
-	hp : 3,
+	hp : 2,
 	detectionRadius : 200,
 	attackRadius : 124,
 	chaseRadius : 240,
 	stunDur : 0,
 	stunnable : true,
 	weight : 1,
+	iframes : 0,
+	iframesMax : 0,
 	indicatorLength : 128,
 	indicatorType : indicator.line,
 }

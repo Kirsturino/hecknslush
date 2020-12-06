@@ -67,3 +67,15 @@ function incrementAnimationFrame()
 	visuals.xScale = lerp(visuals.xScale, 1, 0.1 * delta);
 	visuals.yScale = lerp(visuals.yScale, 1, 0.1 * delta);
 }
+
+function takeDamage(amount) {
+	if (combat.iframes <= 0)
+	{
+		combat.hp -= amount;
+		combat.iframes = combat.iframesMax;
+		
+		if (combat.hp <= 0) destroySelf(visuals.corpse);
+		
+		if (state == idle) { move.aggroTimer = move.aggroTimerMax; }
+	}
+}
