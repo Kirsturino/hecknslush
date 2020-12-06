@@ -36,25 +36,24 @@ function dealDamage(enemy)
 	//All of this is executed in the hit object to reduce the amount of object. calls
 	with (enemy)
 	{
+		if (enemy.combat.iframes > 0) return;
+		
 		var htbx = other.id;
 		
-		if (enemy.combat.iframes <= 0)
+		//Hardcoded to give the player cooldowns, maybe refactor later
+		if (htbx.atk.target == oEnemyBase)
 		{
-			//Hardcoded to give the player cooldowns, maybe refactor later
-			if (htbx.atk.target == oEnemyBase)
-			{
-				refreshPlayerCooldowns(htbx.atk.dmg);
-			}
-		
-			//Reduce hp
-			takeDamage(htbx.atk.dmg);
-		
-			//Inflict knockback
-			inflictKnockback(htbx);
-		
-			//FX
-			hitFX(htbx);
+			refreshPlayerCooldowns(htbx.atk.dmg);
 		}
+		
+		//Reduce hp
+		takeDamage(htbx.atk.dmg);
+		
+		//Inflict knockback
+		inflictKnockback(htbx);
+		
+		//FX
+		hitFX(htbx);
 	}
 	
 	//Destroy projectile if it's not piercing
