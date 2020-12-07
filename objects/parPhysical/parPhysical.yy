@@ -21,8 +21,8 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Objects",
-    "path": "folders/Objects.yy",
+    "name": "Parent Objects",
+    "path": "folders/Parent Objects.yy",
   },
   "resourceVersion": "1.0",
   "name": "parPhysical",

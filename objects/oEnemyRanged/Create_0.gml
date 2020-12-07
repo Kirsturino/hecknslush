@@ -1,41 +1,14 @@
 // Inherit the parent event
 event_inherited();
 
-combat = {
-	hp : 3,
-	detectionRadius : 280,
-	attackRadius : 220,
-	chaseRadius : 320,
-	fleeRadius : 160,
-	stunDur : 0,
-	stunnable : true,
-	weight : 1,
-	iframes : 0,
-	iframesMax : 0,
-}
-
-weapon = new rangedEnemyWeapon();
+combat = new rangedCombat();
+move = new rangedMove();
+visuals = new rangedVisuals();
 
 attack = new attackStruct();
+weapon = new rangedEnemyWeapon();
 
-move = {
-	hsp : 0,
-	vsp : 0,
-	chaseSpd: 0.6,
-	idleSpd: 1,
-	lastSeen : [0, 0],
-	aggroTimerMax : 180,
-	aggroTimer : 0,
-	axl : 0.02,
-	fric : 0.05,
-	collMask : sEnemyRangedWallCollisionMask,
-	dir : 0
-}
-
-visuals.curSprite = sEnemyRanged;
-visuals.corpse = sEnemyCorpse;
-visuals.indicatorLength = 240;
-visuals.indicatorType = indicator.triangle;
+currencyArray = initCurrency(combat.currencyAmount);
 
 //Set mask
 sprite_index = move.collMask;

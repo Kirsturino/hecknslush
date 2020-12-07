@@ -9,7 +9,7 @@ if (!surface_exists(global.enemyAttackSurf))
 	
 	gpu_set_blendmode(bm_add);
 	
-	with (oEnemyBase)
+	with (parEnemy)
 	{
 		if (drawFunction == drawAttackIndicator) 
 		{

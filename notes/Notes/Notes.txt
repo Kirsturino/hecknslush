@@ -17,11 +17,11 @@ REFACTOR:
 Yes
 - Clean attack code with local variables instead of mega if statements
 - Calculate hitbox animation to match the timing of hitbox lifetime
-- Standardize movement, combat and visualize structs if possible
-	- Probably easiest done by making a parent object that inits all that shiz?
 - Instead of having a billion if statement in hitbox object, add extra functionality as functions when spawning hitbox
 	- These will be pushed into a behaviour array where they will be ran by the hitbox
-	- Maybe separate arrays, one that runs every frame, one that is ran when hitting enemy?
+	- Maybe separate arrays, one that runs every frame, one that is ran when hitting enemy/wall?
+- Enemy state structure
+- Enemy pathfinding/movement should be generalized
 
 Maybe
 - Optimize multispread calculation
@@ -31,4 +31,5 @@ Maybe
 
 ---------------------------------------------------------------------------
 KNOWN BUGS:
-- None C:
+- Abilities can give charge to themselves
+	- Mark ability used to hitbox, then exclude it when granting charge

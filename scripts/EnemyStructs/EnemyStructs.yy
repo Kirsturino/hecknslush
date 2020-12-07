@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Player",
-    "path": "folders/Player.yy",
+    "name": "Enemies",
+    "path": "folders/Enemies.yy",
   },
   "resourceVersion": "1.0",
-  "name": "GlobalPlayerStuff",
+  "name": "EnemyStructs",
   "tags": [],
   "resourceType": "GMScript",
 }

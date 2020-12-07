@@ -14,7 +14,8 @@ enum verbs {
 	attack,
 	attack2,
 	dodge,
-	aim
+	aim,
+	interact
 }
 
 //Bind default keys
@@ -23,6 +24,7 @@ input_default_key(ord("D"), verbs.right);
 input_default_key(ord("W"), verbs.up);
 input_default_key(ord("S"), verbs.down);
 input_default_key(vk_space, verbs.dodge);
+input_default_key(ord("F"), verbs.interact);
 input_default_mouse_button(mb_left, verbs.attack, true);
 input_default_mouse_button(mb_middle, verbs.attack2, true);
 input_default_mouse_button(mb_right, verbs.aim, true);
@@ -55,66 +57,23 @@ stateBufferPointer = 0;
 #region MOVEMENT
 
 //Movement variables and player properties
-move = {
-	hsp : 0,
-	vsp : 0,
-	maxSpd : 1.2,
-	curMaxSpd : 1.2,
-	axl : 0.12,
-	fric : 0.04,
-	lastDir : 0,
-	dir : 0,
-	moving : false,
-	collMask : sPlayerWallCollisionMask,
-	aimSpeedModifier : 0.5
-}
+move = new moveStruct();
 
 //Set mask
 sprite_index = move.collMask;
 
 //Sprinting variables
-sprint = {
-	maxSpd : 2,
-	axl : 0.05,
-	turnSpd : 0,
-	turnAxl : 0.2,
-	turnMaxSpd : 2,
-	buildup : 0,
-	buildupMax : 60
-}
+sprint = new sprintStruct();
 
 #endregion
 
 #region COMBAT
 
 //Combat variables
-combat = {
-	maxHP : 5,
-	hp : 5,
-	iframesMax : 144,
-	iframes : 0,
-	aimDir : 0,
-	curAttack : 0,
-	stunnable : false,
-}
+combat = new combatStruct();
 
 //This will be used a lot so here's a lil' shorthand
 #macro ATK combat.curAttack
-
-//Dodge properties, not sure what to put here, really, or how it will work yet
-dodge = {
-	dur : 0,
-	spd : 0,
-	dir : 0,
-	cooldown : 0
-}
-
-curDodge = {
-	dur : 20,
-	spd : 4,
-	iframes : 20,
-	cooldown : 60
-}
 
 #endregion
 
@@ -136,21 +95,19 @@ attackSlots[2] = new burstBlaster();
 	
 attackSlots[3] = new doubleWave();
 	
+//Dodge properties, not sure what to put here, really, or how it will work yet
+dodge = new dodgeStruct();
+
+curDodge = new defaultDodge();
 	
 #endregion
 
 #region MISC. VARIABLES
 
 //Variables that don't directly affect gameplay
-visuals = {
-	curSprite : sPlayer,
-	xScale : 1,
-	yScale : 1,
-	rot : 0,
-	recoil : 0,
-	frm : 0,
-	spd : 1,
-}
+visuals = new visualsStruct();
+
+lastInteractable = noone;
 
 #endregion
 
@@ -613,7 +570,7 @@ function takeDamage(amount) {
 }
 
 function pushEnemies() {
-	with (oEnemyBase) {
+	with (parEnemy) {
 		var dist = distance_to_object(oPlayer);
 		
 		if (dist < 128) {

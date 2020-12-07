@@ -1,16 +1,10 @@
 {
-  "spriteId": {
-    "name": "sWall",
-    "path": "sprites/sWall/sWall.yy",
-  },
+  "spriteId": null,
   "solid": false,
   "visible": true,
   "spriteMaskId": null,
   "persistent": false,
-  "parentObjectId": {
-    "name": "parPhysical",
-    "path": "objects/parPhysical/parPhysical.yy",
-  },
+  "parentObjectId": null,
   "physicsObject": false,
   "physicsSensor": false,
   "physicsShape": 1,
@@ -24,7 +18,8 @@
   "physicsKinematic": false,
   "physicsShapePoints": [],
   "eventList": [
-    {"isDnD":false,"eventNum":0,"eventType":0,"collisionObjectId":null,"parent":{"name":"parCollision","path":"objects/parCollision/parCollision.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
+    {"isDnD":false,"eventNum":0,"eventType":0,"collisionObjectId":null,"parent":{"name":"parInteractable","path":"objects/parInteractable/parInteractable.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
+    {"isDnD":false,"eventNum":0,"eventType":3,"collisionObjectId":null,"parent":{"name":"parInteractable","path":"objects/parInteractable/parInteractable.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
   ],
   "properties": [],
   "overriddenProperties": [],
@@ -33,7 +28,7 @@
     "path": "folders/Parent Objects.yy",
   },
   "resourceVersion": "1.0",
-  "name": "parCollision",
+  "name": "parInteractable",
   "tags": [],
   "resourceType": "GMObject",
 }

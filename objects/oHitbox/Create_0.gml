@@ -12,7 +12,7 @@ atk = {
 	destroyOnCollision : false,
 	hitDelay : 0,
 	hitEnd : 0,
-	target : oEnemyBase
+	target : parEnemy
 }
 
 //Movement variables

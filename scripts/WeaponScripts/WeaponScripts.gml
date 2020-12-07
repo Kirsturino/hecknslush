@@ -8,6 +8,7 @@ enum recharge {
 	damage
 }
 
+//Generic structs that have stats for individual attacks/dodges/actions
 function attackStruct() constructor
 {
 	dur = 0;
@@ -19,6 +20,14 @@ function attackStruct() constructor
 	burstCount = 0;
 	cooldown = 0;
 	mirror = 1;
+}
+
+function dodgeStruct() constructor
+{
+	dur = 0;
+	spd = 0;
+	dir = 0;
+	cooldown = 0
 }
 
 //Player abilities
@@ -85,7 +94,8 @@ function genericweaponStruct() constructor
 	damageFX =				baseDamageFX;
 }
 
-function basicSlash() constructor {
+function basicSlash() constructor
+{
 	//Info
 	name =					"Melee Weapon";
 	type =					weapons.melee;
@@ -144,7 +154,8 @@ function basicSlash() constructor {
 	damageFX =				baseDamageFX;
 }
 
-function spinSlash() constructor {
+function spinSlash() constructor
+{
 	//Info
 	name =					"Spinslash";
 	type =					weapons.melee;
@@ -203,7 +214,8 @@ function spinSlash() constructor {
 	damageFX =				baseDamageFX;
 }
 
-function burstBlaster() constructor {
+function burstBlaster() constructor
+{
 	//Info
 	name =					"Ranged Weapon";
 	type =					weapons.ranged;
@@ -262,7 +274,8 @@ function burstBlaster() constructor {
 	damageFX =				baseDamageFX;
 }
 
-function doubleWave() constructor {
+function doubleWave() constructor
+{
 	//Info
 	name =					"Double Burst";
 	type =					weapons.ranged;
@@ -319,6 +332,14 @@ function doubleWave() constructor {
 	trailFX =				baseProjectileTrail;
 	explosionFX =			baseProjectileExplosion;
 	damageFX =				baseDamageFX;
+}
+	
+function defaultDodge() constructor
+{
+	dur = 20;
+	spd = 4;
+	iframes = 20;
+	cooldown = 60;
 }
 	
 //Enemy abilities

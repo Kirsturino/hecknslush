@@ -1,20 +1,12 @@
 // Inherit the parent event
 event_inherited();
 
-combat = {
-	hp : 2,
-	detectionRadius : 200,
-	attackRadius : 124,
-	chaseRadius : 240,
-	stunDur : 0,
-	stunnable : true,
-	weight : 1,
-	iframes : 0,
-	iframesMax : 0,
-	indicatorLength : 128,
-	indicatorType : indicator.line,
-}
+combat = new swarmerCombat();
+move = new swarmerMove();
+visuals = new swarmerVisuals();
 
+//The swarmers have unique attack structure due to not utilizing hitbox spawning
+//Therefore no constructors, as these are probably a one-off enemy type
 weapon = {
 	dur : 32,
 	anticipationDur : 64,
@@ -33,23 +25,6 @@ attack = {
 	damaged : false
 }
 
-move = {
-	hsp : 0,
-	vsp : 0,
-	chaseSpd: 0.6,
-	idleSpd: 1,
-	lastSeen : [0, 0],
-	aggroTimerMax : 180,
-	aggroTimer : 0,
-	axl : 0.02,
-	fric : 0.05,
-	collMask : sEnemyMeleeWallCollisionMask,
-	dir : 0
-}
-
-visuals.curSprite = sEnemyMelee;
-visuals.corpse = sEnemyMeleeCorpse;
-
 //Set mask
 sprite_index = move.collMask;
 
@@ -57,6 +32,8 @@ sprite_index = move.collMask;
 state = nothing;
 DoLater(1, function(data) {state = idle;},0,true);
 drawFunction = nothing;
+
+currencyArray = initCurrency(combat.currencyAmount);
 
 //States
 function idle() {

@@ -1,5 +1,4 @@
-//Collection of functions most entities/actors ingame will most likely want to call at some point
-
+//Collection of functions/structs most entities/actors ingame will most likely want to call at some point
 function depthSorting()
 {
 	depth = -bbox_bottom;
@@ -41,7 +40,7 @@ function dealDamage(enemy)
 		var htbx = other.id;
 		
 		//Hardcoded to give the player cooldowns, maybe refactor later
-		if (htbx.atk.target == oEnemyBase)
+		if (htbx.atk.target == parEnemy)
 		{
 			refreshPlayerCooldowns(htbx.atk.dmg);
 		}
@@ -251,7 +250,7 @@ function spawnHitbox(weapon, attack)
 	htbx.atk.destroyOnCollision = weapon.destroyOnCollision;
 	
 	//Determine if this should hit enemies or player
-	if (object_index == oPlayer)	{ htbx.atk.target = oEnemyBase; }
+	if (object_index == oPlayer)	{ htbx.atk.target = parEnemy; }
 	else							{ htbx.atk.target = oPlayer; }
 }
 
@@ -353,7 +352,7 @@ function setAttackMovement(amount, weapon, attack) {
 			part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
 		break;
 		
-		case oEnemyBase:
+		case parEnemy:
 			//Soon
 		break;
 	}
