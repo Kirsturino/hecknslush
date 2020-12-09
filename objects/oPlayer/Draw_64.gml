@@ -1,3 +1,5 @@
+if (state == playerDummy) exit;
+
 //Draw HP rectangles
 var margin = 32;
 var size = 8;

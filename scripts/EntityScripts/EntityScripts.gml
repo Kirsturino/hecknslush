@@ -39,10 +39,13 @@ function dealDamage(enemy)
 		
 		var htbx = other.id;
 		
+		//FX
+		hitFX(htbx);
+		
 		//Hardcoded to give the player cooldowns, maybe refactor later
 		if (htbx.atk.target == parEnemy)
 		{
-			refreshPlayerCooldowns(htbx.atk.dmg);
+			refreshPlayerCooldowns(htbx);
 		}
 		
 		//Reduce hp
@@ -50,9 +53,6 @@ function dealDamage(enemy)
 		
 		//Inflict knockback
 		inflictKnockback(htbx);
-		
-		//FX
-		hitFX(htbx);
 	}
 	
 	//Destroy projectile if it's not piercing
@@ -105,13 +105,18 @@ function canSee(instance)
 	return false;
 }
 
-function refreshPlayerCooldowns(amount)
+function refreshPlayerCooldowns(htbx)
 {
 	with  (oPlayer)
 	{
 		var length = array_length(attack);
 		for (var i = 0; i < length; ++i) {
-			if (attackSlots[i].cooldownType == recharge.damage) attack[i].cooldown = approach(attack[i].cooldown, 0, amount * global.damageRechargeMultiplier);
+			//Check if the cooldown type matches and that an ability can't charge itself
+			//Charge granted is proportional to damage inflicted
+			if (attackSlots[i].cooldownType == recharge.damage && htbx.misc.from != attackSlots[i])
+			{	
+				attack[i].cooldown = approach(attack[i].cooldown, 0, htbx.atk.dmg * global.damageRechargeMultiplier);
+			}
 		}
 	}
 }
@@ -215,6 +220,9 @@ function spawnHitbox(weapon, attack)
 	var htbx = instance_create_layer(spawnX, spawnY, "Instances", weapon.htbx);
 	
 	//Hitbox qualities that are shared
+	
+	//Miscellaneous stuff
+	htbx.misc.from = weapon;
 	
 	//Visual stuff
 	htbx.sprite_index = weapon.projSpr;

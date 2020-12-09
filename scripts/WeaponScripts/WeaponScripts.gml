@@ -39,6 +39,8 @@ function genericweaponStruct() constructor
 	clr =					c_red;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
+	upgradeCount =			0;
+	maxUpgradeCount =		3;
 	
 	//Hitbox pattern stuff
 	amount =				10;
@@ -102,6 +104,8 @@ function basicSlash() constructor
 	clr =					c_red;
 	htbx =					oHitbox;
 	projSpr =				sSlash;
+	upgradeCount =			0;
+	maxUpgradeCount =		3;
 	
 	//Hitbox pattern stuff
 	amount =				1;
@@ -162,6 +166,8 @@ function spinSlash() constructor
 	clr =					c_red;
 	htbx =					oHitbox;
 	projSpr =				sThrust;
+	upgradeCount =			0;
+	maxUpgradeCount =		3;
 	
 	//Hitbox pattern stuff
 	amount =				36;
@@ -222,6 +228,8 @@ function burstBlaster() constructor
 	clr =					c_red;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
+	upgradeCount =			0;
+	maxUpgradeCount =		3;
 	
 	//Hitbox pattern stuff
 	amount =				10;
@@ -282,6 +290,8 @@ function doubleWave() constructor
 	clr =					c_red;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
+	upgradeCount =			0;
+	maxUpgradeCount =		3;
 	
 	//Hitbox pattern stuff
 	amount =				10;

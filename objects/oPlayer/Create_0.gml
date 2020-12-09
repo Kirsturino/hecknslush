@@ -84,7 +84,7 @@ combat = new combatStruct();
 abilityAmount = 4;
 for (var i = 0; i < abilityAmount; ++i) { attack[i] = new attackStruct(); }
 
-attackSlots = array_create(abilityAmount, 0);
+attackSlots = array_create(abilityAmount);
 
 //Testing weapon struct idea. Data from a list of weapons would be pulled here to be used locally
 attackSlots[0] = new basicSlash();
@@ -564,6 +564,7 @@ function takeDamage(amount) {
 	combat.iframes = combat.iframesMax;
 	
 	freeze(200);
+	shakeCamera(100, 5, 600);
 	pushEnemies();
 		
 	if (combat.hp <= 0) toDead();

@@ -34,6 +34,10 @@ visuals = {
 	explosionFX : nothing,
 }
 
+misc = {
+	from : noone,
+}
+
 function destroySelf() {
 	ds_list_destroy(atk.damagedEnemies);
 	visuals.explosionFX();

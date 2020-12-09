@@ -1,3 +1,14 @@
+//WIP upgrade randomization
+var size = ds_list_size(global.upgradePool);
+var upg = irandom(size);
+upgrade = global.upgradePool[| upg];
+ds_list_delete(global.upgradePool, upg);
+
+//Some graphics variables
+selected = 0;
+selectX = 0;
+selectY = 0;
+
 function active()
 {
 	var plr = collision_circle(x, y, 32, oPlayer, false, false);
@@ -7,7 +18,7 @@ function active()
 	
 	if (input_check_press(verbs.interact, 0, 0))
 	{
-		interact();
+		toApplying();
 	}
 }
 
@@ -15,6 +26,20 @@ function inactive()
 {
 	var plr = collision_circle(x, y, 32, oPlayer, false, false);
 	if (plr != noone) { toActive(); }
+}
+
+function applying()
+{
+	if (input_check_press(verbs.right))
+	{
+		if (selected != oPlayer.abilityAmount - 1)	{ selected++; }
+	} else if (input_check_press(verbs.left))
+	{
+		if (selected != 0)	{ selected--; }
+	} else if (input_check_press(verbs.interact))
+	{
+		applyUpgrade(oPlayer.attackSlots[selected], upgrade);
+	}
 }
 
 state = inactive;
@@ -32,11 +57,11 @@ function toInactive()
 	state = inactive;
 }
 
-function interact()
+function toApplying()
 {
 	drawFunction = nothing;
-	oPlayer.attackSlots[2].spread += 20;
-	instance_destroy();
+	state = applying;
+	playerToDummy();
 }
 
 function highlight()
@@ -51,6 +76,8 @@ function highlight()
 
 function buttonPrompt()
 {
-	scribble_set_starting_format("fntScribble", c_white, fa_center);
-	scribble_draw(x, ystart + 16, "button prompt", 0);
+	scribble_set_starting_format("fntScribble", c_red, fa_center);
+	var wav = wave(-5, 5, 4, 0, true);
+	scribble_draw(x, ystart + 16 + wav, "button prompt", 0);
+	scribble_draw(x, ystart - 32 + wav, upgrade.name, 0);
 }
