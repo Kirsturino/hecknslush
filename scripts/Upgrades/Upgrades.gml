@@ -11,7 +11,7 @@ function applyUpgrade(weapon, upgrade)
 {
 	//Weapon and upgrade type need to match
 	//If they don't, exit from the script
-	if (weapon.type != upgrade.type || weapon.upgradeCount == weapon.maxUpgradeCount) return;
+	if ((weapon.type != upgrade.type && weapon.type != weapons.multi) || weapon.upgradeCount == weapon.maxUpgradeCount) return;
 	
 	//Get struct variables
 	var upg = variable_struct_get_names(upgrade);
@@ -55,6 +55,10 @@ function applyUpgrade(weapon, upgrade)
 		}
 	}
 	
+	//Clear upgrade from upgrade pool
+	var toDelete = ds_list_find_index(POOL, upgrade);
+	ds_list_delete(POOL, toDelete);
+	
 	//Increment upgrade counter
 	var count = variable_struct_get(weapon, "upgradeCount") + 1;
 	variable_struct_set(weapon, "upgradeCount", count);
@@ -93,3 +97,29 @@ function radialAttack() constructor
 }
 
 ds_list_add(POOL, new radialAttack());
+
+function burstifier() constructor
+{
+	type =			weapons.ranged;
+	name =			"Burstifier";
+	desc =			"Add extra shots to weapon";
+	amount =		[10, upgrades.add];
+	delay =			[10, upgrades.add];
+	cooldown =		[1.2, upgrades.multiply];
+	dmg =			[0.6, upgrades.multiply];
+}
+
+ds_list_add(POOL, new burstifier());
+
+function megaBurstifier() constructor
+{
+	type =			weapons.ranged;
+	name =			"MEGAburstifier";
+	desc =			"Turns your gun into a bullet hose. A long bullet hose";
+	amount =		[50, upgrades.add];
+	delay =			[5, upgrades.set];
+	cooldown =		[2, upgrades.multiply];
+	dmg =			[0.5, upgrades.multiply];
+}
+
+ds_list_add(POOL, new megaBurstifier());

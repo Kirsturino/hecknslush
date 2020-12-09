@@ -1,8 +1,8 @@
 //WIP upgrade randomization
 var size = ds_list_size(global.upgradePool);
-var upg = irandom(size);
-upgrade = global.upgradePool[| upg];
-ds_list_delete(global.upgradePool, upg);
+var upg = irandom(size-1);
+if (size != 0)	{ upgrade = global.upgradePool[| upg]; }
+else			{ instance_destroy(); }
 
 //Some graphics variables
 selected = 0;

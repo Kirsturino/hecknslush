@@ -142,7 +142,7 @@ function hitFX(htbx)
 		
 	//Hitstop & camera stuff
 	if (htbx.visuals.hitStop) {
-		freeze(min(htbx.atk.dmg * 40, 200));
+		freeze(min(htbx.atk.dmg * 30, 150));
 			
 		//This prevents hitstop from happening when hitting multiple enemies
 		htbx.visuals.hitStop = false;

@@ -1,6 +1,7 @@
 enum weapons {
 	melee,
-	ranged
+	ranged,
+	multi
 }
 
 enum recharge {

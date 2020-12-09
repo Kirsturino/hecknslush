@@ -22,8 +22,9 @@ for (var i = 0; i < amount; ++i)
 	var startX = originX - (amount-1)*space/2;
 	var drawX = startX + i*space;
 	var drawY = originY + wave(-8, 8, 4, i, true);
-	if (oPlayer.attackSlots[i].type == weapons.melee) { var c = c_red; }
+	if (oPlayer.attackSlots[i].type == weapons.melee)		{ var c = c_red; }
 	else if (oPlayer.attackSlots[i].type == weapons.ranged) { var c = c_aqua; }
+	else													{ var c = c_purple; }
 	
 	//Draw dots that represent abilites
     draw_circle_color(drawX, drawY, radius, c, c, false);
@@ -48,7 +49,8 @@ drawX = startX + selected*space;
 drawY = originY + wave(-8, 8, 4, selected, true) - yOffset;
 selectX = lerp(selectX, drawX, 0.05);
 selectY = lerp(selectY, drawY, 0.02);
-if (upgrade.type == weapons.melee) { c = c_red; }
-else if (upgrade.type == weapons.ranged) { c = c_aqua; }
+if (upgrade.type == weapons.melee)			{ c = c_red; }
+else if (upgrade.type == weapons.ranged)	{ c = c_aqua; }
+else										{ var c = c_purple; }
 	
 draw_circle_color(selectX, selectY, radius/2, c, c, false);
