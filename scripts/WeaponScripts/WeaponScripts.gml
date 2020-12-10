@@ -9,6 +9,7 @@ enum recharge {
 	damage
 }
 
+
 //Generic structs that have stats for individual attacks/dodges/actions
 function attackStruct() constructor
 {
@@ -42,6 +43,13 @@ function genericweaponStruct() constructor
 	projSpr =				sProjectile;
 	upgradeCount =			0;
 	maxUpgradeCount =		3;
+	
+	//Added behaviour functions
+	spawnFunctions =		[];
+	aliveFunctions =		[];
+	hitFunctions =			[];
+	collisionFunctions =	[];
+	destroyFunctions =		[];
 	
 	//Hitbox pattern stuff
 	amount =				10;
@@ -108,6 +116,13 @@ function basicSlash() constructor
 	upgradeCount =			0;
 	maxUpgradeCount =		3;
 	
+	//Added behaviour functions
+	spawnFunctions =		[];
+	aliveFunctions =		[];
+	hitFunctions =			[];
+	collisionFunctions =	[];
+	destroyFunctions =		[];
+	
 	//Hitbox pattern stuff
 	amount =				1;
 	delay =					0;
@@ -170,12 +185,19 @@ function spinSlash() constructor
 	upgradeCount =			0;
 	maxUpgradeCount =		3;
 	
+	//Added behaviour functions
+	spawnFunctions =		[];
+	aliveFunctions =		[];
+	hitFunctions =			[];
+	collisionFunctions =	[];
+	destroyFunctions =		[];
+	
 	//Hitbox pattern stuff
-	amount =				36;
+	amount =				24;
 	delay =					2;
 	burstAmount =			0;
 	burstDelay =			0;
-	multiSpread =			1080;
+	multiSpread =			720;
 	
 	//Hitbox movement 
 	fric =					0;
@@ -232,12 +254,19 @@ function burstBlaster() constructor
 	upgradeCount =			0;
 	maxUpgradeCount =		3;
 	
+	//Added behaviour functions
+	spawnFunctions =		[];
+	aliveFunctions =		[];
+	hitFunctions =			[];
+	collisionFunctions =	[];
+	destroyFunctions =		[];
+	
 	//Hitbox pattern stuff
-	amount =				10;
-	delay =					5;
+	amount =				3;
+	delay =					10;
 	burstAmount =			0;
 	burstDelay =			20;
-	spread =				5;
+	spread =				2;
 	multiSpread =			0;
 	
 	//Hitbox movement 
@@ -246,10 +275,10 @@ function burstBlaster() constructor
 	
 	//Hitbox active start and end
 	start =					0;
-	length =				9999;
+	length =				999;
 	
 	//Important values
-	dmg=					0.6;
+	dmg=					1;
 	life =					180;
 	size =					1;
 	
@@ -283,10 +312,10 @@ function burstBlaster() constructor
 	damageFX =				baseDamageFX;
 }
 
-function doubleWave() constructor
+function waveGun() constructor
 {
 	//Info
-	name =					"Double Burst";
+	name =					"Burst Wave";
 	type =					weapons.ranged;
 	clr =					c_red;
 	htbx =					oHitbox;
@@ -294,10 +323,17 @@ function doubleWave() constructor
 	upgradeCount =			0;
 	maxUpgradeCount =		3;
 	
+	//Added behaviour functions
+	spawnFunctions =		[];
+	aliveFunctions =		[];
+	hitFunctions =			[];
+	collisionFunctions =	[];
+	destroyFunctions =		[];
+	
 	//Hitbox pattern stuff
 	amount =				10;
 	delay =					0;
-	burstAmount =			1;
+	burstAmount =			0;
 	burstDelay =			20;
 	spread =				0;
 	multiSpread =			90;
@@ -308,7 +344,7 @@ function doubleWave() constructor
 	
 	//Hitbox active start and end
 	start =					0;
-	length =				9999;
+	length =				999;
 	
 	//Important values
 	dmg=					1;
@@ -363,6 +399,13 @@ function rangedEnemyWeapon() constructor
 	clr =					c_red;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
+	
+	//Added behaviour functions
+	spawnFunctions =		[];
+	aliveFunctions =		[];
+	hitFunctions =			[];
+	collisionFunctions =	[];
+	destroyFunctions =		[];
 	
 	//Hitbox pattern stuff
 	amount =				5;

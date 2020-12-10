@@ -3,8 +3,7 @@ function approach(value, to, amount) {
 	{
 	    value += amount * delta;
 	    if (value > to) return to;
-	}
-	else
+	} else
 	{
 	    value -= amount * delta;
 	    if (value < to) return to;
@@ -33,4 +32,16 @@ function isOutsideRoom(objectID) {
 function nothing()
 {
 	
+}
+
+function debug()
+{
+	show_debug_message("This code is being run.");
+}
+
+function executeFunctionArray(array)
+{
+	//Run through functions in an array
+	var length = array_length(array);
+	for (var i = 0; i < length; ++i) { array[i](); }
 }

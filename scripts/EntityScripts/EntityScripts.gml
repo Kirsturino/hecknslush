@@ -55,6 +55,8 @@ function dealDamage(enemy)
 		inflictKnockback(htbx);
 	}
 	
+	executeFunctionArray(hitFunctions);
+	
 	//Destroy projectile if it's not piercing
 	if (!atk.piercing) destroySelf();
 }
@@ -68,11 +70,13 @@ function negateMomentum()
 function staticMovement()
 {
 	//Simple movement
-	move.hsp = approach(move.hsp, 0, move.fric);
+	move.hsp = approach(move.hsp, 0, abs(lengthdir_x(move.fric, move.dir)));
 	horizontalCollision();
 	
-	move.vsp = approach(move.vsp, 0, move.fric);
+	move.vsp = approach(move.vsp, 0, abs(lengthdir_y(move.fric, move.dir)));
 	verticalCollision();
+	
+	move.dir = point_direction(0, 0, move.hsp, move.vsp);
 
 	x += move.hsp * delta;
 	y += move.vsp * delta;
@@ -186,7 +190,7 @@ function drawAttackIndicator(visuals, weapon, attack)
 			var drawX = x + lengthdir_x(visuals.indicatorLength, attack.dir) - camX;
 			var drawY = y + lengthdir_y(visuals.indicatorLength, attack.dir) - camY;
 			
-			draw_line_width_color(x - camX, y - camY, drawX, drawY, 10, c, c2);
+			draw_line_width_color(x - camX, y - camY, drawX, drawY, 8, c, c2);
 		break;
 		
 		case indicator.triangle:
@@ -257,9 +261,23 @@ function spawnHitbox(weapon, attack)
 	htbx.atk.destroyOnStop = weapon.destroyOnStop;
 	htbx.atk.destroyOnCollision = weapon.destroyOnCollision;
 	
+	//Pass extra behaviour functions
+	pushArrayToArray(weapon.spawnFunctions, htbx.spawnFunctions);
+	pushArrayToArray(weapon.aliveFunctions, htbx.aliveFunctions);
+	pushArrayToArray(weapon.hitFunctions, htbx.hitFunctions);
+	pushArrayToArray(weapon.collisionFunctions, htbx.collisionFunctions);
+	pushArrayToArray(weapon.destroyFunctions, htbx.destroyFunctions);
+	
 	//Determine if this should hit enemies or player
 	if (object_index == oPlayer)	{ htbx.atk.target = parEnemy; }
 	else							{ htbx.atk.target = oPlayer; }
+}
+
+function pushArrayToArray(arrayFrom, arrayTo)
+{
+	var length = array_length(arrayFrom);
+	for (var i = 0; i < length; ++i)
+		{ array_push(arrayTo, arrayFrom[i]); }
 }
 
 function attackLogic(weapon, attack)

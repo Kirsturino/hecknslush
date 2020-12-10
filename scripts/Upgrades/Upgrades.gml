@@ -4,14 +4,24 @@ global.upgradePool = ds_list_create();
 enum upgrades {
 	add,
 	multiply,
-	set
+	set,
+	behaviour
 }
 
 function applyUpgrade(weapon, upgrade)
 {
 	//Weapon and upgrade type need to match
 	//If they don't, exit from the script
-	if ((weapon.type != upgrade.type && weapon.type != weapons.multi) || weapon.upgradeCount == weapon.maxUpgradeCount) return;
+	if (weapon.type != upgrade.type && upgrade.type != weapons.multi) { return; }
+	else if (weapon.upgradeCount == weapon.maxUpgradeCount)
+	{
+		//If weapon has max amount of upgrades, destroy upgrade and add 1 to max amount of upgrades
+		var maxUpg = variable_struct_get(weapon, "maxUpgradeCount") + 1;
+		variable_struct_set(weapon, "maxUpgradeCount", maxUpg);
+		
+		destroyUpgrade(weapon, upgrade);
+		return;
+	}
 	
 	//Get struct variables
 	var upg = variable_struct_get_names(upgrade);
@@ -45,6 +55,12 @@ function applyUpgrade(weapon, upgrade)
 					var finalValue = upgradeValueArray[0];
 				break;
 				
+				case upgrades.behaviour:
+					var finalValue = array_create(0);
+					pushArrayToArray(weaponValue, finalValue);
+					array_push(finalValue, upgradeValueArray[0]);
+				break;
+				
 				default:
 					show_message("upgrade broke");
 				break;
@@ -55,6 +71,11 @@ function applyUpgrade(weapon, upgrade)
 		}
 	}
 	
+	destroyUpgrade(weapon, upgrade);
+}
+
+function destroyUpgrade(weapon, upgrade)
+{
 	//Clear upgrade from upgrade pool
 	var toDelete = ds_list_find_index(POOL, upgrade);
 	ds_list_delete(POOL, toDelete);
@@ -82,8 +103,6 @@ function anarchy() constructor
 	cooldown =	[1.5, upgrades.multiply];
 }
 
-ds_list_add(POOL, new anarchy());
-
 function radialAttack() constructor
 {
 	type =			weapons.melee;
@@ -96,8 +115,6 @@ function radialAttack() constructor
 	push =			[0.5, upgrades.multiply];
 }
 
-ds_list_add(POOL, new radialAttack());
-
 function burstifier() constructor
 {
 	type =			weapons.ranged;
@@ -108,8 +125,6 @@ function burstifier() constructor
 	cooldown =		[1.2, upgrades.multiply];
 	dmg =			[0.6, upgrades.multiply];
 }
-
-ds_list_add(POOL, new burstifier());
 
 function megaBurstifier() constructor
 {
@@ -122,4 +137,25 @@ function megaBurstifier() constructor
 	dmg =			[0.5, upgrades.multiply];
 }
 
-ds_list_add(POOL, new megaBurstifier());
+function behaviourTest() constructor
+{
+	type =			weapons.melee;
+	name =			"Hit Debugger";
+	desc =			"Prints debug messages when hitting enemies";
+	hitFunctions =	[debug, upgrades.behaviour];
+}
+
+function multiTest() constructor
+{
+	type =			weapons.multi;
+	name =			"Multi Debugger";
+	desc =			"This can be applied to any ability and only changes the color of the ability";
+	clr =			[c_lime, upgrades.set];
+}
+
+//ds_list_add(POOL, new anarchy());
+//ds_list_add(POOL, new radialAttack());
+//ds_list_add(POOL, new burstifier());
+//ds_list_add(POOL, new megaBurstifier());
+//ds_list_add(POOL, new behaviourTest());
+ds_list_add(POOL, new multiTest());

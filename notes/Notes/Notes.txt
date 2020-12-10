@@ -7,6 +7,7 @@ FEATURES:
 	- Weapons would probably have like a max upgrade amount
 		- Could be increased by consuming upgrade instead of infusing it to the weapon
 	- Buffs that apply to player are probably easiest to implement by adding extra functions to an array that gets run
+	- Dodge perks???
 - Dungeon generation
 - Culling to walls and enemies
 - Controller support

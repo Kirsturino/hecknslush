@@ -93,7 +93,7 @@ attackSlots[1] = new spinSlash();
 
 attackSlots[2] = new burstBlaster();
 	
-attackSlots[3] = new doubleWave();
+attackSlots[3] = new waveGun();
 	
 //Dodge properties, not sure what to put here, really, or how it will work yet
 dodge = new dodgeStruct();
@@ -106,8 +106,6 @@ curDodge = new defaultDodge();
 
 //Variables that don't directly affect gameplay
 visuals = new visualsStruct();
-
-lastInteractable = noone;
 
 #endregion
 
