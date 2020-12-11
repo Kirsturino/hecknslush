@@ -15,7 +15,7 @@ window_set_size(viewWidth * global.windowScale, viewHeight * global.windowScale)
 
 //Apply camera
 camera_set_view_size(view, viewWidth, viewHeight);
-surface_resize(application_surface, viewWidth , viewHeight);
+surface_resize(application_surface, viewWidth, viewHeight);
 
 //Limit GUI draw resolution
 display_set_gui_size(viewWidth, viewHeight);

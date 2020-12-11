@@ -58,7 +58,7 @@ function highlight()
 
 function buttonPrompt()
 {
-	scribble_set_starting_format("fntScribble", c_red, fa_center);
+	scribble_set_blend(c_red, 1);
 	var wav = wave(-5, 5, 4, 0, true);
 	scribble_draw(x, ystart + 16 + wav, "button prompt", 0);
 	scribble_draw(x, ystart - 32 + wav, buff.name, 0);

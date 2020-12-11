@@ -6,7 +6,6 @@ var space = 16;
 
 draw_rectangle_color(0, 0, 200, 200, c_black, c_black, c_black, c_black, false);
 
-scribble_set_starting_format("fntDebug", c_white, fa_left);
 scribble_draw(margin, margin, "FPS: " + string(fps));
 scribble_draw(margin, margin + space, "DELTA MULTIPLIER: " + string(delta));
 scribble_draw(margin, margin + space * 2, "DELTA: " + string(delta_time));

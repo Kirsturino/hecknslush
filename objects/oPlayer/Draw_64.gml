@@ -32,13 +32,14 @@ var txtLength = string_width(txt);
 
 draw_sprite_ext(sPixel, 0, 0, margin-thicc/4, combat.maxHP * hpMultiplier + txtLength*2 + margin, thicc*2, tilt, c, 1);
 c = c_black;
-draw_sprite_ext(sPixel, 0, margin, margin+thicc/2, combat.maxHP * hpMultiplier + thicc/4, thicc, tilt, c, 1);
+draw_sprite_ext(sPixel, 0, margin + thicc/4, margin+thicc/2, combat.maxHP * hpMultiplier + thicc/4, thicc, tilt, c, 1);
 c = c_red;
 draw_sprite_ext(sPixel, 0, margin, margin, combat.hp * hpMultiplier, thicc, tilt, c, 1);
 
 var drawX = margin + lengthdir_x(combat.maxHP * hpMultiplier + txtLength, tilt);
-var drawY = margin + lengthdir_y(combat.maxHP * hpMultiplier + txtLength, tilt);
-scribble_set_starting_format("fntScribble", c_black, fa_center);
+var drawY = margin + lengthdir_y(combat.maxHP * hpMultiplier + txtLength, tilt) - 2;
+
+scribble_set_blend(c_black, 1);
 scribble_draw(drawX, drawY, txt);
 
 //Draw ability indicators

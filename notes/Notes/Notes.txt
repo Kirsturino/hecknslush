@@ -21,7 +21,7 @@ Yes
 - Enemy state structure
 - Enemy pathfinding/movement should be generalized
 
-- Move FX drawing to a separate object that can handle draw calls smoothly (for explosions and stuff)
+- Move FX drawing to a separate object that can handle draw calls from everywhere smoothly (for explosions and stuff)
 
 - Make all damage and HP values be integers, increase all HP scale by 10
 - Generalize adding buffs

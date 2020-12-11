@@ -3,7 +3,7 @@ if (state != applying) exit;
 //Draw background
 draw_sprite_ext(sPixel, 0, 0, 0, viewWidth, viewHeight, 0, c_black, 0.9);
 
-scribble_set_starting_format("fntScribble", c_white, fa_center);
+scribble_set_blend(c_white, 1);
 
 //Draw upgrade name and description
 var drawX = viewWidth/2;
