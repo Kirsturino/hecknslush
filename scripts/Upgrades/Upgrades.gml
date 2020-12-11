@@ -1,11 +1,12 @@
 global.upgradePool = ds_list_create();
-#macro POOL global.upgradePool
+#macro POOL_UPGRADE global.upgradePool
 
 enum upgrades {
 	add,
 	multiply,
 	set,
-	behaviour
+	behaviour,
+	execute
 }
 
 function applyUpgrade(weapon, upgrade)
@@ -19,11 +20,11 @@ function applyUpgrade(weapon, upgrade)
 		var maxUpg = variable_struct_get(weapon, "maxUpgradeCount") + 1;
 		variable_struct_set(weapon, "maxUpgradeCount", maxUpg);
 		
-		destroyUpgrade(weapon, upgrade);
+		destroyUpgrade(upgrade);
 		return;
 	}
 	
-	//Get struct variables
+	//Get weapon variables
 	var upg = variable_struct_get_names(upgrade);
 	
 	//See if we have matching variables
@@ -33,7 +34,7 @@ function applyUpgrade(weapon, upgrade)
 	{
 		var upgradeVarName = upg[i];
 		//Check for matching variable names
-		var notDescriptive = (upgradeVarName != "type" && upgradeVarName != "name" && upgradeVarName != "desc");
+		var notDescriptive = (upgradeVarName != "type" && upgradeVarName != "name" && upgradeVarName != "desc" && upgradeVarName != "pool");
 	    if (notDescriptive && variable_struct_exists(weapon, upgradeVarName))
 		{
 			//Fetch variable values from weapon and upgrade
@@ -61,28 +62,33 @@ function applyUpgrade(weapon, upgrade)
 					array_push(finalValue, upgradeValueArray[0]);
 				break;
 				
+				case upgrades.execute:
+					upgradeValueArray[0]();
+				break;
+				
 				default:
 					show_message("upgrade broke");
 				break;
 			}
 			
 			//Finally, set weapon value with calculated value
-			variable_struct_set(weapon, upgradeVarName, finalValue);
+			if (upgradeValueArray[1] != upgrades.execute) variable_struct_set(weapon, upgradeVarName, finalValue);
 		}
 	}
-	
-	destroyUpgrade(weapon, upgrade);
-}
-
-function destroyUpgrade(weapon, upgrade)
-{
-	//Clear upgrade from upgrade pool
-	var toDelete = ds_list_find_index(POOL, upgrade);
-	ds_list_delete(POOL, toDelete);
 	
 	//Increment upgrade counter
 	var count = variable_struct_get(weapon, "upgradeCount") + 1;
 	variable_struct_set(weapon, "upgradeCount", count);
+	
+	destroyUpgrade(upgrade);
+}
+
+function destroyUpgrade(upgrade)
+{
+	//Clear upgrade from upgrade pool
+	var pool = upgrade.pool;
+	var toDelete = ds_list_find_index(pool, upgrade);
+	ds_list_delete(pool, toDelete);
 	
 	//Change player back to controllable
 	playerToGrounded();
@@ -97,6 +103,8 @@ function anarchy() constructor
 	type =		weapons.ranged;
 	name =		"Anarchy";
 	desc =		"Double damage, increased spread and cooldown"
+	pool =		POOL_UPGRADE;
+	
 	clr =		[c_purple, upgrades.set];
 	spread =	[20, upgrades.add];
 	dmg =		[2, upgrades.multiply];
@@ -108,6 +116,8 @@ function radialAttack() constructor
 	type =			weapons.melee;
 	name =			"Radial Strike";
 	desc =			"Additional attacks around you, lower damage";
+	pool =			POOL_UPGRADE;
+	
 	multiSpread =	[270, upgrades.set];
 	amount =		[2, upgrades.add];
 	dur =			[1.2, upgrades.multiply];
@@ -120,6 +130,8 @@ function burstifier() constructor
 	type =			weapons.ranged;
 	name =			"Burstifier";
 	desc =			"Add extra shots to weapon";
+	pool =		POOL_UPGRADE;
+	
 	amount =		[10, upgrades.add];
 	delay =			[10, upgrades.add];
 	cooldown =		[1.2, upgrades.multiply];
@@ -131,6 +143,8 @@ function megaBurstifier() constructor
 	type =			weapons.ranged;
 	name =			"MEGAburstifier";
 	desc =			"Turns your gun into a bullet hose. A long bullet hose";
+	pool =			POOL_UPGRADE;
+	
 	amount =		[50, upgrades.add];
 	delay =			[5, upgrades.set];
 	cooldown =		[2, upgrades.multiply];
@@ -142,6 +156,8 @@ function behaviourTest() constructor
 	type =			weapons.melee;
 	name =			"Hit Debugger";
 	desc =			"Prints debug messages when hitting enemies";
+	pool =			POOL_UPGRADE;
+	
 	hitFunctions =	[debug, upgrades.behaviour];
 }
 
@@ -149,7 +165,8 @@ function multiTest() constructor
 {
 	type =			weapons.multi;
 	name =			"Multi Debugger";
-	desc =			"This can be applied to any ability and only changes the color of the ability";
+	desc =			"This can be applied to any ability and only changes the color of the ability for debugging purposes";
+	pool =			POOL_UPGRADE;
 	clr =			[c_lime, upgrades.set];
 }
 
@@ -157,7 +174,9 @@ function explodingBullets() constructor
 {
 	type =			weapons.ranged;
 	name =			"Exploding bullets";
-	desc =			"Your bullets explode. Nuff said";
+	desc =			"Halved damage. Bullets create explosion that damages nearby enemies";
+	pool =			POOL_UPGRADE;
+	
 	dmg =			[0.5, upgrades.multiply];
 	piercing =		[false, upgrades.set];
 	
@@ -197,17 +216,74 @@ function explodingBullets() constructor
 		part_type_size(global.explosionPart, radius / 3, radius / 3, 0, 0);
 		part_particles_create(global.ps, htbx.x, htbx.y, global.explosionPart, 1);
 		
+		//Make those explosions feel meaty
 		freeze(htbx.atk.dmg * 100);
-		shakeCamera(htbx.atk.dmg * 200, 2, 100);
+		shakeCamera(htbx.atk.dmg * 200, 2, 200);
 		
-	}, upgrades.behaviour];
+	}
+	, upgrades.behaviour];
 
 }
 
-ds_list_add(POOL, new anarchy());
-ds_list_add(POOL, new radialAttack());
-ds_list_add(POOL, new burstifier());
-ds_list_add(POOL, new megaBurstifier());
-ds_list_add(POOL, new behaviourTest());
-ds_list_add(POOL, new multiTest());
-ds_list_add(POOL, new explodingBullets());
+ds_list_add(POOL_UPGRADE, new anarchy());
+ds_list_add(POOL_UPGRADE, new radialAttack());
+ds_list_add(POOL_UPGRADE, new burstifier());
+ds_list_add(POOL_UPGRADE, new megaBurstifier());
+ds_list_add(POOL_UPGRADE, new behaviourTest());
+ds_list_add(POOL_UPGRADE, new multiTest());
+ds_list_add(POOL_UPGRADE, new explodingBullets());
+
+//-------------------------------------------------------------------------------------------
+
+global.buffPool = ds_list_create();
+#macro POOL_BUFF global.buffPool
+
+function rally() constructor
+{
+	name =			"Rally";
+	desc =			"Regain HP by damaging enemies after getting hit";
+	pool =			POOL_BUFF;
+	
+	
+	function applyBuff()
+	{
+		//Add rally variables to player
+		oPlayer.extra.structs.rallyStruct = {
+			healTime : 0,
+			healTimeMax : 200,
+			healMultiplier : 0.1,
+		}
+		
+		//Create heal function for weapons
+		function rallyHeal()
+		{
+			if (oPlayer.extra.structs.rallyStruct.healTime > 0)
+				{ oPlayer.combat.hp = approach(oPlayer.combat.hp, oPlayer.combat.maxHP, atk.dmg * oPlayer.extra.structs.rallyStruct.healMultiplier); }
+		}
+		
+		//Add heal function to all weapon onhit arrays
+		var length = array_length(oPlayer.attackSlots);
+		for (var i = 0; i < length; ++i)
+		{
+		   array_push(oPlayer.attackSlots[i].hitFunctions, rallyHeal);
+		}
+		
+		//Extra functions to make rally effect work
+		//These get pushed to player arrays that contain extra functions gained from buffs
+		function rallyLogic()
+		{
+			extra.structs.rallyStruct.healTime = approach(extra.structs.rallyStruct.healTime, 0, 1);
+		}
+		
+		array_push(oPlayer.extra.step, rallyLogic);
+	
+		function resetRallyTimer()
+		{
+			extra.structs.rallyStruct.healTime = extra.structs.rallyStruct.healTimeMax;
+		}
+		
+		array_push(oPlayer.extra.onDamageTaken, resetRallyTimer);
+	}
+}
+
+ds_list_add(POOL_BUFF, new rally());

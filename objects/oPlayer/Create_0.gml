@@ -104,6 +104,13 @@ curDodge = new defaultDodge();
 
 #region MISC. VARIABLES
 
+//Added behaviour functions
+extra = {
+	step :			[],
+	onDamageTaken :	[],
+	structs : { },
+}
+
 //Variables that don't directly affect gameplay
 visuals = new visualsStruct();
 
@@ -558,12 +565,14 @@ function cameraStateSwitch() {
 }
 
 function takeDamage(amount) {
-	combat.hp -= amount;
+	combat.hp = approach(combat.hp, 0, amount);
 	combat.iframes = combat.iframesMax;
 	
 	freeze(200);
 	shakeCamera(100, 5, 600);
 	pushEntities(x, y, 3, 128, parEnemy, true);
+	
+	executeFunctionArray(extra.onDamageTaken);
 		
 	if (combat.hp <= 0) toDead();
 }

@@ -1,12 +1,14 @@
 enum weapons {
 	melee,
 	ranged,
-	multi
+	multi,
+	other
 }
 
 enum recharge {
 	time,
-	damage
+	damage,
+	kill
 }
 
 

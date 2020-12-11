@@ -382,6 +382,9 @@ function attackMovement() {
 	
 	x += move.hsp * delta;
 	y += move.vsp * delta;
+	
+	//FX
+	part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
 }
 	
 function setAttackMovement(amount, weapon, attack) {
@@ -394,12 +397,10 @@ function setAttackMovement(amount, weapon, attack) {
 			
 			if (!weapon.aimable)	{ move.dir = attack.dir; }
 			else					{ move.dir = point_direction(x, y, mouse_x, mouse_y); }
-	
-			part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
 		break;
 		
 		case parEnemy:
-			//Soon
+			move.dir = attack.dir;
 		break;
 	}
 	

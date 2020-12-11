@@ -48,6 +48,7 @@
     {"id":{"name":"input_rebind_tick","path":"scripts/input_rebind_tick/input_rebind_tick.yy",},"order":5,},
     {"id":{"name":"oEnemyMelee","path":"objects/oEnemyMelee/oEnemyMelee.yy",},"order":1,},
     {"id":{"name":"sEnemyRangedShooting","path":"sprites/sEnemyRangedShooting/sEnemyRangedShooting.yy",},"order":3,},
+    {"id":{"name":"oBuff","path":"objects/oBuff/oBuff.yy",},"order":6,},
     {"id":{"name":"sGun","path":"sprites/sGun/sGun.yy",},"order":0,},
     {"id":{"name":"scribble_autotype_get","path":"scripts/scribble_autotype_get/scribble_autotype_get.yy",},"order":3,},
     {"id":{"name":"scribble_draw_set_box_align","path":"scripts/scribble_draw_set_box_align/scribble_draw_set_box_align.yy",},"order":6,},
