@@ -64,4 +64,12 @@ part_type_shape(p, pt_shape_disk);
 part_type_life(p, 30, 60);
 part_type_size(p, 0.05, 0.1, -0.01, 0);
 part_type_color1(p, c_white);
- 
+	
+
+global.explosionPart = part_type_create();
+var p = global.explosionPart;
+part_type_shape(p, pt_shape_disk);
+part_type_life(p, 4, 4);
+part_type_scale(p, 0.1, 0.1);
+part_type_size(p, 0.3, 0.4, 0, 0);
+part_type_orientation(p, 0, 0, 0, 0, true);

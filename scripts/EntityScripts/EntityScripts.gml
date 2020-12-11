@@ -176,6 +176,26 @@ function incrementAnimationFrame()
 	visuals.yScale = lerp(visuals.yScale, 1, 0.1 * delta);
 }
 
+function pushEntities(xx, yy, force, radius, objToPush, shouldStun)
+{
+	with (objToPush)
+	{
+		var dist = distance_to_point(xx, yy);
+		
+		if (dist < radius)
+		{
+			var dir = point_direction(xx, yy, x, y);
+			var pushAmount = force - dist * 0.02 * combat.weight;
+			
+			move.hsp = lengthdir_x(pushAmount, dir);
+			move.vsp = lengthdir_y(pushAmount, dir);
+			move.dir = dir;
+			
+			if (shouldStun) toStunned(144);
+		}
+	}
+}
+
 //Enemy functions
 function drawAttackIndicator(visuals, weapon, attack)
 {

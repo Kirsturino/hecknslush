@@ -25,6 +25,7 @@ Yes
 - Enemy pathfinding/movement should be generalized
 - Move all UI to a separate UI object
 	- All draw functions should be in an array that gets looped
+- Move FX drawing to a separate object that can handle vector draw calls
 
 Maybe
 - Optimize multispread calculation

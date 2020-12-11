@@ -563,26 +563,9 @@ function takeDamage(amount) {
 	
 	freeze(200);
 	shakeCamera(100, 5, 600);
-	pushEnemies();
+	pushEntities(x, y, 3, 128, parEnemy, true);
 		
 	if (combat.hp <= 0) toDead();
-}
-
-function pushEnemies() {
-	with (parEnemy) {
-		var dist = distance_to_object(oPlayer);
-		
-		if (dist < 128) {
-			var dir = point_direction(oPlayer.x, oPlayer.y, x, y);
-			var force = 3 - dist * 0.02 * combat.weight;
-			
-			move.hsp = lengthdir_x(force, dir);
-			move.vsp = lengthdir_y(force, dir);
-			move.dir = dir;
-			
-			toStunned(144);
-		}
-	}
 }
 
 #endregion

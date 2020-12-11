@@ -153,9 +153,61 @@ function multiTest() constructor
 	clr =			[c_lime, upgrades.set];
 }
 
-//ds_list_add(POOL, new anarchy());
-//ds_list_add(POOL, new radialAttack());
-//ds_list_add(POOL, new burstifier());
-//ds_list_add(POOL, new megaBurstifier());
-//ds_list_add(POOL, new behaviourTest());
+function explodingBullets() constructor
+{
+	type =			weapons.ranged;
+	name =			"Exploding bullets";
+	desc =			"Your bullets explode. Nuff said";
+	dmg =			[0.5, upgrades.multiply];
+	piercing =		[false, upgrades.set];
+	
+	hitFunctions = [function explosion()
+	{
+		var htbx = other.id;
+		var enemyList = ds_list_create();
+		//Maybe change radius to be dynamic at some point???
+		var radius = 64;
+		
+		collision_circle_list(htbx.x, htbx.y, radius, parEnemy, false, false, enemyList, false);
+		var size = ds_list_size(enemyList);
+		
+		//Cycle through all the enemies hit by explosion
+		for (var i = 0; i < size; ++i)
+		{
+		    with (enemyList[| i])
+			{
+				//Reduce hp
+				takeDamage(htbx.atk.dmg);
+		
+				//Inflict knockback
+				var dist = distance_to_point(htbx.x, htbx.y);
+		
+				var dir = point_direction(htbx.x, htbx.y, x, y);
+				var force = htbx.atk.dmg * 4 - dist * 0.02 * combat.weight;
+			
+				move.hsp = lengthdir_x(force, dir);
+				move.vsp = lengthdir_y(force, dir);
+				move.dir = dir;
+			}
+		}
+		
+		ds_list_destroy(enemyList);
+		
+		//Explosion particle
+		part_type_size(global.explosionPart, radius / 3, radius / 3, 0, 0);
+		part_particles_create(global.ps, htbx.x, htbx.y, global.explosionPart, 1);
+		
+		freeze(htbx.atk.dmg * 100);
+		shakeCamera(htbx.atk.dmg * 200, 2, 100);
+		
+	}, upgrades.behaviour];
+
+}
+
+ds_list_add(POOL, new anarchy());
+ds_list_add(POOL, new radialAttack());
+ds_list_add(POOL, new burstifier());
+ds_list_add(POOL, new megaBurstifier());
+ds_list_add(POOL, new behaviourTest());
 ds_list_add(POOL, new multiTest());
+ds_list_add(POOL, new explodingBullets());
