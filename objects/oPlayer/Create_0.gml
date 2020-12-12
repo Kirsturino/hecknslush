@@ -107,8 +107,10 @@ curDodge = new defaultDodge();
 //Added behaviour functions
 extra = {
 	step :			[],
+	dodge :			[],
 	onDamageTaken :	[],
-	structs : { },
+	onToDodge :		[],
+	structs :		{ },
 }
 
 //Variables that don't directly affect gameplay
@@ -236,6 +238,8 @@ function playerAiming() {
 }
 
 function playerDodging() {
+	executeFunctionArray(extra.dodge);
+	
 	dodge.dur = approach(dodge.dur, 0, 1);
 	
 	dodgeMovement();
@@ -294,6 +298,8 @@ function toAiming() {
 }
 
 function toDodging() {
+	executeFunctionArray(extra.onToDodge);
+	
 	//Set dodge stats
 	dodge.dur = curDodge.dur;
 	dodge.spd = curDodge.spd;
@@ -565,14 +571,17 @@ function cameraStateSwitch() {
 }
 
 function takeDamage(amount) {
-	combat.hp = approach(combat.hp, 0, amount);
+	executeFunctionArray(extra.onDamageTaken);
+	
+	combat.hp = max(0, combat.hp - amount);
 	combat.iframes = combat.iframesMax;
 	
-	freeze(200);
+	//Stuff that needs to get fed to UI
+	oUI.hpBar.delay = oUI.hpBar.delayMax;
+	
+	freeze(2000);
 	shakeCamera(100, 5, 600);
 	pushEntities(x, y, 3, 128, parEnemy, true);
-	
-	executeFunctionArray(extra.onDamageTaken);
 		
 	if (combat.hp <= 0) toDead();
 }

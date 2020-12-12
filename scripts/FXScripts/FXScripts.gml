@@ -2,6 +2,8 @@
 #macro hitFlash 14
 
 global.enemyAttackSurf = 0;
+global.freezeScale = 0.1;
+global.hitFXScale = 0.1;
 
 //Enemy attack indicator types
 enum indicator
@@ -14,7 +16,7 @@ enum indicator
 
 function freeze(amount) {
 	var time = current_time;
-	var dur = argument0;
+	var dur = amount * global.freezeScale;
 
 	while (current_time < time + dur)
 	{

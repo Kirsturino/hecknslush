@@ -70,7 +70,7 @@ function genericweaponStruct() constructor
 	length =				10;
 	
 	//Important values
-	dmg =					0.4;
+	dmg =					4;
 	life =					180;
 	size =					1;
 	
@@ -141,7 +141,7 @@ function basicSlash() constructor
 	length =				10;
 	
 	//Important values
-	dmg=					1;
+	dmg=					10;
 	life =					12;
 	size =					1;
 	
@@ -210,7 +210,7 @@ function spinSlash() constructor
 	length =				12;
 	
 	//Important values
-	dmg=					0.4;
+	dmg=					4;
 	life =					12;
 	size =					1;
 	
@@ -280,7 +280,7 @@ function burstBlaster() constructor
 	length =				999;
 	
 	//Important values
-	dmg=					1;
+	dmg =					10;
 	life =					180;
 	size =					1;
 	
@@ -349,7 +349,7 @@ function waveGun() constructor
 	length =				999;
 	
 	//Important values
-	dmg=					1;
+	dmg =					15;
 	life =					180;
 	size =					1.5;
 	
@@ -426,7 +426,7 @@ function rangedEnemyWeapon() constructor
 	length =				9999;
 	
 	//Important values
-	dmg =					1;
+	dmg =					10;
 	life =					180;
 	size =					1;
 	

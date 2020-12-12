@@ -12,7 +12,7 @@ weapon = {
 	anticipationDur : 64,
 	spd : 2.5,
 	cooldown : 128,
-	dmg : 1
+	dmg : 5,
 }
 
 attack = {
@@ -85,7 +85,7 @@ function attacking() {
 	//Player hit detection
 	if (attack.damaged == false && oPlayer.combat.iframes == 0 && place_meeting(x, y, oPlayer)) {
 		with (oPlayer) {
-			takeDamage(other.attack.dmg);
+			takeDamage(ceil(other.attack.dmg));
 			
 			if (combat.hp <= 0) toDead();
 		}

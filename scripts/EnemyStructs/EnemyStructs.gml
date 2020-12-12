@@ -1,6 +1,6 @@
 function swarmerCombat() constructor
 {
-	hp = 2;
+	hp = 20;
 	detectionRadius = 200;
 	attackRadius = 124;
 	chaseRadius = 240;
@@ -45,7 +45,7 @@ function swarmerVisuals() constructor
 
 function rangedCombat() constructor
 {
-	hp = 3;
+	hp = 30;
 	detectionRadius = 280;
 	attackRadius = 220;
 	chaseRadius = 320;

@@ -49,7 +49,7 @@ function dealDamage(enemy)
 		}
 		
 		//Reduce hp
-		takeDamage(htbx.atk.dmg);
+		takeDamage(ceil(htbx.atk.dmg));
 		
 		//Inflict knockback
 		inflictKnockback(htbx);
@@ -138,11 +138,11 @@ function inflictKnockback(htbx)
 function hitFX(htbx)
 {
 	//Hitflash
-	visuals.flash = max(hitFlash, hitFlash * htbx.atk.dmg);
+	visuals.flash = max(hitFlash, hitFlash * htbx.atk.dmg) * global.hitFXScale;
 	
 	//Squash and stretch
-	visuals.yScale += htbx.atk.dmg;
-	visuals.xScale -= htbx.atk.dmg;
+	visuals.yScale += htbx.atk.dmg * global.hitFXScale;
+	visuals.xScale -= htbx.atk.dmg * global.hitFXScale;
 		
 	//Hitstop & camera stuff
 	if (htbx.visuals.hitStop) {
@@ -154,13 +154,13 @@ function hitFX(htbx)
 		
 	shakeCamera(htbx.atk.dmg * 40, htbx.atk.dmg * 2, 4);
 	pushCamera(htbx.atk.dmg * 20, htbx.move.dir);
-	zoomCamera(1 - htbx.atk.dmg * 0.05);
+	zoomCamera(htbx.atk.dmg * 0.04);
 		
 	//Particles
-	htbx.visuals.damageFX(htbx.atk.dmg);
+	htbx.visuals.damageFX(htbx.atk.dmg * global.hitFXScale);
 
 	//Stun enemy if applicable
-	if (combat.stunnable) toStunned(htbx.atk.dmg * 40);
+	if (combat.stunnable) toStunned(htbx.atk.dmg * 40 * global.hitFXScale);
 }
 
 function incrementAnimationFrame()
@@ -256,7 +256,7 @@ function spawnHitbox(weapon, attack)
 	htbx.image_yscale = weapon.size;
 	if (weapon.mirror) htbx.image_yscale = attack.mirror;
 	htbx.image_blend = weapon.clr;
-	visuals.recoil = weapon.dmg * 20;
+	visuals.recoil = weapon.dmg;
 	htbx.visuals.type = weapon.type;
 	
 	//Determine effects

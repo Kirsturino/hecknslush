@@ -1,14 +1,10 @@
 ---------------------------------------------------------------------------
 FEATURES:
 - Weighted camera
-- Dodge perks
-	- This can be done by just adding new function arrays to player
-	- Maybe these arrays can also be added dynamically instead of having a dozen empty arrays to start with?
 - Dungeon generation
 - Culling to walls and enemies
 - Controller support
 - Global tuning knobs EVERYWHERE
-- Global notification system (like in OCDA)
 
 ---------------------------------------------------------------------------
 REFACTOR:
@@ -23,7 +19,6 @@ Yes
 
 - Move FX drawing to a separate object that can handle draw calls from everywhere smoothly (for explosions and stuff)
 
-- Make all damage and HP values be integers, increase all HP scale by 10
 - Generalize adding buffs
 	- At least make it easy to add new structs and add functions to arrays
 

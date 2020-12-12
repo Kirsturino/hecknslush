@@ -4,8 +4,8 @@ global.currencyAmount = 0;
 //Player stat structs
 function combatStruct() constructor
 {
-	maxHP = 5;
-	hp = 5;
+	maxHP = 50;
+	hp = 50;
 	iframesMax = 144;
 	iframes = 0;
 	aimDir = 0;

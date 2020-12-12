@@ -7,6 +7,9 @@ instance_create_layer(0, 0, layer, oSurfaceHandler);
 //Init rt-shell
 instance_create_layer(0, 0, layer, oShell);
 
+//Init UI
+instance_create_layer(0, 0, layer, oUI);
+
 //Init Scribble fonts
 scribble_init("", "fntScribble", false);
 scribble_add_font("fntScribble");

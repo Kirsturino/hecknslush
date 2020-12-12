@@ -174,13 +174,13 @@ function explodingBullets() constructor
 {
 	type =			weapons.ranged;
 	name =			"Exploding bullets";
-	desc =			"Halved damage. Bullets create explosion that damages nearby enemies";
+	desc =			"Halved damage. Bullets create explosions that damage and push nearby enemies";
 	pool =			POOL_UPGRADE;
 	
 	dmg =			[0.5, upgrades.multiply];
 	piercing =		[false, upgrades.set];
 	
-	hitFunctions = [function explosion()
+	destroyFunctions = [function explosion()
 	{
 		var htbx = other.id;
 		var enemyList = ds_list_create();
@@ -225,6 +225,61 @@ function explodingBullets() constructor
 
 }
 
+function implodingBullets() constructor
+{
+	type =			weapons.ranged;
+	name =			"Imploding bullets";
+	desc =			"Halved damage. Bullets create explosions that damage and pull nearby enemies";
+	pool =			POOL_UPGRADE;
+	
+	dmg =			[0.5, upgrades.multiply];
+	piercing =		[false, upgrades.set];
+	
+	destroyFunctions = [function implosion()
+	{
+		var htbx = other.id;
+		var enemyList = ds_list_create();
+		//Maybe change radius to be dynamic at some point???
+		var radius = 64;
+		
+		collision_circle_list(htbx.x, htbx.y, radius, parEnemy, false, false, enemyList, false);
+		var size = ds_list_size(enemyList);
+		
+		//Cycle through all the enemies hit by explosion
+		for (var i = 0; i < size; ++i)
+		{
+		    with (enemyList[| i])
+			{
+				//Reduce hp
+				takeDamage(htbx.atk.dmg);
+		
+				//Inflict knockback
+				var dist = distance_to_point(htbx.x, htbx.y);
+		
+				var dir = point_direction(x, y, htbx.x, htbx.y);
+				var force = htbx.atk.dmg * 4 - dist * 0.02 * combat.weight;
+			
+				move.hsp = lengthdir_x(force, dir);
+				move.vsp = lengthdir_y(force, dir);
+				move.dir = dir;
+			}
+		}
+		
+		ds_list_destroy(enemyList);
+		
+		//Explosion particle
+		part_type_size(global.explosionPart, radius / 3, radius / 3, 0, 0);
+		part_particles_create(global.ps, htbx.x, htbx.y, global.explosionPart, 1);
+		
+		//Make those explosions feel meaty
+		freeze(htbx.atk.dmg * 100);
+		shakeCamera(htbx.atk.dmg * 200, 2, 200);
+		
+	}
+	, upgrades.behaviour];
+
+}
+
 ds_list_add(POOL_UPGRADE, new anarchy());
 ds_list_add(POOL_UPGRADE, new radialAttack());
 ds_list_add(POOL_UPGRADE, new burstifier());
@@ -232,6 +287,7 @@ ds_list_add(POOL_UPGRADE, new megaBurstifier());
 ds_list_add(POOL_UPGRADE, new behaviourTest());
 ds_list_add(POOL_UPGRADE, new multiTest());
 ds_list_add(POOL_UPGRADE, new explodingBullets());
+ds_list_add(POOL_UPGRADE, new implodingBullets());
 
 //-------------------------------------------------------------------------------------------
 
@@ -251,6 +307,7 @@ function rally() constructor
 		oPlayer.extra.structs.rallyStruct = {
 			healTime : 0,
 			healTimeMax : 200,
+			healMax : 0,
 			healMultiplier : 0.1,
 		}
 		
@@ -258,7 +315,9 @@ function rally() constructor
 		function rallyHeal()
 		{
 			if (oPlayer.extra.structs.rallyStruct.healTime > 0)
-				{ oPlayer.combat.hp = approach(oPlayer.combat.hp, oPlayer.combat.maxHP, atk.dmg * oPlayer.extra.structs.rallyStruct.healMultiplier); }
+				{
+					oPlayer.combat.hp = min(oPlayer.extra.structs.rallyStruct.healMax, oPlayer.combat.hp + ceil(atk.dmg * oPlayer.extra.structs.rallyStruct.healMultiplier));
+				}
 		}
 		
 		//Add heal function to all weapon onhit arrays
@@ -280,9 +339,16 @@ function rally() constructor
 		function resetRallyTimer()
 		{
 			extra.structs.rallyStruct.healTime = extra.structs.rallyStruct.healTimeMax;
+			extra.structs.rallyStruct.healMax = combat.hp;
 		}
 		
 		array_push(oPlayer.extra.onDamageTaken, resetRallyTimer);
+		
+		//Set UI hp bar movement to match with rally mechanic
+		oUI.hpBar.delayMax = oPlayer.extra.structs.rallyStruct.healTimeMax;
+		
+		var txt = name + "\n\n" + desc;
+		startNotification(txt);
 	}
 }
 

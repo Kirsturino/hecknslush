@@ -47,7 +47,7 @@ var p = global.hangingDustPart;
 part_type_shape(p, pt_shape_disk);
 part_type_life(p, 180, 360);
 part_type_size(p, 0.05, 0.1, -0.0005, 0);
-part_type_speed(p, 2, 3, -0.02, 0);
+part_type_speed(p, 0, 0, -0.02, 0);
 part_type_orientation(p, 0, 0, 0, 0, true);
 part_type_gravity(p, 0.007, 90);
 

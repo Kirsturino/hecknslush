@@ -25,6 +25,8 @@ function active()
 
 function inactive()
 {
+	highlight();
+	
 	var plr = collision_circle(x, y, 32, oPlayer, false, false);
 	if (plr != noone) { toActive(); }
 }
@@ -48,12 +50,9 @@ function toInactive()
 
 function highlight()
 {
-	if (random(1) > 0.9)
-	{
-		var xx = x + irandom_range(-6, 6);
-		var yy = y + irandom_range(-6, 6);
-		part_particles_create(global.ps, xx, yy, global.hangingDustPart, 1);
-	}
+	var xx = x + irandom_range(-6, 6);
+	var yy = y + irandom_range(-6, 6);
+	part_particles_create(global.ps, xx, yy, global.hangingDustPart, 1);
 }
 
 function buttonPrompt()

@@ -45,3 +45,17 @@ function executeFunctionArray(array)
 	var length = array_length(array);
 	for (var i = 0; i < length; ++i) { array[i](); }
 }
+
+function startNotification(txt_string)
+{
+	with (oUI.notification)
+	{
+		y = yInactiveTarget;
+		time = timeMax;
+		txt = txt_string;
+		yTarget = yActiveTarget;
+		alpha = 1;
+		state = active;
+		drawFunction = drawNotification;
+	}
+}

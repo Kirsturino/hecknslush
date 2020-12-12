@@ -16,7 +16,7 @@ function destroySelf()
 }
 
 function takeDamage(amount) {
-	combat.hp -= amount;
+	combat.hp = max(0, combat.hp - amount);
 	combat.iframes = combat.iframesMax;
 		
 	if (combat.hp <= 0) destroySelf(visuals.corpse);

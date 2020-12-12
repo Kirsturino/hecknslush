@@ -6,6 +6,9 @@
 #macro viewHeight 360
 global.windowScale = 2;
 
+//FX scaling
+global.cameraFXMultiplier = 0.1;
+
 enum cameraStates {
 	follow,
 	aim,
@@ -13,25 +16,24 @@ enum cameraStates {
 }
 
 function shakeCamera(panAmount, rotAmount, duration) {
-	oCamera.shakeAmount = panAmount;
+	oCamera.shakeAmount = panAmount * global.cameraFXMultiplier;
 	oCamera.shakeDuration = duration;
-	oCamera.rotTo = choose(rotAmount, -rotAmount);
+	oCamera.rotTo = choose(rotAmount, -rotAmount) * global.cameraFXMultiplier;
 }
 
 function pushCamera(amount, direction) {
-	oCamera.pushX = lengthdir_x(amount, direction);
-	oCamera.pushY = lengthdir_y(amount, direction);
+	oCamera.pushX = lengthdir_x(amount * global.cameraFXMultiplier, direction);
+	oCamera.pushY = lengthdir_y(amount * global.cameraFXMultiplier, direction);
 }
 
 function rotateCamera(amount, randomized) {
-	var setRot = amount;
-	var rand = randomized;
+	var setRot = amount * global.cameraFXMultiplier;
 	
-	if (rand) setRot *= choose(-1, 1);
+	if (randomized) setRot *= choose(-1, 1);
 
 	oCamera.rot = setRot;
 }
 
 function zoomCamera(amount) {
-	oCamera.zoomMultiplier = amount;
+	oCamera.zoomMultiplier = 1 - amount * global.cameraFXMultiplier;
 }
