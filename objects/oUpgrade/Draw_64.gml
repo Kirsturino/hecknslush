@@ -28,8 +28,9 @@ for (var i = 0; i < amount; ++i)
 	else if (oPlayer.attackSlots[i].type == weapons.ranged) { var c = c_aqua; }
 	else													{ var c = c_purple; }
 	
-	//Draw dots that represent abilites
-    draw_circle_color(drawX, drawY, radius, c, c, false);
+	//Draw ability sprites
+    draw_sprite(oPlayer.attackSlots[i].abilitySpr, 0, drawX, drawY);
+	draw_sprite_ext(sAbilityBorder, 0, drawX, drawY, 1, 1, 0, c, 1);
 	
 	//Draw ability names
 	var yOffset = radius * 1.5;
@@ -45,14 +46,14 @@ for (var i = 0; i < amount; ++i)
 	
 }
 
-//Draw selection dot
+//Draw selection indicator
 yOffset = radius * 2;
 drawX = startX + selected*space;
 drawY = originY + wave(-8, 8, 4, selected, true) - yOffset;
-selectX = lerp(selectX, drawX, 0.05);
+selectX = lerp(selectX, drawX, 0.1);
 selectY = lerp(selectY, drawY, 0.02);
 if (upgrade.type == weapons.melee)			{ c = c_red; }
 else if (upgrade.type == weapons.ranged)	{ c = c_aqua; }
 else										{ var c = c_purple; }
 	
-draw_circle_color(selectX, selectY, radius/2, c, c, false);
+draw_sprite_ext(sSelect, 0, selectX, selectY, wave(-1, 1, 2, 0, true), 1, 0, c, 1);

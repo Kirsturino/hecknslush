@@ -69,7 +69,7 @@
   ],
   "parent": {
     "name": "Projectiles",
-    "path": "folders/Weapons/Ranged/Projectiles.yy",
+    "path": "folders/Weapons/Projectiles.yy",
   },
   "resourceVersion": "1.0",
   "name": "sProjectile",

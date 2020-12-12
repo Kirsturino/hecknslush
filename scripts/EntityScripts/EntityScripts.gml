@@ -56,9 +56,6 @@ function dealDamage(enemy)
 	}
 	
 	executeFunctionArray(hitFunctions);
-	
-	//Destroy projectile if it's not piercing
-	if (!atk.piercing) destroySelf();
 }
 
 function negateMomentum()
@@ -277,9 +274,6 @@ function spawnHitbox(weapon, attack)
 	htbx.atk.knockback = weapon.knockback;
 	htbx.atk.hitDelay = weapon.start;
 	htbx.atk.hitEnd = weapon.length;
-	htbx.atk.piercing = weapon.piercing;
-	htbx.atk.destroyOnStop = weapon.destroyOnStop;
-	htbx.atk.destroyOnCollision = weapon.destroyOnCollision;
 	
 	//Pass extra behaviour functions
 	pushArrayToArray(weapon.spawnFunctions, htbx.spawnFunctions);

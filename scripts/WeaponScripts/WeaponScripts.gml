@@ -43,14 +43,15 @@ function genericweaponStruct() constructor
 	clr =					c_red;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
+	abilitySpr =			sAbility;
 	upgradeCount =			0;
 	maxUpgradeCount =		3;
 	
 	//Added behaviour functions
 	spawnFunctions =		[];
-	aliveFunctions =		[];
+	aliveFunctions =		[defaultHitboxEnemyCollision];
 	hitFunctions =			[];
-	collisionFunctions =	[];
+	collisionFunctions =	[destroyOnCollision];
 	destroyFunctions =		[];
 	
 	//Hitbox pattern stuff
@@ -75,10 +76,7 @@ function genericweaponStruct() constructor
 	size =					1;
 	
 	//Misc. values
-	destroyOnStop =			true;
-	destroyOnCollision =	true;
 	knockback =				0.2;
-	piercing =				true;
 	
 	//Values that affect player while attacking
 	push =					-0.2;
@@ -115,12 +113,13 @@ function basicSlash() constructor
 	clr =					c_red;
 	htbx =					oHitbox;
 	projSpr =				sSlash;
+	abilitySpr =			sAbility;
 	upgradeCount =			0;
 	maxUpgradeCount =		3;
 	
 	//Added behaviour functions
 	spawnFunctions =		[];
-	aliveFunctions =		[];
+	aliveFunctions =		[piercingHitboxEnemyCollision, defaultHitboxMovement];
 	hitFunctions =			[];
 	collisionFunctions =	[];
 	destroyFunctions =		[];
@@ -146,10 +145,7 @@ function basicSlash() constructor
 	size =					1;
 	
 	//Misc. values
-	destroyOnStop =			false;
-	destroyOnCollision =	false;
 	knockback =				2;
-	piercing =				true;
 	
 	//Values that affect player while attacking
 	push =					1;
@@ -184,12 +180,13 @@ function spinSlash() constructor
 	clr =					c_red;
 	htbx =					oHitbox;
 	projSpr =				sThrust;
+	abilitySpr =			sAbility;
 	upgradeCount =			0;
 	maxUpgradeCount =		3;
 	
 	//Added behaviour functions
 	spawnFunctions =		[];
-	aliveFunctions =		[];
+	aliveFunctions =		[piercingHitboxEnemyCollision, defaultHitboxMovement];
 	hitFunctions =			[];
 	collisionFunctions =	[];
 	destroyFunctions =		[];
@@ -215,10 +212,7 @@ function spinSlash() constructor
 	size =					1;
 	
 	//Misc. values
-	destroyOnStop =			false;
-	destroyOnCollision =	false;
 	knockback =				0.2;
-	piercing =				true;
 	
 	//Values that affect player while attacking
 	push =					2;
@@ -253,14 +247,15 @@ function burstBlaster() constructor
 	clr =					c_red;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
+	abilitySpr =			sAbility;
 	upgradeCount =			0;
 	maxUpgradeCount =		3;
 	
 	//Added behaviour functions
 	spawnFunctions =		[];
-	aliveFunctions =		[];
+	aliveFunctions =		[piercingHitboxEnemyCollision, defaultHitboxMovement];
 	hitFunctions =			[];
-	collisionFunctions =	[];
+	collisionFunctions =	[destroyOnCollision];
 	destroyFunctions =		[];
 	
 	//Hitbox pattern stuff
@@ -285,10 +280,7 @@ function burstBlaster() constructor
 	size =					1;
 	
 	//Misc. values
-	destroyOnStop =			true;
-	destroyOnCollision =	true;
 	knockback =				0.2;
-	piercing =				true;
 	
 	//Values that affect player while attacking
 	push =					-0.2;
@@ -322,14 +314,15 @@ function waveGun() constructor
 	clr =					c_red;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
+	abilitySpr =			sAbility;
 	upgradeCount =			0;
 	maxUpgradeCount =		3;
 	
 	//Added behaviour functions
 	spawnFunctions =		[];
-	aliveFunctions =		[];
+	aliveFunctions =		[defaultHitboxEnemyCollision, destroyOnStop, defaultHitboxMovement];
 	hitFunctions =			[];
-	collisionFunctions =	[];
+	collisionFunctions =	[destroyOnCollision];
 	destroyFunctions =		[];
 	
 	//Hitbox pattern stuff
@@ -354,10 +347,7 @@ function waveGun() constructor
 	size =					1.5;
 	
 	//Misc. values
-	destroyOnStop =			true;
-	destroyOnCollision =	true;
 	knockback =				0.2;
-	piercing =				false;
 	
 	//Values that affect player while attacking
 	push =					-0.2;
@@ -401,10 +391,11 @@ function rangedEnemyWeapon() constructor
 	clr =					c_red;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
+	abilitySpr =			sAbility;
 	
 	//Added behaviour functions
 	spawnFunctions =		[];
-	aliveFunctions =		[];
+	aliveFunctions =		[defaultHitboxMovement, defaultHitboxEnemyCollision];
 	hitFunctions =			[];
 	collisionFunctions =	[];
 	destroyFunctions =		[];
@@ -431,10 +422,8 @@ function rangedEnemyWeapon() constructor
 	size =					1;
 	
 	//Misc. values
-	destroyOnStop =			true;
 	destroyOnCollision =	true;
 	knockback =				0.2;
-	piercing =				true;
 	
 	//Values that affect player while attacking
 	push =					0.4;

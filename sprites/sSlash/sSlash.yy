@@ -80,8 +80,8 @@
     {"visible":true,"isLocked":false,"blendMode":0,"opacity":100.0,"displayName":"default","resourceVersion":"1.0","name":"d5a75025-f89d-4f9f-87c0-2713027dd478","tags":[],"resourceType":"GMImageLayer",},
   ],
   "parent": {
-    "name": "Melee",
-    "path": "folders/Weapons/Melee.yy",
+    "name": "Projectiles",
+    "path": "folders/Weapons/Projectiles.yy",
   },
   "resourceVersion": "1.0",
   "name": "sSlash",

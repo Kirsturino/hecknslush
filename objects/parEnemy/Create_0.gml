@@ -19,7 +19,7 @@ function takeDamage(amount) {
 	combat.hp = max(0, combat.hp - amount);
 	combat.iframes = combat.iframesMax;
 		
-	if (combat.hp <= 0) destroySelf(visuals.corpse);
+	if (combat.hp <= 0) destroySelf();
 		
 	if (state == idle) { move.aggroTimer = move.aggroTimerMax; }
 }

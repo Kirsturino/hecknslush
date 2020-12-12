@@ -7,12 +7,12 @@ FEATURES:
 - Global tuning knobs EVERYWHERE
 
 ---------------------------------------------------------------------------
+TO-DO:
+- Add fonts for upgrade/buff texts
+
 REFACTOR:
 Yes
 - Calculate hitbox animation to match the timing of hitbox lifetime
-- Instead of having a billion if statement in hitbox object, add extra functionality as functions when spawning hitbox
-	- These will be pushed into a behaviour array where they will be ran by the hitbox
-	- Maybe separate arrays, one that runs every frame, one that is ran when hitting enemy/wall?
 	
 - Enemy state structure
 - Enemy pathfinding/movement should be generalized
@@ -25,8 +25,6 @@ Yes
 
 Maybe
 - Optimize multispread calculation
-- Move hitbox collision checks to enemies (?)
-	- This depends on how many enemies/bullets we want to have on screen at a time
 - Add possibility for anticipation time for attacking? (currently kinda hardcoded into enemies)
 
 ---------------------------------------------------------------------------

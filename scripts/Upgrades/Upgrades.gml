@@ -178,7 +178,6 @@ function explodingBullets() constructor
 	pool =			POOL_UPGRADE;
 	
 	dmg =			[0.5, upgrades.multiply];
-	piercing =		[false, upgrades.set];
 	
 	destroyFunctions = [function explosion()
 	{
@@ -219,7 +218,6 @@ function explodingBullets() constructor
 		//Make those explosions feel meaty
 		freeze(htbx.atk.dmg * 100);
 		shakeCamera(htbx.atk.dmg * 200, 2, 200);
-		
 	}
 	, upgrades.behaviour];
 
@@ -233,7 +231,6 @@ function implodingBullets() constructor
 	pool =			POOL_UPGRADE;
 	
 	dmg =			[0.5, upgrades.multiply];
-	piercing =		[false, upgrades.set];
 	
 	destroyFunctions = [function implosion()
 	{
@@ -274,7 +271,6 @@ function implodingBullets() constructor
 		//Make those explosions feel meaty
 		freeze(htbx.atk.dmg * 100);
 		shakeCamera(htbx.atk.dmg * 200, 2, 200);
-		
 	}
 	, upgrades.behaviour];
 
