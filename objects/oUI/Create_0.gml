@@ -11,7 +11,7 @@ hpBar = {
 	chunkLength : 0,
 }
 
-function initUI() constructor
+function initNotifications() constructor
 {
 	y = 0;
 	yTarget = 0;
@@ -44,10 +44,10 @@ function initUI() constructor
 	function drawNotification()
 	{
 		var width = string_width(txt)*1.5;
-		var height = string_height(txt)*1.5;
-		draw_sprite_ext(sPixel, 0, viewWidth/2 - width/2, y + height, width, -height*1.5, -2, c_white, alpha);
+		var height = string_height(txt)*2;
+		draw_sprite_ext(sPixel, 0, viewWidth/2 - width/2, y + height, width, -height*1.5, -2, col.white, alpha);
 		
-		scribble_set_blend(c_black, alpha);
+		scribble_set_blend(col.black, alpha);
 		scribble_draw(viewWidth/2, y, txt);
 	}
 	
@@ -61,4 +61,4 @@ function initUI() constructor
 	drawFunction = nothing;
 }
 
-notification = new initUI();
+notification = new initNotifications();

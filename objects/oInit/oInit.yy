@@ -21,7 +21,14 @@
     {"isDnD":false,"eventNum":0,"eventType":0,"collisionObjectId":null,"parent":{"name":"oInit","path":"objects/oInit/oInit.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
   ],
   "properties": [
-    {"varType":7,"value":"$00000000","rangeEnabled":false,"rangeMin":0.0,"rangeMax":10.0,"listItems":[],"multiselect":false,"filters":[],"resourceVersion":"1.0","name":"thisIsNothing","tags":[],"resourceType":"GMObjectProperty",},
+    {"varType":7,"value":"$FF444384","rangeEnabled":false,"rangeMin":0.0,"rangeMax":10.0,"listItems":[],"multiselect":false,"filters":[],"resourceVersion":"1.0","name":"enemyColor","tags":[],"resourceType":"GMObjectProperty",},
+    {"varType":7,"value":"$FF37334A","rangeEnabled":false,"rangeMin":0.0,"rangeMax":10.0,"listItems":[],"multiselect":false,"filters":[],"resourceVersion":"1.0","name":"enemyColorDeep","tags":[],"resourceType":"GMObjectProperty",},
+    {"varType":7,"value":"0","rangeEnabled":false,"rangeMin":0.0,"rangeMax":10.0,"listItems":[],"multiselect":false,"filters":[],"resourceVersion":"1.0","name":"enemyColorDead","tags":[],"resourceType":"GMObjectProperty",},
+    {"varType":7,"value":"$FFD6EBE6","rangeEnabled":false,"rangeMin":0.0,"rangeMax":10.0,"listItems":[],"multiselect":false,"filters":[],"resourceVersion":"1.0","name":"white","tags":[],"resourceType":"GMObjectProperty",},
+    {"varType":7,"value":"$FF2E2224","rangeEnabled":false,"rangeMin":0.0,"rangeMax":10.0,"listItems":[],"multiselect":false,"filters":[],"resourceVersion":"1.0","name":"black","tags":[],"resourceType":"GMObjectProperty",},
+    {"varType":7,"value":"$FF98BBCC","rangeEnabled":false,"rangeMin":0.0,"rangeMax":10.0,"listItems":[],"multiselect":false,"filters":[],"resourceVersion":"1.0","name":"tan1","tags":[],"resourceType":"GMObjectProperty",},
+    {"varType":7,"value":"$FF61482E","rangeEnabled":false,"rangeMin":0.0,"rangeMax":10.0,"listItems":[],"multiselect":false,"filters":[],"resourceVersion":"1.0","name":"blue","tags":[],"resourceType":"GMObjectProperty",},
+    {"varType":7,"value":"$FF505438","rangeEnabled":false,"rangeMin":0.0,"rangeMax":10.0,"listItems":[],"multiselect":false,"filters":[],"resourceVersion":"1.0","name":"green","tags":[],"resourceType":"GMObjectProperty",},
   ],
   "overriddenProperties": [],
   "parent": {

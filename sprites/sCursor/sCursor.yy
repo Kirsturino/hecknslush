@@ -68,8 +68,8 @@
     {"visible":true,"isLocked":false,"blendMode":0,"opacity":100.0,"displayName":"default","resourceVersion":"1.0","name":"469067a2-bdb4-4c90-b2e9-d8fb03a73893","tags":[],"resourceType":"GMImageLayer",},
   ],
   "parent": {
-    "name": "UI Graphics",
-    "path": "folders/UI Graphics.yy",
+    "name": "Graphics",
+    "path": "folders/Graphics.yy",
   },
   "resourceVersion": "1.0",
   "name": "sCursor",

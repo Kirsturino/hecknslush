@@ -5,7 +5,8 @@ enum upgrades {
 	add,
 	multiply,
 	set,
-	behaviour,
+	addBehaviour,
+	removeBehaviour,
 	execute
 }
 
@@ -56,10 +57,20 @@ function applyUpgrade(weapon, upgrade)
 					var finalValue = upgradeValueArray[0];
 				break;
 				
-				case upgrades.behaviour:
+				case upgrades.addBehaviour:
 					var finalValue = array_create(0);
 					pushArrayToArray(weaponValue, finalValue);
 					array_push(finalValue, upgradeValueArray[0]);
+				break;
+				
+				case upgrades.removeBehaviour:
+					var finalValue = array_create(0);
+					var length = array_length(weaponValue);
+					for (var ii = 0; ii < length; ++ii) //This is essentially pushArrayToArray, but we exclude one variable when copying it over
+					{
+						if (weaponValue[ii] != upgradeValueArray[0])
+							array_push(finalValue, weaponValue[ii]);
+					}
 				break;
 				
 				case upgrades.execute:
@@ -130,7 +141,7 @@ function burstifier() constructor
 	type =			weapons.ranged;
 	name =			"Burstifier";
 	desc =			"Add extra shots to weapon";
-	pool =		POOL_UPGRADE;
+	pool =			POOL_UPGRADE;
 	
 	amount =		[10, upgrades.add];
 	delay =			[10, upgrades.add];
@@ -141,7 +152,7 @@ function burstifier() constructor
 function megaBurstifier() constructor
 {
 	type =			weapons.ranged;
-	name =			"MEGAburstifier";
+	name =			"Megaurstifier";
 	desc =			"Turns your gun into a bullet hose. A long bullet hose";
 	pool =			POOL_UPGRADE;
 	
@@ -158,7 +169,7 @@ function behaviourTest() constructor
 	desc =			"Prints debug messages when hitting enemies";
 	pool =			POOL_UPGRADE;
 	
-	hitFunctions =	[debug, upgrades.behaviour];
+	hitFunctions =	[debug, upgrades.addBehaviour];
 }
 
 function multiTest() constructor
@@ -173,11 +184,12 @@ function multiTest() constructor
 function explodingBullets() constructor
 {
 	type =			weapons.ranged;
-	name =			"Exploding bullets";
+	name =			"Exploding Bullets";
 	desc =			"Halved damage. Bullets create explosions that damage and push nearby enemies";
 	pool =			POOL_UPGRADE;
 	
 	dmg =			[0.5, upgrades.multiply];
+	knockback =		[1.5, upgrades.multiply];
 	
 	destroyFunctions = [function explosion()
 	{
@@ -199,9 +211,8 @@ function explodingBullets() constructor
 		
 				//Inflict knockback
 				var dist = distance_to_point(htbx.x, htbx.y);
-		
 				var dir = point_direction(htbx.x, htbx.y, x, y);
-				var force = htbx.atk.dmg * 4 - dist * 0.02 * combat.weight;
+				var force = htbx.atk.knockback * 4 - dist * 0.02 * combat.weight;
 			
 				move.hsp = lengthdir_x(force, dir);
 				move.vsp = lengthdir_y(force, dir);
@@ -219,18 +230,22 @@ function explodingBullets() constructor
 		freeze(htbx.atk.dmg * 100);
 		shakeCamera(htbx.atk.dmg * 200, 2, 200);
 	}
-	, upgrades.behaviour];
+	, upgrades.addBehaviour];
+	
+	aliveFunctions = [piercingHitboxEnemyCollision, upgrades.removeBehaviour];
+	aliveFunctions = [defaultHitboxEnemyCollision, upgrades.addBehaviour];
 
 }
 
 function implodingBullets() constructor
 {
 	type =			weapons.ranged;
-	name =			"Imploding bullets";
+	name =			"Imploding Bullets";
 	desc =			"Halved damage. Bullets create explosions that damage and pull nearby enemies";
 	pool =			POOL_UPGRADE;
 	
 	dmg =			[0.5, upgrades.multiply];
+	knockback =		[1.5, upgrades.multiply];
 	
 	destroyFunctions = [function implosion()
 	{
@@ -254,7 +269,7 @@ function implodingBullets() constructor
 				var dist = distance_to_point(htbx.x, htbx.y);
 		
 				var dir = point_direction(x, y, htbx.x, htbx.y);
-				var force = htbx.atk.dmg * 4 - dist * 0.02 * combat.weight;
+				var force = htbx.atk.knockback * 4 - dist * 0.02 * combat.weight;
 			
 				move.hsp = lengthdir_x(force, dir);
 				move.vsp = lengthdir_y(force, dir);
@@ -272,8 +287,21 @@ function implodingBullets() constructor
 		freeze(htbx.atk.dmg * 100);
 		shakeCamera(htbx.atk.dmg * 200, 2, 200);
 	}
-	, upgrades.behaviour];
+	, upgrades.addBehaviour];
+	aliveFunctions = [piercingHitboxEnemyCollision, upgrades.removeBehaviour];
+	aliveFunctions = [defaultHitboxEnemyCollision, upgrades.addBehaviour];
 
+}
+
+function fracturedBlade() constructor
+{
+	type =			weapons.melee;
+	name =			"Fractured Blade";
+	desc =			"Increased damage, but attacks vanish when hitting walls";
+	pool =			POOL_UPGRADE;
+	
+	dmg =			[20, upgrades.add];
+	collisionFunctions = [destroyOnCollision, upgrades.addBehaviour];
 }
 
 ds_list_add(POOL_UPGRADE, new anarchy());
@@ -284,6 +312,7 @@ ds_list_add(POOL_UPGRADE, new behaviourTest());
 ds_list_add(POOL_UPGRADE, new multiTest());
 ds_list_add(POOL_UPGRADE, new explodingBullets());
 ds_list_add(POOL_UPGRADE, new implodingBullets());
+ds_list_add(POOL_UPGRADE, new fracturedBlade());
 
 //-------------------------------------------------------------------------------------------
 
@@ -343,7 +372,7 @@ function rally() constructor
 		//Set UI hp bar movement to match with rally mechanic
 		oUI.hpBar.delayMax = oPlayer.extra.structs.rallyStruct.healTimeMax;
 		
-		var txt = name + "\n\n" + desc;
+		var txt = "[fntUpgradeTitle]" + name + "\n\n[fntScribble]" + desc;
 		startNotification(txt);
 	}
 }

@@ -25,8 +25,8 @@
   "gridY": 0,
   "frames": [
     {"compositeImage":{"FrameId":{"name":"bd0e7c20-3a03-4ccb-aadc-d980baf1293e","path":"sprites/sEnemyRangedShooting/sEnemyRangedShooting.yy",},"LayerId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},"images":[
-        {"FrameId":{"name":"bd0e7c20-3a03-4ccb-aadc-d980baf1293e","path":"sprites/sEnemyRangedShooting/sEnemyRangedShooting.yy",},"LayerId":{"name":"23ecf693-2302-4b40-be8d-c95004325155","path":"sprites/sEnemyRangedShooting/sEnemyRangedShooting.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
         {"FrameId":{"name":"bd0e7c20-3a03-4ccb-aadc-d980baf1293e","path":"sprites/sEnemyRangedShooting/sEnemyRangedShooting.yy",},"LayerId":{"name":"ade6dfad-1813-44fd-9b65-89145c44a289","path":"sprites/sEnemyRangedShooting/sEnemyRangedShooting.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
+        {"FrameId":{"name":"bd0e7c20-3a03-4ccb-aadc-d980baf1293e","path":"sprites/sEnemyRangedShooting/sEnemyRangedShooting.yy",},"LayerId":{"name":"23ecf693-2302-4b40-be8d-c95004325155","path":"sprites/sEnemyRangedShooting/sEnemyRangedShooting.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
       ],"parent":{"name":"sEnemyRangedShooting","path":"sprites/sEnemyRangedShooting/sEnemyRangedShooting.yy",},"resourceVersion":"1.0","name":"bd0e7c20-3a03-4ccb-aadc-d980baf1293e","tags":[],"resourceType":"GMSpriteFrame",},
   ],
   "sequence": {
@@ -67,7 +67,7 @@
   },
   "layers": [
     {"visible":true,"isLocked":false,"blendMode":0,"opacity":100.0,"displayName":"Layer 1","resourceVersion":"1.0","name":"ade6dfad-1813-44fd-9b65-89145c44a289","tags":[],"resourceType":"GMImageLayer",},
-    {"visible":true,"isLocked":false,"blendMode":0,"opacity":100.0,"displayName":"default","resourceVersion":"1.0","name":"23ecf693-2302-4b40-be8d-c95004325155","tags":[],"resourceType":"GMImageLayer",},
+    {"visible":false,"isLocked":false,"blendMode":0,"opacity":100.0,"displayName":"default","resourceVersion":"1.0","name":"23ecf693-2302-4b40-be8d-c95004325155","tags":[],"resourceType":"GMImageLayer",},
   ],
   "parent": {
     "name": "Sprites",

@@ -40,7 +40,7 @@ function genericweaponStruct() constructor
 	//Info
 	name =					"Generic Weapon";
 	type =					weapons.ranged;
-	clr =					c_red;
+	clr =					col.enemy;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
 	abilitySpr =			sAbility;
@@ -110,7 +110,7 @@ function basicSlash() constructor
 	//Info
 	name =					"Melee Weapon";
 	type =					weapons.melee;
-	clr =					c_red;
+	clr =					col.enemy;
 	htbx =					oHitbox;
 	projSpr =				sSlash;
 	abilitySpr =			sAbility;
@@ -177,7 +177,7 @@ function spinSlash() constructor
 	//Info
 	name =					"Spinslash";
 	type =					weapons.melee;
-	clr =					c_red;
+	clr =					col.enemy;
 	htbx =					oHitbox;
 	projSpr =				sThrust;
 	abilitySpr =			sAbility;
@@ -244,7 +244,7 @@ function burstBlaster() constructor
 	//Info
 	name =					"Ranged Weapon";
 	type =					weapons.ranged;
-	clr =					c_red;
+	clr =					col.enemy;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
 	abilitySpr =			sAbility;
@@ -311,7 +311,7 @@ function waveGun() constructor
 	//Info
 	name =					"Burst Wave";
 	type =					weapons.ranged;
-	clr =					c_red;
+	clr =					col.enemy;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
 	abilitySpr =			sAbility;
@@ -388,7 +388,7 @@ function rangedEnemyWeapon() constructor
 	//Info
 	name =					"Burst Blaster";
 	type =					weapons.ranged;
-	clr =					c_red;
+	clr =					col.enemy;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
 	abilitySpr =			sAbility;
@@ -397,7 +397,7 @@ function rangedEnemyWeapon() constructor
 	spawnFunctions =		[];
 	aliveFunctions =		[defaultHitboxMovement, defaultHitboxEnemyCollision];
 	hitFunctions =			[];
-	collisionFunctions =	[];
+	collisionFunctions =	[destroyOnCollision];
 	destroyFunctions =		[];
 	
 	//Hitbox pattern stuff

@@ -6,8 +6,8 @@ else			{ instance_destroy(); }
 
 //Some graphics variables
 selected = 0;
-selectX = 0;
-selectY = 0;
+selectX = viewWidth/4;
+selectY = viewHeight/2;
 
 function active()
 {
@@ -61,6 +61,10 @@ function toInactive()
 
 function toApplying()
 {
+	var txt = upgrade.desc;
+	scribble_cache(txt, "desc", true, false);
+	scribble_autotype_fade_in(txt, 1, 1, false, "desc");
+	
 	drawFunction = nothing;
 	state = applying;
 	playerToDummy();
@@ -75,7 +79,7 @@ function highlight()
 
 function buttonPrompt()
 {
-	scribble_set_blend(c_red, 1);
+	scribble_set_blend(col.white, 1);
 	var wav = wave(-5, 5, 4, 0, true);
 	scribble_draw(x, ystart + 16 + wav, "button prompt", 0);
 	scribble_draw(x, ystart - 32 + wav, upgrade.name, 0);

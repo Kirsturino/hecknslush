@@ -108,6 +108,7 @@ function toAttacking() {
 }
 
 function toStunned(duration) {
+	resetAttack(weapon, attack);
 	attack.cooldown = weapon.cooldown;
 	combat.stunDur = duration;
 	

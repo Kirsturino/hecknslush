@@ -13,7 +13,7 @@ instance_create_layer(0, 0, layer, oUI);
 //Init Scribble fonts
 scribble_init("", "fntScribble", false);
 scribble_add_font("fntScribble");
-scribble_add_font("fntDebug");
+scribble_add_font("fntUpgradeTitle");
 scribble_set_starting_format("fntScribble", c_white, fa_center);
 
 //Debug
@@ -22,6 +22,25 @@ scribble_set_starting_format("fntScribble", c_white, fa_center);
 //cursor_sprite = sCursor;
 
 //Init colors
+global.palette = {
+	enemy : other.enemyColor,
+	enemyDeep : other.enemyColorDeep,
+	white : other.white,
+	black : other.black,
+	tan : other.tan1,
+	blue : other.blue,
+	green : other.green,
+}
+#macro col global.palette
+
+global.abilityColors = [
+	col.enemy,
+	col.blue,
+	col.green
+]
+
+//Init particles
+particleInit();
 
 //Move to next room automatically
 room_goto_next();

@@ -220,7 +220,6 @@ function playerAttacking() {
 	//Make player be able to break out of attack at will
 	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER)) {
 		attack[ATK].cooldown = attackSlots[ATK].cooldown;
-		resetAttack(attackSlots[ATK], attack[ATK]);
 		toDodging();
 	}
 }
@@ -299,6 +298,9 @@ function toAiming() {
 
 function toDodging() {
 	executeFunctionArray(extra.onToDodge);
+	
+	//Reset attacks
+	resetAttack(attackSlots[ATK], attack[ATK]);
 	
 	//Set dodge stats
 	dodge.dur = curDodge.dur;
@@ -572,6 +574,14 @@ function cameraStateSwitch() {
 
 function takeDamage(amount) {
 	executeFunctionArray(extra.onDamageTaken);
+	
+	//If player is using an attack, reset things
+	if (state == playerAttacking)
+	{
+		resetAttack(attackSlots[ATK], attack[ATK]);
+		attack[ATK].cooldown = attackSlots[ATK].cooldown;
+		toGrounded();
+	}
 	
 	combat.hp = max(0, combat.hp - amount);
 	combat.iframes = combat.iframesMax;
