@@ -33,3 +33,4 @@ Maybe
 
 ---------------------------------------------------------------------------
 KNOWN BUGS:
+- Angled collision checks with attacks might be broken

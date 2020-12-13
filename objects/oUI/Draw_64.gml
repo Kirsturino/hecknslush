@@ -62,8 +62,8 @@ with (oPlayer)
 		draw_sprite_ext(sPixel, 0, xx + abilityOffset, yy + abilityOffset, size, -size, -tilt, c, 1);
 	
 		//Some extra stuff to indicate ability is fully charged
-		c = col.enemy;
-		if (attack[i].cooldown != 0) c = merge_color(col.enemy, col.tan, wave(0, 1, 1, 0, true));
+		c = global.abilityColors[attackSlots[i].type];
+		if (attack[i].cooldown != 0) c = merge_color(global.abilityColors[attackSlots[i].type], col.tan, wave(0, 1, 1, 0, true));
 
 		//Ability rectangles
 		var yScale = size *  (1 - attack[i].cooldown / attackSlots[i].cooldown);

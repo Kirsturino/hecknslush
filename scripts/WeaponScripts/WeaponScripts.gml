@@ -244,7 +244,7 @@ function burstBlaster() constructor
 	//Info
 	name =					"Ranged Weapon";
 	type =					weapons.ranged;
-	clr =					col.enemy;
+	clr =					col.blue;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
 	abilitySpr =			sAbility;
@@ -311,7 +311,7 @@ function waveGun() constructor
 	//Info
 	name =					"Burst Wave";
 	type =					weapons.ranged;
-	clr =					col.enemy;
+	clr =					col.blue;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
 	abilitySpr =			sAbility;
@@ -388,7 +388,7 @@ function rangedEnemyWeapon() constructor
 	//Info
 	name =					"Burst Blaster";
 	type =					weapons.ranged;
-	clr =					col.enemy;
+	clr =					col.blue;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
 	abilitySpr =			sAbility;

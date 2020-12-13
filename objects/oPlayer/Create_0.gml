@@ -590,7 +590,7 @@ function takeDamage(amount) {
 	oUI.hpBar.delay = oUI.hpBar.delayMax;
 	
 	freeze(2000);
-	shakeCamera(100, 5, 600);
+	shakeCamera(1000, 100, 600);
 	pushEntities(x, y, 3, 128, parEnemy, true);
 		
 	if (combat.hp <= 0) toDead();
