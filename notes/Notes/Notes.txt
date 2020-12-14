@@ -32,4 +32,3 @@ KNOWN BUGS:
 
 ---------------------------------------------------------------------------
 UPGRADE/BUFF IDEAS
-- Ability does more damage if it has more upgrades in it

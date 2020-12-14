@@ -305,6 +305,22 @@ function fracturedBlade() constructor
 	collisionFunctions = [destroyOnCollision, upgrades.addBehaviour];
 }
 
+function upgradedDamage() constructor
+{
+	type =			weapons.multi;
+	name =			"Upgraded Damage";
+	desc =			"Damage increases with each upgrade this ability has";
+	pool =			POOL_UPGRADE;
+	
+	function moreDamagePerUpgrade()
+	{
+		atk.dmg *= (1 + misc.from.upgradeCount/10);
+	}
+	
+	spawnFunctions = [moreDamagePerUpgrade, upgrades.addBehaviour];
+	
+}
+
 ds_list_add(POOL_UPGRADE, new anarchy());
 ds_list_add(POOL_UPGRADE, new radialAttack());
 ds_list_add(POOL_UPGRADE, new burstifier());
@@ -314,6 +330,7 @@ ds_list_add(POOL_UPGRADE, new multiTest());
 ds_list_add(POOL_UPGRADE, new explodingBullets());
 ds_list_add(POOL_UPGRADE, new implodingBullets());
 ds_list_add(POOL_UPGRADE, new fracturedBlade());
+ds_list_add(POOL_UPGRADE, new upgradedDamage());
 
 //-------------------------------------------------------------------------------------------
 
