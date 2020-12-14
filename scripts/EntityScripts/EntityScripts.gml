@@ -53,6 +53,9 @@ function dealDamage(enemy)
 		
 		//Inflict knockback
 		inflictKnockback(htbx);
+		
+		//Stun enemy if applicable
+		if (combat.stunnable) toStunned(htbx.atk.dmg);
 	}
 	
 	executeFunctionArray(hitFunctions);
@@ -135,29 +138,25 @@ function inflictKnockback(htbx)
 function hitFX(htbx)
 {
 	//Hitflash
-	visuals.flash = max(hitFlash, hitFlash * htbx.atk.dmg) * global.hitFXScale;
+	setFlash(htbx.atk.dmg);
 	
 	//Squash and stretch
-	visuals.yScale += htbx.atk.dmg * global.hitFXScale;
-	visuals.xScale -= htbx.atk.dmg * global.hitFXScale;
+	setSquash(htbx.atk.dmg);
 		
 	//Hitstop & camera stuff
 	if (htbx.visuals.hitStop) {
-		freeze(min(htbx.atk.dmg * 30, 150));
+		freeze(htbx.atk.dmg);
 			
 		//This prevents hitstop from happening when hitting multiple enemies
 		htbx.visuals.hitStop = false;
 	}
 		
-	shakeCamera(htbx.atk.dmg * 40, htbx.atk.dmg * 2, 4);
-	pushCamera(htbx.atk.dmg * 20, htbx.move.dir);
-	zoomCamera(htbx.atk.dmg * 0.04);
+	shakeCamera(htbx.atk.dmg, htbx.atk.dmg, hitFXDur);
+	pushCamera(htbx.atk.dmg, htbx.move.dir);
+	zoomCamera(htbx.atk.dmg);
 		
 	//Particles
-	htbx.visuals.damageFX(htbx.atk.dmg * global.hitFXScale);
-
-	//Stun enemy if applicable
-	if (combat.stunnable) toStunned(htbx.atk.dmg * 40 * global.hitFXScale);
+	htbx.visuals.damageFX(htbx.atk.dmg * global.hitFXParticleScale);
 }
 
 function incrementAnimationFrame()
@@ -191,6 +190,17 @@ function pushEntities(xx, yy, force, radius, objToPush, shouldStun)
 			if (shouldStun) toStunned(144);
 		}
 	}
+}
+
+function setSquash(amount)
+{
+	visuals.yScale = 1 + (hitSquash + amount * global.hitFXSquashScale);
+	visuals.xScale = 1 - (hitSquash + amount * global.hitFXSquashScale);
+}
+
+function setFlash(amount)
+{
+	visuals.flash = hitFlash + amount * global.hitFXFlashScale;
 }
 
 //Enemy functions
@@ -254,7 +264,6 @@ function spawnHitbox(weapon, attack)
 	htbx.image_yscale = weapon.size;
 	if (weapon.mirror) htbx.image_yscale = attack.mirror;
 	htbx.image_blend = weapon.clr;
-	visuals.recoil = weapon.dmg;
 	htbx.visuals.type = weapon.type;
 	
 	//Determine effects
@@ -262,6 +271,7 @@ function spawnHitbox(weapon, attack)
 	htbx.visuals.trailFX = weapon.trailFX;
 	htbx.visuals.explosionFX = weapon.explosionFX;
 	htbx.visuals.damageFX = weapon.damageFX;
+	visuals.recoil = weapon.dmg;
 	
 	//Movement
 	htbx.move.hsp = lengthdir_x(weapon.spd * (1 + random(weapon.spread) * 0.01), attack.htbxDir);
@@ -323,7 +333,8 @@ function performAttack(weapon, attack) {
 			//If weapon has multispread, do some directional calculation for each projectile based on the multispread variable
 			if (weapon.multiSpread > 0)
 			{
-				attack.htbxDir += (weapon.multiSpread / (weapon.amount - 1) * attack.count) - weapon.multiSpread * .5;
+				var bulletDir = (weapon.multiSpread / (weapon.amount - 1) * attack.count) - weapon.multiSpread * .5;
+				attack.htbxDir = attack.dir + attack.mirror * bulletDir;
 			}
 			
 			attack.htbxDir += irandom_range(-weapon.spread, weapon.spread);
@@ -336,12 +347,12 @@ function performAttack(weapon, attack) {
 	} else
 	{ 
 		//This is where we go if we only shoot 1 bullet per frame, aka delay > 0
-		//Just shoot bullet in the direction, no directional shenanigans
 		attack.htbxDir = attack.dir;
 		
 		if (weapon.multiSpread > 0)
 		{
-			attack.htbxDir = attack.dir + (weapon.multiSpread / (weapon.amount - 1) * attack.count) - weapon.multiSpread * .5;
+			var bulletDir = (weapon.multiSpread / (weapon.amount - 1) * attack.count) - weapon.multiSpread * .5;
+			attack.htbxDir = attack.dir + attack.mirror * bulletDir;
 		}
 		
 		attack.htbxDir += irandom_range(-weapon.spread, weapon.spread);

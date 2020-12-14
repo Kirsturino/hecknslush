@@ -106,7 +106,7 @@
     {"id":{"name":"input_gamepad_check_press","path":"scripts/input_gamepad_check_press/input_gamepad_check_press.yy",},"order":1,},
     {"id":{"name":"scribble_page_set","path":"scripts/scribble_page_set/scribble_page_set.yy",},"order":3,},
     {"id":{"name":"input_assignment_tick","path":"scripts/input_assignment_tick/input_assignment_tick.yy",},"order":0,},
-    {"id":{"name":"CameraScripts","path":"scripts/CameraScripts/CameraScripts.yy",},"order":8,},
+    {"id":{"name":"CameraStuff","path":"scripts/CameraStuff/CameraStuff.yy",},"order":1,},
     {"id":{"name":"__scribble_macros","path":"scripts/__scribble_macros/__scribble_macros.yy",},"order":0,},
     {"id":{"name":"input_async_system_event","path":"scripts/input_async_system_event/input_async_system_event.yy",},"order":1,},
     {"id":{"name":"oDeltaTime","path":"objects/oDeltaTime/oDeltaTime.yy",},"order":0,},

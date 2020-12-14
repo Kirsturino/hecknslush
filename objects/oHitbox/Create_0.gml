@@ -43,7 +43,7 @@ function destroySelf()
 {
 	executeFunctionArray(destroyFunctions);
 	ds_list_destroy(atk.damagedEnemies);
-	visuals.explosionFX();
+	visuals.explosionFX(atk.dmg);
 	instance_destroy();
 }
 

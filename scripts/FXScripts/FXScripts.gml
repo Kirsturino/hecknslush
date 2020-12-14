@@ -1,10 +1,3 @@
-//Default hitflash duration
-#macro hitFlash 14
-
-global.enemyAttackSurf = 0;
-global.freezeScale = 0.1;
-global.hitFXScale = 0.1;
-
 //Enemy attack indicator types
 enum indicator
 {
@@ -14,9 +7,23 @@ enum indicator
 	rectangle
 }
 
-function freeze(amount) {
+function freeze(amount)
+{
+	DoLater(1,
+            function(data)
+            {
+                loopEmpty(data.time);
+            },
+            {
+                time : hitFreeze + amount * global.freezeScale
+            },
+            true);
+}
+
+function loopEmpty(amount)
+{
 	var time = current_time;
-	var dur = amount * global.freezeScale;
+	var dur = amount;
 
 	while (current_time < time + dur)
 	{
@@ -24,4 +31,19 @@ function freeze(amount) {
 	}
 	
 	delta = defaultFramesPerSecond / game_get_speed(gamespeed_fps);
+}
+
+function shakeCamera(panAmount, rotAmount, duration) {
+	oCamera.shakeAmount = hitShake + panAmount * global.cameraShakeMultiplier;
+	oCamera.shakeDuration = hitFXDur + duration * global.cameraShakeDurMultiplier;
+	oCamera.rotTo = hitRot + choose(rotAmount, -rotAmount) * global.cameraRotMultiplier;
+}
+
+function pushCamera(amount, direction) {
+	oCamera.pushX = lengthdir_x(hitPush + amount * global.cameraPushMultiplier, direction);
+	oCamera.pushY = lengthdir_y(hitPush + amount * global.cameraPushMultiplier, direction);
+}
+
+function zoomCamera(amount) {
+	oCamera.zoomMultiplier = 1 - (hitZoom + amount * global.cameraZoomMultiplier);
 }

@@ -5,6 +5,7 @@ surface_set_target(shellSurface);
 	draw_roundrect_ext(0, 0, width, height, cornerRadius, cornerRadius, false);
 	
 	draw_set_font(consoleFont);
+	draw_set_halign(fa_left);
 	var lineHeight = string_height(prompt);
 	
 	// Draw our command prompt

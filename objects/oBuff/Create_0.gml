@@ -18,8 +18,7 @@ function active()
 	
 	if (input_check_press(verbs.interact, 0, 0))
 	{
-		buff.applyBuff();
-		destroyUpgrade(buff);
+		applyBuff(buff);
 	}
 }
 

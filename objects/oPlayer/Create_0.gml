@@ -532,7 +532,8 @@ function incrementVerbCooldowns() {
 }
 
 function drawAimIndicator() {
-	//Third ability will determine gun visuals
+	//Third ability will determine gun visuals for now
+	//This might change later
 	var wpn = attackSlots[2];
 	var atk = attack[ATK];
 	

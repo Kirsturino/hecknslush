@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------
 FEATURES:
-- Weighted camera
+- Weighted/Smart camera
 - Dungeon generation
-- Culling to walls and enemies
 - Controller support (!!!)
-- Global tuning knobs EVERYWHERE
 
 ---------------------------------------------------------------------------
 TO-DO:
+- Global tuning knobs EVERYWHERE (Ongoing effort)
+- Culling to walls and enemies
 
 REFACTOR:
 Yes
@@ -15,22 +15,21 @@ Yes
 	
 - Enemy state structure
 - Enemy pathfinding/movement should be generalized
+- ALL enemies use hitbox spawning
+	- This means reworking the swarmer enemy
 
-- Move FX drawing to a separate object that can handle draw calls from everywhere smoothly (for explosions and stuff)
-
-- Generalize adding buffs
-	- At least make it easy to add new structs and add functions to arrays
-	
-- FX scaling on damage needs to be toned down or it will become unplayable quickly
-	- Maybe just remove scaling altogether or make a baseline + very slight scaling on top
+- Move FX drawing to a separate object that can handle draw calls from everywhere smoothly
+	- for explosions and stuff, vector draw calls in specific
 	
 - Clean ALL UI drawing code to actually be readable by a human being
 
 
 Maybe
-- Optimize multispread calculation
 - Add possibility for anticipation time for attacking? (currently kinda hardcoded into enemies)
 
 ---------------------------------------------------------------------------
 KNOWN BUGS:
-- Angled collision checks with attacks might be broken
+
+---------------------------------------------------------------------------
+UPGRADE/BUFF IDEAS
+- Ability does more damage if it has more upgrades in it

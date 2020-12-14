@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Scripts",
-    "path": "folders/Scripts.yy",
+    "name": "Camera",
+    "path": "folders/Camera.yy",
   },
   "resourceVersion": "1.0",
-  "name": "CameraScripts",
+  "name": "CameraStuff",
   "tags": [],
   "resourceType": "GMScript",
 }

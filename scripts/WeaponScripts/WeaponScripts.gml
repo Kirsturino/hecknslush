@@ -209,7 +209,7 @@ function spinSlash() constructor
 	//Important values
 	dmg=					4;
 	life =					12;
-	size =					1;
+	size =					0.8;
 	
 	//Misc. values
 	knockback =				0.2;
@@ -455,27 +455,23 @@ function rangedEnemyWeapon() constructor
 //Weapon FX
 function baseMeleeFX(weapon, attack, xx, yy)
 {
-	shakeCamera(weapon.dmg * 20, 2, 4);
-	pushCamera(weapon.dmg * 20, attack.htbxDir);
+	shakeCamera(weapon.dmg, 2, 40);
+	pushCamera(weapon.dmg, attack.htbxDir);
 			
-	if (weapon.multiSpread == 0) {
-		var sprd = 40;
-	} else {
-		var sprd = weapon.multiSpread * .5;
-	}
+	var sprd = max(40, weapon.spread);
 			
 	part_type_direction(global.shootPart, attack.htbxDir - sprd, attack.htbxDir + sprd, 0, 0);
-	part_particles_create(global.ps, xx, yy, global.shootPart, 5);
+	part_particles_create(global.ps, xx, yy, global.shootPart, weapon.dmg);
 }
 
 function baseRangedFX(weapon, attack, xx, yy)
 {
-	shakeCamera(weapon.dmg * 60, 2, 4);
-	pushCamera(weapon.dmg * 50, attack.htbxDir + 180);
+	shakeCamera(weapon.dmg, 2, 4);
+	pushCamera(weapon.dmg, attack.htbxDir + 180);
 			
 	part_particles_create(global.ps, xx, yy, global.muzzleFlashPart, 1);
 	part_type_direction(global.shootPart, attack.htbxDir - weapon.spread * 2, attack.htbxDir + weapon.spread * 2, 0, 0);
-	part_particles_create(global.ps, xx, yy, global.shootPart, 10);
+	part_particles_create(global.ps, xx, yy, global.shootPart, weapon.dmg);
 }
 
 function baseProjectileTrail(move)
@@ -484,15 +480,15 @@ function baseProjectileTrail(move)
 	part_particles_create(global.ps, other.x, other.y, global.bulletTrail, 1);
 }
 
-function baseProjectileExplosion()
+function baseProjectileExplosion(amount)
 {
-	part_particles_create(global.ps, other.x, other.y, global.hitPart, 10);
+	part_particles_create(global.ps, other.x, other.y, global.hitPart, amount);
 }
 	
 function baseDamageFX(amount)
 {
-	part_particles_create(global.ps, other.x, other.y, global.hitPart, amount * 10);
+	part_particles_create(global.ps, other.x, other.y, global.hitPart, amount);
 		
-	part_type_size(global.hitPart2, amount * 3.2, amount * 3.4, -amount * 0.3, 0);
+	part_type_size(global.hitPart2, amount * 2, amount * 2, -amount, 0);
 	part_particles_create(global.ps, other.x, other.y, global.hitPart2, 1);
 }

@@ -1,7 +1,8 @@
 global.upgradePool = ds_list_create();
 #macro POOL_UPGRADE global.upgradePool
 
-enum upgrades {
+enum upgrades
+{
 	add,
 	multiply,
 	set,
@@ -319,6 +320,17 @@ ds_list_add(POOL_UPGRADE, new fracturedBlade());
 global.buffPool = ds_list_create();
 #macro POOL_BUFF global.buffPool
 
+function applyBuff(buff)
+{
+	buff.buffFunction();
+	
+	//Pop up ui informing player that they picked up a buff
+	var txt = "[fntUpgradeTitle]" + buff.name + "\n\n[fntScribble]" + buff.desc;
+	startNotification(txt);
+	
+	destroyUpgrade(buff);
+}
+
 function rally() constructor
 {
 	name =			"Rally";
@@ -326,7 +338,7 @@ function rally() constructor
 	pool =			POOL_BUFF;
 	
 	
-	function applyBuff()
+	function buffFunction()
 	{
 		//Add rally variables to player
 		oPlayer.extra.structs.rallyStruct = {
@@ -358,7 +370,6 @@ function rally() constructor
 		{
 			extra.structs.rallyStruct.healTime = approach(extra.structs.rallyStruct.healTime, 0, 1);
 		}
-		
 		array_push(oPlayer.extra.step, rallyLogic);
 	
 		function resetRallyTimer()
@@ -366,14 +377,10 @@ function rally() constructor
 			extra.structs.rallyStruct.healTime = extra.structs.rallyStruct.healTimeMax;
 			extra.structs.rallyStruct.healMax = combat.hp;
 		}
-		
 		array_push(oPlayer.extra.onDamageTaken, resetRallyTimer);
 		
 		//Set UI hp bar movement to match with rally mechanic
 		oUI.hpBar.delayMax = oPlayer.extra.structs.rallyStruct.healTimeMax;
-		
-		var txt = "[fntUpgradeTitle]" + name + "\n\n[fntScribble]" + desc;
-		startNotification(txt);
 	}
 }
 
