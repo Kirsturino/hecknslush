@@ -79,25 +79,21 @@ combat = new combatStruct();
 
 #region ABILITIES
 
-//Create generic attack structs for each of your abilities
-//THIS IS WIP and some stuff is hardcoded atm
 abilityAmount = 4;
-for (var i = 0; i < abilityAmount; ++i) { attack[i] = new attackStruct(); }
-
 attackSlots = array_create(abilityAmount);
 
-//Testing weapon struct idea. Data from a list of weapons would be pulled here to be used locally
+//Init ability
 attackSlots[0] = new basicSlash();
-
 attackSlots[1] = new spinSlash();	
-
 attackSlots[2] = new burstBlaster();
-	
 attackSlots[3] = new waveGun();
+
+//Create generic attack structs for each of your abilities
+for (var i = 0; i < abilityAmount; ++i)
+	{ attack[i] = setAttackStruct(attackSlots[i]); }
 	
 //Dodge properties, not sure what to put here, really, or how it will work yet
 dodge = new dodgeStruct();
-
 curDodge = new defaultDodge();
 	
 #endregion
@@ -198,10 +194,8 @@ function playerDummy() {
 
 function playerAttacking() {
 	combat.aimDir = getAttackDir();
-	attack[ATK].dur = approach(attack[ATK].dur, 0, 1);
 	
 	attackLogic(attackSlots[ATK], attack[ATK]);
-
 	attackMovement();
 	
 	//visuals
@@ -210,15 +204,13 @@ function playerAttacking() {
 	//State switch
 	if (attack[ATK].dur <= 0)
 	{
-		attack[ATK].cooldown = attackSlots[ATK].cooldown;
-		resetAttack(attackSlots[ATK], attack[ATK]);
-		
 		if (input_check(verbs.aim)) { toAiming(); }
 		else						{ toGrounded(); }	
 	}
 	
 	//Make player be able to break out of attack at will
-	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER)) {
+	if (dodge.cooldown == 0 && input_check_press(verbs.dodge, 0, DODGE_BUFFER))
+	{
 		attack[ATK].cooldown = attackSlots[ATK].cooldown;
 		toDodging();
 	}
@@ -283,9 +275,10 @@ function toGrounded() {
 }
 	
 function toAttacking() {	
-	//Instant attack when transitioning
 	attack[ATK].dir = getAttackDir();
-	performAttack(attackSlots[ATK], attack[ATK]);
+	
+	//Instant attack when transitioning, this is to make attacking just that tiny bit more responsive
+	if (attackSlots[ATK].anticipationDur == 0) performAttack(attackSlots[ATK], attack[ATK]);
 	
 	input_consume(verbs.attack);
 	state = playerAttacking;

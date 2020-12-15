@@ -5,8 +5,8 @@ combat = new rangedCombat();
 move = new rangedMove();
 visuals = new rangedVisuals();
 
-attack = new attackStruct();
 weapon = new rangedEnemyWeapon();
+attack = setAttackStruct(weapon);
 
 currencyArray = initCurrency(combat.currencyAmount);
 
@@ -50,26 +50,13 @@ function repositioning() {
 function attacking() {
 	//Wait a while before attacking, then initiate attack
 	//When attack is over, go back to repositioning
-	if (attack.anticipationDur > 0)
-	{
-		attack.anticipationDur = approach(attack.anticipationDur, 0, 1);
-	} else if (attack.dur > 0)
-	{
-		visuals.curSprite = sEnemyRangedShooting;
-		drawFunction = nothing;
+	visuals.curSprite = sEnemyRangedShooting;
 		
-		attackLogic(weapon, attack);
-		attackMovement();
+	attackLogic(weapon, attack);
+	attackMovement();
 		
-		//Count down attack dur
-		attack.dur = approach(attack.dur, 0, 1);
-		if (attack.dur == 0)
-		{			
-			attack.cooldown = weapon.cooldown;
-			resetAttack(weapon, attack);
-			toRepositioning();
-		}
-	}
+	//Count down attack dur
+	if (attack.dur == 0) { toRepositioning(); }
 }
 
 function stunned() {
@@ -93,12 +80,6 @@ function toRepositioning() {
 }
 
 function toAttacking() {
-	//Impart attack qualities to current attack
-	attack.dur = weapon.dur;
-	attack.anticipationDur = weapon.anticipationDur;
-	attack.spd = weapon.spd;
-	attack.dmg = weapon.dmg;
-	
 	//Set attack direction
 	attack.dir = point_direction(x, y, oPlayer.x, oPlayer.y);
 

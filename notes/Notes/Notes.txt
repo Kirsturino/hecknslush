@@ -12,6 +12,7 @@ TO-DO:
 REFACTOR:
 Yes
 - Calculate hitbox animation to match the timing of hitbox lifetime
+	- Tie projectile hitbox animation to animation frames instead of time passed
 	
 - Enemy state structure
 - Enemy pathfinding/movement should be generalized
@@ -25,10 +26,11 @@ Yes
 
 
 Maybe
-- Add possibility for anticipation time for attacking? (currently kinda hardcoded into enemies)
 
 ---------------------------------------------------------------------------
 KNOWN BUGS:
+- Pixel perfect camera jitter
+	- Fixable with some surface magic, also makes camera smoother overall
 
 ---------------------------------------------------------------------------
 UPGRADE/BUFF IDEAS

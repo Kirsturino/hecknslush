@@ -16,7 +16,7 @@ enum recharge {
 function attackStruct() constructor
 {
 	dur = 0;
-	anticipationDur = 64;
+	anticipationDur = 0;
 	dir = 0;
 	htbxDir = 0;
 	
@@ -34,13 +34,22 @@ function dodgeStruct() constructor
 	cooldown = 0
 }
 
+function setAttackStruct(weapon)
+{
+	var struct = new attackStruct();
+	struct.dur = weapon.dur;
+	struct.anticipationDur = weapon.anticipationDur;
+	
+	return struct;
+}
+
 //Player abilities
 function genericweaponStruct() constructor
 {
 	//Info
 	name =					"Generic Weapon";
 	type =					weapons.ranged;
-	clr =					col.enemy;
+	clr =					col.red;
 	htbx =					oHitbox;
 	projSpr =				sProjectile;
 	abilitySpr =			sAbility;
@@ -84,6 +93,7 @@ function genericweaponStruct() constructor
 	
 	//Cooldowns and timing
 	dur =					30;
+	anticipationDur =		0;
 	cooldown =				60;
 	cooldownType =			recharge.time;
 	
@@ -94,9 +104,6 @@ function genericweaponStruct() constructor
 	//Ranged exclusive
 	spr =					sGun;
 	zoom =					0.4;
-	
-	//Enemy exclusive
-	anticipationDur =		64;
 	
 	//FX
 	attackFX =				baseMeleeFX;
@@ -110,7 +117,7 @@ function basicSlash() constructor
 	//Info
 	name =					"Melee Weapon";
 	type =					weapons.melee;
-	clr =					col.enemy;
+	clr =					col.red;
 	htbx =					oHitbox;
 	projSpr =				sSlash;
 	abilitySpr =			sAbility;
@@ -153,6 +160,7 @@ function basicSlash() constructor
 	
 	//Cooldowns and timing
 	dur =					32;
+	anticipationDur =		0;
 	cooldown =				0;
 	cooldownType =			recharge.damage;
 	
@@ -177,7 +185,7 @@ function spinSlash() constructor
 	//Info
 	name =					"Spinslash";
 	type =					weapons.melee;
-	clr =					col.enemy;
+	clr =					col.red;
 	htbx =					oHitbox;
 	projSpr =				sThrust;
 	abilitySpr =			sAbility;
@@ -220,6 +228,7 @@ function spinSlash() constructor
 	
 	//Cooldowns and timing
 	dur =					64;
+	anticipationDur =		0;
 	cooldown =				240;
 	cooldownType =			recharge.damage;
 	
@@ -288,6 +297,7 @@ function burstBlaster() constructor
 	
 	//Cooldowns and timing
 	dur =					30;
+	anticipationDur =		0;
 	cooldown =				180;
 	cooldownType =			recharge.damage;
 	
@@ -355,6 +365,7 @@ function waveGun() constructor
 	
 	//Cooldowns and timing
 	dur =					60;
+	anticipationDur =		0;
 	cooldown =				240;
 	cooldownType =			recharge.damage;
 	
@@ -422,7 +433,6 @@ function rangedEnemyWeapon() constructor
 	size =					1;
 	
 	//Misc. values
-	destroyOnCollision =	true;
 	knockback =				0.2;
 	
 	//Values that affect player while attacking
@@ -431,7 +441,8 @@ function rangedEnemyWeapon() constructor
 	
 	//Cooldowns and timing
 	dur =					30;
-	cooldown =				60;
+	anticipationDur =		64;
+	cooldown =				120;
 	cooldownType =			recharge.time;
 	
 	//Melee exclusive
@@ -441,9 +452,6 @@ function rangedEnemyWeapon() constructor
 	//Ranged exclusive
 	zoom =					0.4;
 	spr =					sGun;
-	
-	//Enemy exclusive
-	anticipationDur =		64;
 	
 	//FX
 	attackFX =				nothing;

@@ -23,7 +23,7 @@ scribble_set_starting_format("fntScribble", c_white, fa_center);
 
 //Init colors
 global.palette = {
-	enemy : other.enemyColor,
+	red : other.enemyColor,
 	enemyDeep : other.enemyColorDeep,
 	white : other.white,
 	black : other.black,
@@ -34,7 +34,7 @@ global.palette = {
 #macro col global.palette
 
 global.abilityColors = [
-	col.enemy,
+	col.red,
 	col.blue,
 	col.green
 ]

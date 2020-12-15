@@ -20,7 +20,7 @@ function getTouchingObjects(list, object, func)
 			ds_list_add(list, enemyInList);
 			
 			//Do something with object
-			script_execute(func, enemyInList);
+			func(enemyInList);
 		}
 		
 		i++;
@@ -206,7 +206,7 @@ function setFlash(amount)
 //Enemy functions
 function drawAttackIndicator(visuals, weapon, attack)
 {
-	var c = col.enemy;
+	var c = col.red;
 	var c2 = c_black;
 	
 	switch (visuals.indicatorType)
@@ -307,9 +307,13 @@ function pushArrayToArray(arrayFrom, arrayTo)
 
 function attackLogic(weapon, attack)
 {
-	if (attack.count < weapon.amount && attack.dur < weapon.dur - weapon.delay)
+	if (attack.anticipationDur > 0)
 	{
-		if (weapon.aimable) attack.dir = getAttackDir();
+		attack.anticipationDur = approach(attack.anticipationDur, 0, 1);
+		attack.dur = weapon.dur;
+	} else if (attack.count < weapon.amount && attack.dur < weapon.dur - weapon.delay)
+	{
+		if (weapon.aimable) { attack.dir = getAttackDir(); }
 		performAttack(weapon, attack);
 	} else if (attack.count == weapon.amount && attack.burstCount < weapon.burstAmount)
 	{
@@ -318,6 +322,12 @@ function attackLogic(weapon, attack)
 		attack.burstCount++;
 		attack.dur = weapon.dur + weapon.burstDelay;
 	}
+	
+	//Count attack duration down
+	if (attack.anticipationDur == 0) attack.dur = approach(attack.dur, 0, 1);
+	
+	//Set cooldowns and reset attack variables if we're transitioning out of attack
+	if (attack.dur <= 0) { resetAttack(weapon, attack); }
 }
 
 function performAttack(weapon, attack) {
@@ -328,17 +338,7 @@ function performAttack(weapon, attack) {
 		//Loop through all the bullets in the burst
 		repeat (weapon.amount)
 		{
-			attack.htbxDir = attack.dir;
-			
-			//If weapon has multispread, do some directional calculation for each projectile based on the multispread variable
-			if (weapon.multiSpread > 0)
-			{
-				var bulletDir = (weapon.multiSpread / (weapon.amount - 1) * attack.count) - weapon.multiSpread * .5;
-				attack.htbxDir = attack.dir + attack.mirror * bulletDir;
-			}
-			
-			attack.htbxDir += irandom_range(-weapon.spread, weapon.spread);
-		
+			calculateHtbxDir(weapon, attack);
 			spawnHitbox(weapon, attack);
 			incrementAttack(weapon, attack);
 		}
@@ -347,20 +347,25 @@ function performAttack(weapon, attack) {
 	} else
 	{ 
 		//This is where we go if we only shoot 1 bullet per frame, aka delay > 0
-		attack.htbxDir = attack.dir;
-		
-		if (weapon.multiSpread > 0)
-		{
-			var bulletDir = (weapon.multiSpread / (weapon.amount - 1) * attack.count) - weapon.multiSpread * .5;
-			attack.htbxDir = attack.dir + attack.mirror * bulletDir;
-		}
-		
-		attack.htbxDir += irandom_range(-weapon.spread, weapon.spread);
-				
+		calculateHtbxDir(weapon, attack);		
 		spawnHitbox(weapon, attack);
 		incrementAttack(weapon, attack);
 		setAttackMovement(weapon.push, weapon, attack);
 	}
+}
+
+function calculateHtbxDir(weapon, attack)
+{
+	attack.htbxDir = attack.dir;
+			
+	//If weapon has multispread, do some directional calculation for each projectile based on the multispread variable
+	if (weapon.multiSpread > 0)
+	{
+		var bulletDir = (weapon.multiSpread / (weapon.amount - 1) * attack.count) - weapon.multiSpread * .5;
+		attack.htbxDir = attack.dir + attack.mirror * bulletDir;
+	}
+			
+	attack.htbxDir += irandom_range(-weapon.spread, weapon.spread);
 }
 
 function incrementAttack(weapon, attack) {
@@ -375,7 +380,9 @@ function resetAttack(weapon, attack) {
 	//Reset individual attack values
 	attack.count = 0;
 	attack.burstCount = 0;
-	
+	attack.cooldown = weapon.cooldown;
+	attack.anticipationDur = weapon.anticipationDur;
+		
 	if (weapon.mirror) attack.mirror *= -1;
 }
 	

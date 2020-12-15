@@ -31,7 +31,7 @@ with (oPlayer)
 	draw_sprite_ext(sPixel, 0, margin + thicc/4, margin+thicc/2 + barYOffset, combat.maxHP + thicc/4, thicc, tilt, c, 1);
 	c = col.tan;
 	draw_sprite_ext(sPixel, 0, margin, margin + barYOffset, UI.hpBar.chunkLength, thicc, tilt, c, 1);
-	c = col.enemy;
+	c = col.red;
 	draw_sprite_ext(sPixel, 0, margin, margin + barYOffset, combat.hp, thicc, tilt, c, 1);
 
 	var drawX = margin + lengthdir_x(combat.maxHP + txtLength, tilt);

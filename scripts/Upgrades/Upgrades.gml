@@ -228,7 +228,7 @@ function explodingBullets() constructor
 		part_particles_create(global.ps, htbx.x, htbx.y, global.explosionPart, 1);
 		
 		//Make those explosions feel meaty
-		freeze(htbx.atk.dmg * 100);
+		freeze(htbx.atk.dmg * 10);
 		shakeCamera(htbx.atk.dmg * 200, 2, 200);
 	}
 	, upgrades.addBehaviour];
@@ -285,7 +285,7 @@ function implodingBullets() constructor
 		part_particles_create(global.ps, htbx.x, htbx.y, global.explosionPart, 1);
 		
 		//Make those explosions feel meaty
-		freeze(htbx.atk.dmg * 100);
+		freeze(htbx.atk.dmg);
 		shakeCamera(htbx.atk.dmg * 200, 2, 200);
 	}
 	, upgrades.addBehaviour];
@@ -321,16 +321,16 @@ function upgradedDamage() constructor
 	
 }
 
-ds_list_add(POOL_UPGRADE, new anarchy());
-ds_list_add(POOL_UPGRADE, new radialAttack());
-ds_list_add(POOL_UPGRADE, new burstifier());
-ds_list_add(POOL_UPGRADE, new megaBurstifier());
-ds_list_add(POOL_UPGRADE, new behaviourTest());
-ds_list_add(POOL_UPGRADE, new multiTest());
-ds_list_add(POOL_UPGRADE, new explodingBullets());
-ds_list_add(POOL_UPGRADE, new implodingBullets());
-ds_list_add(POOL_UPGRADE, new fracturedBlade());
-ds_list_add(POOL_UPGRADE, new upgradedDamage());
+ds_list_add(POOL_UPGRADE,	new anarchy(),
+							new radialAttack(),
+							new burstifier(),
+							new megaBurstifier(),
+							new behaviourTest(),
+							new multiTest(),
+							new explodingBullets(),
+							new implodingBullets(),
+							new fracturedBlade(),
+							new upgradedDamage());
 
 //-------------------------------------------------------------------------------------------
 
@@ -369,24 +369,20 @@ function rally() constructor
 		function rallyHeal()
 		{
 			if (oPlayer.extra.structs.rallyStruct.healTime > 0)
-				{
-					oPlayer.combat.hp = min(oPlayer.extra.structs.rallyStruct.healMax, oPlayer.combat.hp + ceil(atk.dmg * oPlayer.extra.structs.rallyStruct.healMultiplier));
-				}
+			{
+				oPlayer.combat.hp = min(oPlayer.extra.structs.rallyStruct.healMax, oPlayer.combat.hp + ceil(atk.dmg * oPlayer.extra.structs.rallyStruct.healMultiplier));
+			}
 		}
 		
 		//Add heal function to all weapon onhit arrays
 		var length = array_length(oPlayer.attackSlots);
 		for (var i = 0; i < length; ++i)
-		{
-		   array_push(oPlayer.attackSlots[i].hitFunctions, rallyHeal);
-		}
+			{ array_push(oPlayer.attackSlots[i].hitFunctions, rallyHeal); }
 		
 		//Extra functions to make rally effect work
 		//These get pushed to player arrays that contain extra functions gained from buffs
 		function rallyLogic()
-		{
-			extra.structs.rallyStruct.healTime = approach(extra.structs.rallyStruct.healTime, 0, 1);
-		}
+			{ extra.structs.rallyStruct.healTime = approach(extra.structs.rallyStruct.healTime, 0, 1); }
 		array_push(oPlayer.extra.step, rallyLogic);
 	
 		function resetRallyTimer()
@@ -401,4 +397,20 @@ function rally() constructor
 	}
 }
 
-ds_list_add(POOL_BUFF, new rally());
+function longHands() constructor
+{
+	name =			"LONG LONG MAAAAAAN";
+	desc =			"Increases reach of all abilities";
+	pool =			POOL_BUFF;
+	
+	function buffFunction() 
+	{
+		//Increase reach of all abilities
+		var length = array_length(oPlayer.attackSlots);
+		for (var i = 0; i < length; ++i)
+			{ oPlayer.attackSlots[i].reach *= 2; }
+	}
+}
+
+ds_list_add(POOL_BUFF,	new rally(),
+						new longHands());
