@@ -1,36 +1,63 @@
 ---------------------------------------------------------------------------
-FEATURES:
+FEATURES
 - Weighted/Smart camera
 - Dungeon generation
-- Controller support (!!!)
+- Controls (!!!)
+	- Needs to support:
+		- KB & Mouse
+		- KB Only
+		- Controller
 
 ---------------------------------------------------------------------------
-TO-DO:
-- Global tuning knobs EVERYWHERE (Ongoing effort)
+TO-DO
+- Global tuning knobs (Ongoing effort)
+	- Projectile speed
+	- Projectile size
+	- Damage being dealt
+	- Cooldowns
+	- Anything else you can come up with
+	
 - Culling to walls and enemies
 
-REFACTOR:
+- Replace dodge with a special ability slot
+	- Opens up room for parries and other abilities for more versatile playstyles
+
+---------------------------------------------------------------------------
+REFACTOR
 Yes
 - Calculate hitbox animation to match the timing of hitbox lifetime
-	- Tie projectile hitbox animation to animation frames instead of time passed
+	- Tie projectile hitbox delay to animation frames instead of time passed
 	
-- Enemy state structure
-- Enemy pathfinding/movement should be generalized
-- ALL enemies use hitbox spawning
-	- This means reworking the swarmer enemy
+- Clean enemy pathfinding code
+	- Might need a bigger rework because gneralizing enemy code was done in a hurry
+	- There's a lot of just weird stuff going on with all the radiuses (raidiai?)
 
-- Move FX drawing to a separate object that can handle draw calls from everywhere smoothly
-	- for explosions and stuff, vector draw calls in specific
+- Make FXDrawer utilize vertex buffers
+	- This would mean that rectangles could be rotated, for example
+	- This would also mean calculating vertice locations that take in rotation as an argument, ugh
 	
 - Clean ALL UI drawing code to actually be readable by a human being
 
+- Insert enemy attack indicators as functions instead of a switch statement mess
 
 Maybe
 
 ---------------------------------------------------------------------------
-KNOWN BUGS:
+KNOWN BUGS
 - Pixel perfect camera jitter
 	- Fixable with some surface magic, also makes camera smoother overall
 
+- Enemy attack indicator alpha sucks atm
+	- Should be usable with surfaces, but surfaces and clearing with draw_clear mess up the alpha
+	- Maybe there's some way to solve it with some advanced blend modes or other ways to clear a surface
+
 ---------------------------------------------------------------------------
 UPGRADE/BUFF IDEAS
+- Upgrades that modify bullet movement pattern like in Isaac
+	- Probably as new movement functions?
+	- Might result in float, we'll habe to see
+	
+---------------------------------------------------------------------------
+THINGS TO THINK ABOUT
+- Resolution should be decided soon-ish
+	- Kinda have a fear that current resolution is too big?

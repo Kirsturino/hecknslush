@@ -10,6 +10,9 @@ instance_create_layer(0, 0, layer, oShell);
 //Init UI
 instance_create_layer(0, 0, layer, oUI);
 
+//Init object that handles vector draw calls
+instance_create_layer(0, 0, layer, oFXDrawer);
+
 //Init Scribble fonts
 scribble_init("", "fntScribble", false);
 scribble_add_font("fntScribble");

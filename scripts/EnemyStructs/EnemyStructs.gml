@@ -1,16 +1,18 @@
 function swarmerCombat() constructor
 {
-	hp = 20;
 	detectionRadius = 200;
 	attackRadius = 124;
 	chaseRadius = 240;
+	fleeRadius = 0;
+	
+	hp = 20;
 	stunDur = 0;
 	stunnable = true;
 	weight = 1;
 	iframes = 0;
 	iframesMax = 0;
 	indicatorLength = 128;
-	indicatorType = indicator.line;
+	indicatorType = shapes.line;
 	currencyAmount = 10;
 }
 
@@ -32,24 +34,31 @@ function swarmerMove() constructor
 function swarmerVisuals() constructor
 {
 	flash = 0;
-	curSprite = sEnemyMelee;
-	corpse= sEnemyMeleeCorpse;
 	frm = 0;
 	spd = 1;
 	xScale = 1;
 	yScale = 1;
 	rot = 0;
 	indicatorLength = 128;
-	indicatorType = indicator.line;
+	indicatorType = shapes.line;
+	
+	//Sprites
+	curSprite = sEnemyMelee;
+	idle = sEnemyMelee;
+	anticipation  = sEnemyMeleeAnticipation;
+	attacking = sEnemyMeleeDashing;
+	stunned = sEnemyMeleeStunned;
+	corpse = sEnemyMeleeCorpse;
 }
 
 function rangedCombat() constructor
 {
-	hp = 30;
 	detectionRadius = 280;
 	attackRadius = 220;
 	chaseRadius = 320;
 	fleeRadius = 160;
+	
+	hp = 30;
 	stunDur = 0;
 	stunnable = true;
 	weight = 1;
@@ -76,13 +85,19 @@ function rangedMove() constructor
 function rangedVisuals() constructor
 {
 	flash = 0;
-	curSprite = sEnemyRanged;
-	corpse = sEnemyCorpse;
 	frm = 0;
 	spd = 1;
 	xScale = 1;
 	yScale = 1;
 	rot = 0;
 	indicatorLength = 240;
-	indicatorType = indicator.triangle;
+	indicatorType = shapes.triangle;
+	
+	//Sprites
+	curSprite = sEnemyRanged;
+	idle = sEnemyRanged;;
+	anticipation  = sEnemyRangedAnticipation;
+	attacking = sEnemyRangedShooting;
+	stunned = sEnemyRangedStunned;
+	corpse = sEnemyCorpse;
 }

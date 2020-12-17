@@ -459,6 +459,74 @@ function rangedEnemyWeapon() constructor
 	explosionFX =			baseProjectileExplosion;
 	damageFX =				baseDamageFX;
 }
+
+function swarmerEnemyWeapon() constructor
+{
+	//Info
+	name =					"Spinslash";
+	type =					weapons.melee;
+	clr =					col.red;
+	htbx =					oHitbox;
+	projSpr =				sThrust;
+	abilitySpr =			sAbility;
+	upgradeCount =			0;
+	maxUpgradeCount =		3;
+	
+	//Added behaviour functions
+	spawnFunctions =		[];
+	aliveFunctions =		[piercingHitboxEnemyCollision, defaultHitboxMovement];
+	hitFunctions =			[];
+	collisionFunctions =	[];
+	destroyFunctions =		[];
+	
+	//Hitbox pattern stuff
+	amount =				48;
+	delay =					2;
+	burstAmount =			0;
+	burstDelay =			0;
+	multiSpread =			1440;
+	
+	//Hitbox movement 
+	fric =					0;
+	spd =					0;
+	
+	//Hitbox active start and end
+	start =					0;
+	length =				12;
+	
+	//Important values
+	dmg =					5;
+	life =					12;
+	size =					0.5;
+	
+	//Misc. values
+	knockback =				0.2;
+	
+	//Values that affect player while attacking
+	push =					2;
+	aimable =				false;
+	
+	//Cooldowns and timing
+	dur =					128;
+	anticipationDur =		64;
+	cooldown =				64;
+	cooldownType =			recharge.time;
+	
+	//Melee exclusive
+	reach =					6; //Ranged reach is also tied to gun sprite
+	mirror =				false;
+	
+	//Ranged exclusive
+	spr =					sThrust;
+	zoom =					0.4;
+	spread =				0;
+	
+	//FX
+	attackFX =				nothing;
+	trailFX =				nothing;
+	explosionFX =			nothing;
+	damageFX =				baseDamageFX;
+}
 	
 //Weapon FX
 function baseMeleeFX(weapon, attack, xx, yy)

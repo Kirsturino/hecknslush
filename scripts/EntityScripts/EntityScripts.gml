@@ -1,4 +1,5 @@
 //Collection of functions/structs most entities/actors ingame will most likely want to call at some point
+#region Misc. scripts
 function depthSorting()
 {
 	depth = -bbox_bottom;
@@ -202,37 +203,7 @@ function setFlash(amount)
 {
 	visuals.flash = hitFlash + amount * global.hitFXFlashScale;
 }
-
-//Enemy functions
-function drawAttackIndicator(visuals, weapon, attack)
-{
-	var c = col.red;
-	var c2 = c_black;
-	
-	switch (visuals.indicatorType)
-	{
-		case indicator.line:
-			var drawX = x + lengthdir_x(visuals.indicatorLength, attack.dir);
-			var drawY = bbox_bottom + lengthdir_y(visuals.indicatorLength, attack.dir);
-			
-			draw_line_width_color(x, bbox_bottom, drawX, drawY, 8, c, c2);
-		break;
-		
-		case indicator.triangle:
-			var drawX = x;
-			var drawY = y;
-			var drawX2 = x + lengthdir_x(visuals.indicatorLength, attack.dir - weapon.spread);
-			var drawY2 = y + lengthdir_y(visuals.indicatorLength, attack.dir - weapon.spread);
-			var drawX3 = x + lengthdir_x(visuals.indicatorLength, attack.dir + weapon.spread);
-			var drawY3 = y + lengthdir_y(visuals.indicatorLength, attack.dir + weapon.spread);
-			
-			draw_triangle_color(drawX, drawY, drawX2, drawY2, drawX3, drawY3, c, c2, c2, false);
-		break;
-	}
-	var xOff = sprite_width;
-	var yOff = sprite_height/2;
-	draw_ellipse_color(x - xOff, bbox_bottom - yOff, x + xOff, bbox_bottom + yOff, c, c2, false);
-}
+#endregion
 
 #region ATTACKING
 
@@ -395,9 +366,6 @@ function attackMovement() {
 	
 	x += move.hsp * delta;
 	y += move.vsp * delta;
-	
-	//FX
-	part_particles_create(global.ps, x, bbox_bottom, global.bulletTrail, 1);
 }
 	
 function setAttackMovement(amount, weapon, attack) {
@@ -417,6 +385,7 @@ function setAttackMovement(amount, weapon, attack) {
 		break;
 	}
 	
+	//Set entity speed to attack speed
 	move.hsp = lengthdir_x(amount, move.dir);
 	move.vsp = lengthdir_y(amount, move.dir);
 }

@@ -11,6 +11,7 @@
     {"id":{"name":"sTile","path":"sprites/sTile/sTile.yy",},"order":0,},
     {"id":{"name":"scribble_page_count","path":"scripts/scribble_page_count/scribble_page_count.yy",},"order":0,},
     {"id":{"name":"oPlayer","path":"objects/oPlayer/oPlayer.yy",},"order":0,},
+    {"id":{"name":"oFXDrawer","path":"objects/oFXDrawer/oFXDrawer.yy",},"order":8,},
     {"id":{"name":"input_cursor_verbs","path":"scripts/input_cursor_verbs/input_cursor_verbs.yy",},"order":4,},
     {"id":{"name":"sAbility","path":"sprites/sAbility/sAbility.yy",},"order":0,},
     {"id":{"name":"input_default_gamepad_button","path":"scripts/input_default_gamepad_button/input_default_gamepad_button.yy",},"order":1,},

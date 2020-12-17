@@ -1,6 +1,4 @@
-//Create and store currency that enemy will drop
-state = nothing;
-drawFunction = nothing;
+#region functions
 
 function destroySelf()
 {
@@ -21,7 +19,7 @@ function takeDamage(amount) {
 		
 	if (combat.hp <= 0) destroySelf();
 		
-	if (state == idle) { move.aggroTimer = move.aggroTimerMax; }
+	if (state == states.idle) { move.aggroTimer = move.aggroTimerMax; }
 }
 
 function initCurrency(amount)
@@ -48,4 +46,184 @@ function spawnCurrency(currencyArray)
 		currencyArray[i].move.hsp = irandom_range(-3, 3);
 		currencyArray[i].move.vsp = irandom_range(-3, 3);
 	}
+}
+
+#endregion
+
+#region Attack indicator scripts
+
+function drawAttackIndicator(visuals, weapon, attack)
+{
+	var c = col.red;
+	var c2 = c_black;
+	
+	switch (visuals.indicatorType)
+	{
+		case shapes.line:
+			var drawX = x + lengthdir_x(visuals.indicatorLength, attack.dir);
+			var drawY = bbox_bottom + lengthdir_y(visuals.indicatorLength, attack.dir);
+			
+			draw_line_width_color(x, bbox_bottom, drawX, drawY, 8, c, c2);
+		break;
+		
+		case shapes.triangle:
+			var drawX = x;
+			var drawY = y;
+			var drawX2 = x + lengthdir_x(visuals.indicatorLength, attack.dir - weapon.spread);
+			var drawY2 = y + lengthdir_y(visuals.indicatorLength, attack.dir - weapon.spread);
+			var drawX3 = x + lengthdir_x(visuals.indicatorLength, attack.dir + weapon.spread);
+			var drawY3 = y + lengthdir_y(visuals.indicatorLength, attack.dir + weapon.spread);
+			
+			draw_triangle_color(drawX, drawY, drawX2, drawY2, drawX3, drawY3, c, c2, c2, false);
+		break;
+	}
+	
+	//Generic glow/circle thing under enemy
+	var xOff = sprite_width;
+	var yOff = sprite_height/2;
+	draw_ellipse_color(x - xOff, bbox_bottom - yOff, x + xOff, bbox_bottom + yOff, c, c2, false);
+}
+
+#endregion
+
+#region Enemy AI stuff
+
+function enemyIdle()
+{
+	staticMovement();
+
+	var los = canSee(oPlayer);
+	var closeEnough = distance_to_object(oPlayer) <= combat.detectionRadius;
+	
+	//If enemy can see player or has been aggroed, start chasing player
+	if ((closeEnough && los) || move.aggroTimer != 0) toChasing();
+}
+
+function enemyChasing() {
+	var dir = point_direction(x, y, move.lastSeen[0], move.lastSeen[1]);
+	var dist = distance_to_object(oPlayer);
+	var los = canSee(oPlayer);
+	
+	//Get line of sight
+	if (los && dist < combat.chaseRadius)
+	{
+		move.lastSeen[0] = oPlayer.x;
+		move.lastSeen[1] = oPlayer.y;
+	}
+	
+	chaseMovement(dist, dir);
+	move.aggroTimer = approach(move.aggroTimer, 0, 1);
+	
+	if (dist < combat.attackRadius && los && attack.cooldown == 0) { toAttacking(); }
+	else if ((dist > combat.chaseRadius || !los) && move.aggroTimer == 0) { toIdle(); }
+}
+
+function enemyAttacking() {
+	//Wait a while before attacking, then initiate attack
+	//When attack is over, go back to repositioning
+	visuals.curSprite = visuals.attacking;
+		
+	attackLogic(weapon, attack);
+	attackMovement();
+	
+	//This might be baked into the attack logic at some point
+	//For now, this can stay, even if it's being run every frame
+	//Maybe into increment attack function?
+	if (attack.count == weapon.amount) { drawFunction = nothing; }
+		
+	//Count down attack dur
+	if (attack.dur == 0) { toChasing(); }
+}
+
+function enemyStunned() {
+	staticMovement();
+	
+	combat.stunDur = approach(combat.stunDur, 0, 1);
+	if (combat.stunDur == 0) toIdle();
+}
+
+//Init states
+states =  {
+	idle : enemyIdle,
+	chasing : enemyChasing,
+	attacking : enemyAttacking,
+	stunned : enemyStunned,
+}
+	
+#endregion
+
+#region State switches
+
+function toIdle() {
+	visuals.curSprite = visuals.idle;
+	state = states.idle;
+	drawFunction = nothing;
+}
+
+function toChasing() {
+	visuals.curSprite = visuals.idle;
+	state = states.chasing;
+	drawFunction = nothing;
+}
+
+function toAttacking() {
+	//Set attack direction
+	attack.dir = point_direction(x, y, oPlayer.x, oPlayer.y);
+	move.dir = attack.dir;
+
+	visuals.curSprite = visuals.anticipation;
+	state = states.attacking;
+	drawFunction = drawAttackIndicator;
+}
+
+function toStunned(duration) {
+	resetAttack(weapon, attack);
+	
+	combat.stunDur = duration;
+	
+	visuals.curSprite = visuals.stunned;
+	state = states.stunned;
+	drawFunction = nothing;
+}
+
+#endregion
+
+#region Movement
+
+function chaseMovement(dist, dir)
+{
+	if (dist < combat.fleeRadius || dist > combat.attackRadius)
+	{
+		move.hsp = approach(move.hsp, lengthdir_x(move.chaseSpd, dir), move.axl);
+		horizontalCollision();
+	
+		move.vsp = approach(move.vsp, lengthdir_y(move.chaseSpd, dir), move.axl);
+		verticalCollision();
+		
+		move.dir = point_direction(0, 0, move.hsp, move.vsp);
+	
+		x += move.hsp * delta;
+		y += move.vsp * delta;
+	} else 
+	{
+		staticMovement();
+	}
+}
+
+#endregion
+
+//Other
+
+function incrementCooldowns() {
+	attack.cooldown = approach(attack.cooldown, 0, 1);
+}
+	
+function initEnemy()
+{
+	state = nothing;
+	DoLater(1, function(data) {state = states.idle;},0,true);
+	drawFunction = nothing;
+
+	//Set mask
+	sprite_index = move.collMask;
 }
