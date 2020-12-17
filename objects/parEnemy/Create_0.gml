@@ -233,10 +233,10 @@ function incrementCooldowns() {
 function initEnemy()
 {
 	state = nothing;
-	DoLater(1, function(data) {state = states.idle;},0,true);
+	DoLater(1, function(data) {toIdle();},0,true);
 	drawFunction = nothing;
 	
-	visuals.finalSpr = variable_struct_get(visuals.spriteStruct, visuals.curSprite);
+	visuals.finalSpr = variable_struct_get(visuals.down, "idle");
 
 	//Set mask
 	sprite_index = move.collMask;

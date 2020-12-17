@@ -174,7 +174,7 @@ function incrementAnimationFrame()
 		var maxFrames = sprite_get_number(visuals.finalSpr);
 		if (visuals.frm > maxFrames) { visuals.frm = frac(visuals.frm); }
 		//Decide whether to use up or down sprite
-		if (move.dir < 180 && visuals.spriteStruct != visuals.up)
+		if (move.dir < 180 &&  move.dir != 0 && visuals.spriteStruct != visuals.up)
 		{
 			visuals.spriteStruct = visuals.up;
 			visuals.finalSpr = variable_struct_get(visuals.spriteStruct, visuals.curSprite);

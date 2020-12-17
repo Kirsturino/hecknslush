@@ -43,7 +43,6 @@ input_consume(verbs.dodge);
 state = nothing;
 DoLater(1, function(data) {state = playerGrounded;},0,true);
 drawFunction = nothing;
-DoLater(1, function(data) {drawFunction = nothing;},0,true);
 
 //Circular buffer for states, normalize size for different target framerates
 //This will be used to add some leniency to combos and various actions
