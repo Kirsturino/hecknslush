@@ -224,8 +224,7 @@ function explodingBullets() constructor
 		ds_list_destroy(enemyList);
 		
 		//Explosion particle
-		part_type_size(global.explosionPart, radius / 3, radius / 3, 0, 0);
-		part_particles_create(global.ps, htbx.x, htbx.y, global.explosionPart, 1);
+		vectorShapeCall(htbx.x, htbx.y, shapes.circle, radius, -1, 2, 0, 12, col.white, false);
 		
 		//Make those explosions feel meaty
 		freeze(htbx.atk.dmg * 10);
@@ -281,8 +280,7 @@ function implodingBullets() constructor
 		ds_list_destroy(enemyList);
 		
 		//Explosion particle
-		part_type_size(global.explosionPart, radius / 3, radius / 3, 0, 0);
-		part_particles_create(global.ps, htbx.x, htbx.y, global.explosionPart, 1);
+		vectorShapeCall(htbx.x, htbx.y, shapes.circle, radius, -1, 2, 0, 12, col.white, false);
 		
 		//Make those explosions feel meaty
 		freeze(htbx.atk.dmg);

@@ -20,14 +20,14 @@ scribble_add_font("fntUpgradeTitle");
 scribble_set_starting_format("fntScribble", c_white, fa_center);
 
 //Debug
-//show_debug_overlay(true);
+show_debug_overlay(true);
 //window_set_cursor(cr_none);
 //cursor_sprite = sCursor;
 
 //Init colors
 global.palette = {
 	red : other.enemyColor,
-	enemyDeep : other.enemyColorDeep,
+	redDeep : other.enemyColorDeep,
 	white : other.white,
 	black : other.black,
 	tan : other.tan1,

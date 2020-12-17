@@ -164,13 +164,30 @@ function incrementAnimationFrame()
 {
 	visuals.frm += visuals.spd * delta;
 	
-	if (visuals.frm > image_number) {
-		visuals.frm = frac(visuals.frm);
-	}
-	
 	//Reset squash
 	visuals.xScale = lerp(visuals.xScale, 1, 0.1 * delta);
 	visuals.yScale = lerp(visuals.yScale, 1, 0.1 * delta);
+	
+	//THIS IS WIP, PLAYER WILL USE THIS SAME SYSTEM LATER WHEN IT GETS ART
+	if (object_index != oPlayer)
+	{
+		var maxFrames = sprite_get_number(visuals.finalSpr);
+		if (visuals.frm > maxFrames) { visuals.frm = frac(visuals.frm); }
+		//Decide whether to use up or down sprite
+		if (move.dir < 180 && visuals.spriteStruct != visuals.up)
+		{
+			visuals.spriteStruct = visuals.up;
+			visuals.finalSpr = variable_struct_get(visuals.spriteStruct, visuals.curSprite);
+		}
+		else if (move.dir > 180 && visuals.spriteStruct != visuals.down)
+		{
+			visuals.spriteStruct = visuals.down;
+			visuals.finalSpr = variable_struct_get(visuals.spriteStruct, visuals.curSprite);
+		}
+	} else
+	{
+		if (visuals.frm > image_number) { visuals.frm = frac(visuals.frm); }
+	}
 }
 
 function pushEntities(xx, yy, force, radius, objToPush, shouldStun)

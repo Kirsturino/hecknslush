@@ -121,7 +121,15 @@ function enemyChasing() {
 function enemyAttacking() {
 	//Wait a while before attacking, then initiate attack
 	//When attack is over, go back to repositioning
-	visuals.curSprite = visuals.attacking;
+	if (visuals.curSprite != "attacking" && attack.anticipationDur == 0 && attack.count == 0) 
+	{
+		visuals.curSprite = "attacking";
+		visuals.finalSpr = variable_struct_get(visuals.spriteStruct, visuals.curSprite);
+	} else if (visuals.curSprite != "idle" && attack.count == weapon.amount) 
+	{
+		visuals.curSprite = "idle";
+		visuals.finalSpr = variable_struct_get(visuals.spriteStruct, visuals.curSprite);
+	}
 		
 	attackLogic(weapon, attack);
 	attackMovement();
@@ -155,13 +163,15 @@ states =  {
 #region State switches
 
 function toIdle() {
-	visuals.curSprite = visuals.idle;
+	visuals.curSprite = "idle";
+	visuals.finalSpr = variable_struct_get(visuals.spriteStruct, visuals.curSprite);
 	state = states.idle;
 	drawFunction = nothing;
 }
 
 function toChasing() {
-	visuals.curSprite = visuals.idle;
+	visuals.curSprite = "moving";
+	visuals.finalSpr = variable_struct_get(visuals.spriteStruct, visuals.curSprite);
 	state = states.chasing;
 	drawFunction = nothing;
 }
@@ -171,7 +181,8 @@ function toAttacking() {
 	attack.dir = point_direction(x, y, oPlayer.x, oPlayer.y);
 	move.dir = attack.dir;
 
-	visuals.curSprite = visuals.anticipation;
+	visuals.curSprite = "anticipation";
+	visuals.finalSpr = variable_struct_get(visuals.spriteStruct, visuals.curSprite);
 	state = states.attacking;
 	drawFunction = drawAttackIndicator;
 }
@@ -181,7 +192,8 @@ function toStunned(duration) {
 	
 	combat.stunDur = duration;
 	
-	visuals.curSprite = visuals.stunned;
+	visuals.curSprite = "stunned";
+	visuals.finalSpr = variable_struct_get(visuals.spriteStruct, visuals.curSprite);
 	state = states.stunned;
 	drawFunction = nothing;
 }
@@ -223,6 +235,8 @@ function initEnemy()
 	state = nothing;
 	DoLater(1, function(data) {state = states.idle;},0,true);
 	drawFunction = nothing;
+	
+	visuals.finalSpr = variable_struct_get(visuals.spriteStruct, visuals.curSprite);
 
 	//Set mask
 	sprite_index = move.collMask;

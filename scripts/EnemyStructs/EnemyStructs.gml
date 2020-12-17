@@ -1,7 +1,7 @@
 function swarmerCombat() constructor
 {
 	detectionRadius = 200;
-	attackRadius = 124;
+	attackRadius = 80;
 	chaseRadius = 240;
 	fleeRadius = 0;
 	
@@ -28,14 +28,14 @@ function swarmerMove() constructor
 	axl = 0.02;
 	fric = 0.05;
 	collMask = sEnemyMeleeWallCollisionMask;
-	dir = 0;
+	dir = 270;
 }
 
 function swarmerVisuals() constructor
 {
 	flash = 0;
 	frm = 0;
-	spd = 1;
+	spd = 0.02;
 	xScale = 1;
 	yScale = 1;
 	rot = 0;
@@ -43,11 +43,26 @@ function swarmerVisuals() constructor
 	indicatorType = shapes.line;
 	
 	//Sprites
-	curSprite = sEnemyMelee;
-	idle = sEnemyMelee;
-	anticipation  = sEnemyMeleeAnticipation;
-	attacking = sEnemyMeleeDashing;
-	stunned = sEnemyMeleeStunned;
+	down = {
+		idle : sEnemyMelee,
+		moving : sEnemyMeleeMoving,
+		anticipation  : sEnemyMeleeAnticipation,
+		attacking : sEnemyMeleeDashing,
+		stunned : sEnemyMeleeStunned,
+	}
+	
+	up = {
+		idle : sEnemyMeleeUp,
+		moving : sEnemyMeleeMovingUp,
+		anticipation  : sEnemyMeleeAnticipationUp,
+		attacking : sEnemyMeleeDashingUp,
+		stunned : sEnemyMeleeStunnedUp,
+	}
+	
+	curSprite = "idle";
+	finalSpr = sEnemyMelee;
+	spriteStruct = down;
+	
 	corpse = sEnemyMeleeCorpse;
 }
 
@@ -79,7 +94,7 @@ function rangedMove() constructor
 	axl = 0.02;
 	fric = 0.05;
 	collMask = sEnemyRangedWallCollisionMask;
-	dir = 0;
+	dir = 270;
 }
 
 function rangedVisuals() constructor
@@ -93,11 +108,27 @@ function rangedVisuals() constructor
 	indicatorLength = 240;
 	indicatorType = shapes.triangle;
 	
+	
 	//Sprites
-	curSprite = sEnemyRanged;
-	idle = sEnemyRanged;;
-	anticipation  = sEnemyRangedAnticipation;
-	attacking = sEnemyRangedShooting;
-	stunned = sEnemyRangedStunned;
+	down = {
+		idle : sEnemyRanged,
+		moving : sEnemyRanged,
+		anticipation  : sEnemyRangedAnticipation,
+		attacking : sEnemyRangedShooting,
+		stunned : sEnemyRangedStunned,
+	}
+	
+	up = {
+		idle : sEnemyRanged,
+		moving : sEnemyRanged,
+		anticipation  : sEnemyRangedAnticipation,
+		attacking : sEnemyRangedShooting,
+		stunned : sEnemyRangedStunned,
+	}
+	
+	curSprite = "idle";
+	finalSpr = sEnemyRanged;
+	spriteStruct = down;
+	
 	corpse = sEnemyCorpse;
 }

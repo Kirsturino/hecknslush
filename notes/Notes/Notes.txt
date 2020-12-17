@@ -61,3 +61,6 @@ UPGRADE/BUFF IDEAS
 THINGS TO THINK ABOUT
 - Resolution should be decided soon-ish
 	- Kinda have a fear that current resolution is too big?
+	
+- Particles will have to be elegantly loaded on a per-level/biome basis
+	- Can't bloat memory by loading all particles as global variables at once

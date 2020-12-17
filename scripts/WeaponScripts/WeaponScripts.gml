@@ -420,8 +420,8 @@ function rangedEnemyWeapon() constructor
 	multiSpread =			0;
 	
 	//Hitbox movement 
-	fric =					0.02;
-	spd =					3;
+	fric =					0.015;
+	spd =					2.5;
 	
 	//Hitbox active start and end
 	start =					0;
@@ -480,11 +480,11 @@ function swarmerEnemyWeapon() constructor
 	destroyFunctions =		[];
 	
 	//Hitbox pattern stuff
-	amount =				48;
-	delay =					2;
+	amount =				14;
+	delay =					4;
 	burstAmount =			0;
 	burstDelay =			0;
-	multiSpread =			1440;
+	multiSpread =			0;
 	
 	//Hitbox movement 
 	fric =					0;
@@ -513,7 +513,7 @@ function swarmerEnemyWeapon() constructor
 	cooldownType =			recharge.time;
 	
 	//Melee exclusive
-	reach =					6; //Ranged reach is also tied to gun sprite
+	reach =					24; //Ranged reach is also tied to gun sprite
 	mirror =				false;
 	
 	//Ranged exclusive
