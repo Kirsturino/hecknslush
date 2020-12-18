@@ -50,43 +50,7 @@ function spawnCurrency(currencyArray)
 
 #endregion
 
-#region Attack indicator scripts
-
-function drawAttackIndicator(visuals, weapon, attack)
-{
-	var c = col.red;
-	var c2 = c_black;
-	
-	switch (visuals.indicatorType)
-	{
-		case shapes.line:
-			var drawX = x + lengthdir_x(visuals.indicatorLength, attack.dir);
-			var drawY = bbox_bottom + lengthdir_y(visuals.indicatorLength, attack.dir);
-			
-			draw_line_width_color(x, bbox_bottom, drawX, drawY, 8, c, c2);
-		break;
-		
-		case shapes.triangle:
-			var drawX = x;
-			var drawY = y;
-			var drawX2 = x + lengthdir_x(visuals.indicatorLength, attack.dir - weapon.spread);
-			var drawY2 = y + lengthdir_y(visuals.indicatorLength, attack.dir - weapon.spread);
-			var drawX3 = x + lengthdir_x(visuals.indicatorLength, attack.dir + weapon.spread);
-			var drawY3 = y + lengthdir_y(visuals.indicatorLength, attack.dir + weapon.spread);
-			
-			draw_triangle_color(drawX, drawY, drawX2, drawY2, drawX3, drawY3, c, c2, c2, false);
-		break;
-	}
-	
-	//Generic glow/circle thing under enemy
-	var xOff = sprite_width;
-	var yOff = sprite_height/2;
-	draw_ellipse_color(x - xOff, bbox_bottom - yOff, x + xOff, bbox_bottom + yOff, c, c2, false);
-}
-
-#endregion
-
-#region Enemy AI stuff
+#region States
 
 function enemyIdle()
 {
@@ -110,6 +74,9 @@ function enemyChasing() {
 		move.lastSeen[0] = oPlayer.x;
 		move.lastSeen[1] = oPlayer.y;
 	}
+	
+	//Get direction, if player too close, reverse direction
+	if (dist < combat.fleeRadius && los) dir += 180;
 	
 	chaseMovement(dist, dir);
 	move.aggroTimer = approach(move.aggroTimer, 0, 1);
@@ -184,7 +151,7 @@ function toAttacking() {
 	visuals.curSprite = "anticipation";
 	visuals.finalSpr = variable_struct_get(visuals.spriteStruct, visuals.curSprite);
 	state = states.attacking;
-	drawFunction = drawAttackIndicator;
+	drawFunction = visuals.indicatorFunction;
 }
 
 function toStunned(duration) {
@@ -237,7 +204,9 @@ function initEnemy()
 	drawFunction = nothing;
 	
 	visuals.finalSpr = variable_struct_get(visuals.down, "idle");
+	
+	attackIndicator = visuals.indicatorFunction;
 
-	//Set mask
+	//Set collision mask
 	sprite_index = move.collMask;
 }

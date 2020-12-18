@@ -224,7 +224,7 @@ function explodingBullets() constructor
 		ds_list_destroy(enemyList);
 		
 		//Explosion particle
-		vectorShapeCall(htbx.x, htbx.y, shapes.circle, radius, -1, 2, 0, 12, col.white, false);
+		vectorShapeCall(htbx.x, htbx.y, shapes.circle, radius, -1, 4, 0, 12, col.white, false);
 		
 		//Make those explosions feel meaty
 		freeze(htbx.atk.dmg * 10);
@@ -280,7 +280,7 @@ function implodingBullets() constructor
 		ds_list_destroy(enemyList);
 		
 		//Explosion particle
-		vectorShapeCall(htbx.x, htbx.y, shapes.circle, radius, -1, 2, 0, 12, col.white, false);
+		vectorShapeCall(htbx.x, htbx.y, shapes.circle, radius, -1, 4, 0, 12, col.white, false);
 		
 		//Make those explosions feel meaty
 		freeze(htbx.atk.dmg);

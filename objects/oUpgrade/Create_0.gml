@@ -7,7 +7,10 @@ else			{ instance_destroy(); }
 //Some graphics variables
 selected = 0;
 selectX = viewWidth/4;
-selectY = viewHeight/2;
+selectY = viewHeight;
+
+uiEaseInTimer = 1.5;
+uiEaseLerp = 2;
 
 function active()
 {
@@ -42,6 +45,10 @@ function applying()
 	{
 		applyUpgrade(oPlayer.attackSlots[selected], upgrade);
 	}
+	
+	//Ease UI elements in
+	uiEaseInTimer = approach(uiEaseInTimer, 1, 0.01);
+	uiEaseLerp = lerp(uiEaseLerp, uiEaseInTimer, 0.01);
 }
 
 state = inactive;

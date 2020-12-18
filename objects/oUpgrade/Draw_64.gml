@@ -21,7 +21,7 @@ var amount = oPlayer.abilityAmount;
 for (var i = 0; i < amount; ++i)
 {
 	var originX = viewWidth/2;
-	var originY = viewHeight/16*11;
+	var originY = viewHeight/16*11 * uiEaseLerp;
 	var space = 128;
 	var radius = 32;
 	var startX = originX - (amount-1)*space/2;
@@ -52,7 +52,7 @@ yOffset = radius * 1.5;
 drawX = startX + selected*space;
 drawY = originY + wave(-4, 4, 4, selected, true) - yOffset;
 selectX = lerp(selectX, drawX, 0.1);
-selectY = lerp(selectY, drawY, 0.02);
+selectY = lerp(selectY, drawY, 0.1);
 
 c = global.abilityColors[upgrade.type];
 draw_sprite_ext(sSelect, 0, selectX, selectY, wave(-1, 1, 2, 0, true), 1, 0, c, 1);

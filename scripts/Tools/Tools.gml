@@ -59,3 +59,23 @@ function startNotification(txt_string)
 		drawFunction = drawNotification;
 	}
 }
+
+/// smoothstep(a,b,x)
+//
+//  Returns 0 when (x < a), 1 when (x >= b), a smooth transition
+//  from 0 to 1 otherwise, or (-1) on error (a == b).
+//
+//      a           upper bound, real
+//      b           lower bound, real
+//      x           value, real
+//
+/// GMLscripts.com/license
+function smoothstep(from, to, timer)
+{
+    var p;
+    if (timer < from) return 0;
+    if (timer >= to) return 1;
+    if (from == to) return -1;
+    p = (timer - from) / (to - from);
+    return (p * p * (3 - 2 * p));
+}

@@ -173,7 +173,11 @@ function incrementAnimationFrame()
 	{
 		var maxFrames = sprite_get_number(visuals.finalSpr);
 		if (visuals.frm > maxFrames) { visuals.frm = frac(visuals.frm); }
+		
 		//Decide whether to use up or down sprite
+		//Current implementation tries to minimze struct calls, but is a little unclean
+		//This could be replaced by a simple local var in the draw event that gets redefined every frame
+		//Performance implications are unknown, needs testing
 		if (move.dir < 180 &&  move.dir != 0 && visuals.spriteStruct != visuals.up)
 		{
 			visuals.spriteStruct = visuals.up;
