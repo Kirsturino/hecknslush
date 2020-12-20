@@ -28,6 +28,7 @@ input_default_key(ord("F"), verbs.interact);
 input_default_mouse_button(mb_left, verbs.attack, true);
 input_default_mouse_button(mb_middle, verbs.attack2, true);
 input_default_mouse_button(mb_right, verbs.aim, true);
+input_default_key(ord("R"), verbs.aim);
 
 #macro ATTACK_BUFFER 200
 #macro DODGE_BUFFER 200
@@ -514,10 +515,11 @@ function incrementVerbCooldowns() {
 	
 	var length = array_length(attack);
 	for (var i = 0; i < length; ++i) {
-	    if (attackSlots[i].cooldownType == recharge.time) attack[i].cooldown = approach(attack[i].cooldown, 0, 1);
+	    if (attackSlots[i].cooldownType == recharge.time)
+			attack[i].cooldown = approach(attack[i].cooldown, 0, 1  * global.timeRechargeMultiplier);
 	}
 	
-	dodge.cooldown = approach(dodge.cooldown, 0, 1);
+	dodge.cooldown = approach(dodge.cooldown, 0, 1 * global.timeRechargeMultiplier);
 	
 	//Iframes
 	combat.iframes = approach(combat.iframes, 0, 1);

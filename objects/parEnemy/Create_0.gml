@@ -193,8 +193,9 @@ function chaseMovement(dist, dir)
 
 //Other
 
-function incrementCooldowns() {
-	attack.cooldown = approach(attack.cooldown, 0, 1);
+function incrementCooldowns()
+{
+	attack.cooldown = approach(attack.cooldown, 0, 1 * global.timeRechargeMultiplier);
 }
 	
 function initEnemy()

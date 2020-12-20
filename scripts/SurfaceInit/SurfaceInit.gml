@@ -1,0 +1,1 @@
+global.enemyAttackSurface = 0;

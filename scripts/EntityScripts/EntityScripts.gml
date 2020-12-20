@@ -44,6 +44,7 @@ function dealDamage(enemy)
 		hitFX(htbx);
 		
 		//Hardcoded to give the player cooldowns, maybe refactor later
+		//REFACTOR THIS TO BE AN ONHIT FUNCTION ADDED TO WEAPONS
 		if (htbx.atk.target == parEnemy)
 		{
 			refreshPlayerCooldowns(htbx);
@@ -251,9 +252,9 @@ function spawnHitbox(weapon, attack)
 	//Visual stuff
 	htbx.sprite_index = weapon.projSpr;
 	htbx.image_angle = attack.htbxDir;
-	htbx.visuals.size = weapon.size;
-	htbx.image_xscale = weapon.size;
-	htbx.image_yscale = weapon.size;
+	htbx.visuals.size = weapon.size * global.projectileSizeMultiplier;
+	htbx.image_xscale = weapon.size * global.projectileSizeMultiplier;
+	htbx.image_yscale = weapon.size * global.projectileSizeMultiplier;
 	if (weapon.mirror) htbx.image_yscale = attack.mirror;
 	htbx.image_blend = weapon.clr;
 	htbx.visuals.type = weapon.type;
@@ -266,15 +267,15 @@ function spawnHitbox(weapon, attack)
 	visuals.recoil = weapon.dmg;
 	
 	//Movement
-	htbx.move.hsp = lengthdir_x(weapon.spd * (1 + random(weapon.spread) * 0.01), attack.htbxDir);
-	htbx.move.vsp = lengthdir_y(weapon.spd * (1 + random(weapon.spread) * 0.01), attack.htbxDir);
+	htbx.move.hsp = lengthdir_x(weapon.spd * (1 + random(weapon.spread) * 0.01) * global.projectileSpeedMultiplier, attack.htbxDir);
+	htbx.move.vsp = lengthdir_y(weapon.spd * (1 + random(weapon.spread) * 0.01) * global.projectileSpeedMultiplier, attack.htbxDir);
 	htbx.move.fric = weapon.fric;
 	
 	//Combat stuff
 	htbx.atk.dur = weapon.life;
 	htbx.atk.maxDur = weapon.life;	
-	htbx.atk.dmg = weapon.dmg;
-	htbx.atk.knockback = weapon.knockback;
+	htbx.atk.dmg = weapon.dmg * global.damageMultiplier;
+	htbx.atk.knockback = weapon.knockback * global.projectileKnockbackMultiplier;
 	htbx.atk.hitDelay = weapon.start;
 	htbx.atk.hitEnd = weapon.length;
 	

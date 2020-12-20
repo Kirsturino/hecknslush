@@ -10,17 +10,12 @@ FEATURES
 
 ---------------------------------------------------------------------------
 TO-DO
-- Global tuning knobs (Ongoing effort)
-	- Projectile speed
-	- Projectile size
-	- Damage being dealt
-	- Cooldowns
-	- Anything else you can come up with
-	
 - Culling to walls and enemies
+	- Depends on how we do enemy spawning
 
 - Replace dodge with a special ability slot
 	- Opens up room for parries and other abilities for more versatile playstyles
+	- This would mean converting the dodge state to a special state that would have to have its logic changed dynamically
 
 ---------------------------------------------------------------------------
 REFACTOR
@@ -35,6 +30,8 @@ Yes
 - Make FXDrawer utilize vertex buffers
 	- This would mean that rectangles could be rotated, for example
 	- This would also mean calculating vertice locations that take in rotation as an argument, ugh
+	- This is all also probably completely unnecessary
+	- This would probably be the most efficient way to make physics particles
 	
 - Clean ALL UI drawing code to actually be readable by a human being
 
@@ -50,12 +47,16 @@ KNOWN BUGS
 - Enemy attack indicator alpha sucks atm
 	- Should be usable with surfaces, but surfaces and clearing with draw_clear mess up the alpha
 	- Maybe there's some way to solve it with some advanced blend modes or other ways to clear a surface
+	- Draw to black surface with normal blendmode, then draw surface with additive blendmode(?)
+	- Might just ditch this system and rely on enemy animations, TBA
 
 ---------------------------------------------------------------------------
 UPGRADE/BUFF IDEAS
 - Upgrades that modify bullet movement pattern like in Isaac
 	- Probably as new movement functions?
-	- Might result in float, we'll habe to see
+	- Might result in float, we'll have to see
+	
+- Bouncy Bullets
 	
 ---------------------------------------------------------------------------
 THINGS TO THINK ABOUT

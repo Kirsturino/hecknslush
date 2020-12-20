@@ -319,16 +319,46 @@ function upgradedDamage() constructor
 	
 }
 
-ds_list_add(POOL_UPGRADE,	new anarchy(),
-							new radialAttack(),
-							new burstifier(),
-							new megaBurstifier(),
-							new behaviourTest(),
-							new multiTest(),
-							new explodingBullets(),
-							new implodingBullets(),
-							new fracturedBlade(),
-							new upgradedDamage());
+function bouncyBullets() constructor
+{
+	type =			weapons.ranged;
+	name =			"Bouncy Bullets";
+	desc =			"Projectiles bounce when hitting a wall";
+	pool =			POOL_UPGRADE;
+	
+	dur =			[1.5, upgrades.multiply];
+	
+	collisionFunctions = [destroyOnCollision, upgrades.removeBehaviour];
+	collisionFunctions = [function bouncy()
+	{
+		
+		var left = collision_point(other.bbox_left, other.y, parCollision, false, false);
+		var right = collision_point(other.bbox_right, other.y, parCollision, false, false);
+		var up = collision_point(other.x, other.bbox_top, parCollision, false, false);
+		var down = collision_point(other.x, other.bbox_bottom, parCollision, false, false);
+		
+		if (left != noone || right != noone)
+		{ other.move.hsp *= -1; }
+		
+		if (up != noone || down != noone)
+		{ other.move.vsp *= -1; }
+		
+	}, upgrades.addBehaviour];
+}
+
+ds_list_add(POOL_UPGRADE,	
+							//new anarchy(),
+							//new radialAttack(),
+							//new burstifier(),
+							//new megaBurstifier(),
+							//new behaviourTest(),
+							//new multiTest(),
+							//new explodingBullets(),
+							//new implodingBullets(),
+							//new fracturedBlade(),
+							//new upgradedDamage(),
+							new bouncyBullets()
+							);
 
 //-------------------------------------------------------------------------------------------
 

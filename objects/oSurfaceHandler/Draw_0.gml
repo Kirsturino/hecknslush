@@ -13,6 +13,7 @@ draw_set_alpha(1);
 with (parPhysical)
 {
 	//Dropshadow implementation
+	//Dependand on enemy sprites being always drawn at sprite bottom
 	var xOff = sprite_width/3;
 	var yOff = sprite_height/6;
 	draw_ellipse_color(x - xOff, bbox_bottom - yOff, x + xOff, bbox_bottom + yOff, c_black, c_black, false);
