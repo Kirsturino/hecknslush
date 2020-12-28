@@ -36,7 +36,10 @@ function applyUpgrade(weapon, upgrade)
 	{
 		var upgradeVarName = upg[i];
 		//Check for matching variable names
-		var notDescriptive = (upgradeVarName != "type" && upgradeVarName != "name" && upgradeVarName != "desc" && upgradeVarName != "pool");
+		var notDescriptive =	(upgradeVarName != "type" && 
+								upgradeVarName != "name" && 
+								upgradeVarName != "desc" && 
+								upgradeVarName != "pool");
 	    if (notDescriptive && variable_struct_exists(weapon, upgradeVarName))
 		{
 			//Fetch variable values from weapon and upgrade
@@ -59,18 +62,20 @@ function applyUpgrade(weapon, upgrade)
 				break;
 				
 				case upgrades.addBehaviour:
+				show_message("add");
 					var finalValue = array_create(0);
 					pushArrayToArray(weaponValue, finalValue);
 					array_push(finalValue, upgradeValueArray[0]);
 				break;
 				
 				case upgrades.removeBehaviour:
+					show_message("remove");
 					var finalValue = array_create(0);
 					var length = array_length(weaponValue);
 					for (var ii = 0; ii < length; ++ii) //This is essentially pushArrayToArray, but we exclude one variable when copying it over
 					{
 						if (weaponValue[ii] != upgradeValueArray[0])
-							array_push(finalValue, weaponValue[ii]);
+							{ array_push(finalValue, weaponValue[ii]); }
 					}
 				break;
 				
@@ -232,8 +237,8 @@ function explodingBullets() constructor
 	}
 	, upgrades.addBehaviour];
 	
-	aliveFunctions = [piercingHitboxEnemyCollision, upgrades.removeBehaviour];
 	aliveFunctions = [defaultHitboxEnemyCollision, upgrades.addBehaviour];
+	aliveFunctions = [piercingHitboxEnemyCollision, upgrades.removeBehaviour];
 
 }
 
@@ -287,8 +292,9 @@ function implodingBullets() constructor
 		shakeCamera(htbx.atk.dmg * 200, 2, 200);
 	}
 	, upgrades.addBehaviour];
-	aliveFunctions = [piercingHitboxEnemyCollision, upgrades.removeBehaviour];
+
 	aliveFunctions = [defaultHitboxEnemyCollision, upgrades.addBehaviour];
+	aliveFunctions = [piercingHitboxEnemyCollision, upgrades.removeBehaviour];
 
 }
 
@@ -328,10 +334,9 @@ function bouncyBullets() constructor
 	
 	dur =			[1.5, upgrades.multiply];
 	
-	collisionFunctions = [destroyOnCollision, upgrades.removeBehaviour];
 	collisionFunctions = [function bouncy()
 	{
-		
+		show_message("BOUNCE");
 		var left = collision_point(other.bbox_left, other.y, parCollision, false, false);
 		var right = collision_point(other.bbox_right, other.y, parCollision, false, false);
 		var up = collision_point(other.x, other.bbox_top, parCollision, false, false);
@@ -344,6 +349,8 @@ function bouncyBullets() constructor
 		{ other.move.vsp *= -1; }
 		
 	}, upgrades.addBehaviour];
+	
+	collisionFunctions = [destroyOnCollision, upgrades.removeBehaviour];
 }
 
 ds_list_add(POOL_UPGRADE,	

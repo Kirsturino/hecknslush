@@ -48,7 +48,7 @@ function applying()
 	
 	//Ease UI elements in
 	uiEaseInTimer = approach(uiEaseInTimer, 1, 0.01);
-	uiEaseLerp = lerp(uiEaseLerp, uiEaseInTimer, 0.01);
+	uiEaseLerp = lerp(uiEaseLerp, uiEaseInTimer, 0.05);
 }
 
 state = inactive;
