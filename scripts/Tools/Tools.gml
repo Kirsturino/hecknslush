@@ -60,6 +60,41 @@ function startNotification(txt_string)
 	}
 }
 
+function pushArrayToArray(arrayFrom, arrayTo)
+{
+	var length = array_length(arrayFrom);
+	for (var i = 0; i < length; ++i)
+		{ array_push(arrayTo, arrayFrom[i]); }
+}
+
+function removeFromArray(array, value)
+{
+	var foundValue = false;
+	var length = array_length(array);
+	for (var i = 0; i < length; ++i)
+	{
+		if (array[i] == value)
+		{
+			var index = i;
+			foundValue = true;
+		}
+	}
+	
+	if (foundValue) array_delete(array, index, 1);
+}
+
+function arrayContains(array, value)
+{
+	var foundValue = false;
+	var length = array_length(array);
+	for (var i = 0; i < length; ++i)
+	{
+		if (array[i] == value) {foundValue = true;}
+	}
+	
+	return foundValue;
+}
+
 /// smoothstep(a,b,x)
 //
 //  Returns 0 when (x < a), 1 when (x >= b), a smooth transition

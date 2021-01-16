@@ -43,8 +43,8 @@ function initNotifications() constructor
 	
 	function drawNotification()
 	{
-		var width = string_width(txt)*1.5;
-		var height = string_height(txt)*2;
+		var width = scribble_get_width(txt)*1.5;
+		var height = scribble_get_height(txt)*2;
 		draw_sprite_ext(sPixel, 0, viewWidth/2 - width/2, y + height, width, -height*1.5, -2, col.white, alpha);
 		
 		scribble_set_blend(col.black, alpha);

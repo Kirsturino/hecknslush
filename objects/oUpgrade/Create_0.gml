@@ -12,6 +12,9 @@ selectY = viewHeight;
 uiEaseInTimer = 1.5;
 uiEaseLerp = 2;
 
+//Text
+scribText = scribble_draw(x, y, upgrade.desc);
+
 function active()
 {
 	var plr = collision_circle(x, y, 32, oPlayer, false, false);
@@ -68,9 +71,7 @@ function toInactive()
 
 function toApplying()
 {
-	var txt = upgrade.desc;
-	scribble_cache(txt, "desc", true, false);
-	scribble_autotype_fade_in(txt, 1, 1, false, "desc");
+	scribble_autotype_fade_in(scribText, 1, 0, false);
 	
 	drawFunction = nothing;
 	state = applying;

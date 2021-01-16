@@ -35,6 +35,8 @@ Yes
 	
 - Clean ALL UI drawing code to actually be readable by a human being
 
+- Separate notifications to title and desc format
+
 Maybe
 - Enemy graphics implementation + attack indicator system kinda sucks
 	- Not sure how to improve yet, need to do performance testing

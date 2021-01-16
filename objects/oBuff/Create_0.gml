@@ -9,6 +9,10 @@ selected = 0;
 selectX = 0;
 selectY = 0;
 
+//Text
+scribText = scribble_draw(x, y, "[fntUpgradeTitle]" + buff.name + "\n\n[fntScribble]" + buff.desc);
+
+
 function active()
 {
 	var plr = collision_circle(x, y, 32, oPlayer, false, false);

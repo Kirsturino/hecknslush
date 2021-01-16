@@ -291,13 +291,6 @@ function spawnHitbox(weapon, attack)
 	else							{ htbx.atk.target = oPlayer; }
 }
 
-function pushArrayToArray(arrayFrom, arrayTo)
-{
-	var length = array_length(arrayFrom);
-	for (var i = 0; i < length; ++i)
-		{ array_push(arrayTo, arrayFrom[i]); }
-}
-
 function attackLogic(weapon, attack)
 {
 	if (attack.anticipationDur > 0)

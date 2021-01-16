@@ -62,14 +62,12 @@ function applyUpgrade(weapon, upgrade)
 				break;
 				
 				case upgrades.addBehaviour:
-				show_message("add");
 					var finalValue = array_create(0);
 					pushArrayToArray(weaponValue, finalValue);
 					array_push(finalValue, upgradeValueArray[0]);
 				break;
 				
 				case upgrades.removeBehaviour:
-					show_message("remove");
 					var finalValue = array_create(0);
 					var length = array_length(weaponValue);
 					for (var ii = 0; ii < length; ++ii) //This is essentially pushArrayToArray, but we exclude one variable when copying it over
@@ -79,8 +77,9 @@ function applyUpgrade(weapon, upgrade)
 					}
 				break;
 				
+				//One-time effects or more complex effects
 				case upgrades.execute:
-					upgradeValueArray[0]();
+					upgradeValueArray[0](weapon);
 				break;
 				
 				default:
@@ -89,6 +88,7 @@ function applyUpgrade(weapon, upgrade)
 			}
 			
 			//Finally, set weapon value with calculated value
+			//If you want to execute things, set the value there
 			if (upgradeValueArray[1] != upgrades.execute) variable_struct_set(weapon, upgradeVarName, finalValue);
 		}
 	}
@@ -237,9 +237,12 @@ function explodingBullets() constructor
 	}
 	, upgrades.addBehaviour];
 	
-	aliveFunctions = [defaultHitboxEnemyCollision, upgrades.addBehaviour];
-	aliveFunctions = [piercingHitboxEnemyCollision, upgrades.removeBehaviour];
-
+	function removePiercing(weapon)
+	{
+		if (arrayContains(weapon.aliveFunctions, piercingHitboxEnemyCollision)) {removeFromArray(weapon.aliveFunctions, piercingHitboxEnemyCollision);}
+		if (!arrayContains(weapon.aliveFunctions, defaultHitboxEnemyCollision)) {array_push(weapon.aliveFunctions, defaultHitboxEnemyCollision);}
+	}
+	aliveFunctions = [removePiercing, upgrades.execute];
 }
 
 function implodingBullets() constructor
@@ -292,10 +295,13 @@ function implodingBullets() constructor
 		shakeCamera(htbx.atk.dmg * 200, 2, 200);
 	}
 	, upgrades.addBehaviour];
-
-	aliveFunctions = [defaultHitboxEnemyCollision, upgrades.addBehaviour];
-	aliveFunctions = [piercingHitboxEnemyCollision, upgrades.removeBehaviour];
-
+	
+	function removePiercing(weapon)
+	{
+		if (arrayContains(weapon.aliveFunctions, piercingHitboxEnemyCollision)) {removeFromArray(weapon.aliveFunctions, piercingHitboxEnemyCollision);}
+		if (!arrayContains(weapon.aliveFunctions, defaultHitboxEnemyCollision)) {array_push(weapon.aliveFunctions, defaultHitboxEnemyCollision);}
+	}
+	aliveFunctions = [removePiercing, upgrades.execute];
 }
 
 function fracturedBlade() constructor
@@ -322,7 +328,6 @@ function upgradedDamage() constructor
 	}
 	
 	spawnFunctions = [moreDamagePerUpgrade, upgrades.addBehaviour];
-	
 }
 
 function bouncyBullets() constructor
@@ -334,36 +339,40 @@ function bouncyBullets() constructor
 	
 	dur =			[1.5, upgrades.multiply];
 	
-	collisionFunctions = [function bouncy()
+	function addBouncy(weapon)
 	{
-		show_message("BOUNCE");
-		var left = collision_point(other.bbox_left, other.y, parCollision, false, false);
-		var right = collision_point(other.bbox_right, other.y, parCollision, false, false);
-		var up = collision_point(other.x, other.bbox_top, parCollision, false, false);
-		var down = collision_point(other.x, other.bbox_bottom, parCollision, false, false);
+		function bouncy()
+		{
+			var left = collision_point(other.bbox_left, other.y, parCollision, false, false);
+			var right = collision_point(other.bbox_right, other.y, parCollision, false, false);
+			var up = collision_point(other.x, other.bbox_top, parCollision, false, false);
+			var down = collision_point(other.x, other.bbox_bottom, parCollision, false, false);
 		
-		if (left != noone || right != noone)
-		{ other.move.hsp *= -1; }
+			if (left != noone || right != noone)
+			{ other.move.hsp *= -1; }
 		
-		if (up != noone || down != noone)
-		{ other.move.vsp *= -1; }
+			if (up != noone || down != noone)
+			{ other.move.vsp *= -1; }
+		}
 		
-	}, upgrades.addBehaviour];
-	
-	collisionFunctions = [destroyOnCollision, upgrades.removeBehaviour];
+		array_push(weapon.collisionFunctions, bouncy);
+		removeFromArray(weapon.collisionFunctions, destroyOnCollision);
+	}
+							
+	collisionFunctions = [addBouncy, upgrades.execute];
 }
 
 ds_list_add(POOL_UPGRADE,	
-							//new anarchy(),
-							//new radialAttack(),
-							//new burstifier(),
-							//new megaBurstifier(),
-							//new behaviourTest(),
-							//new multiTest(),
-							//new explodingBullets(),
-							//new implodingBullets(),
-							//new fracturedBlade(),
-							//new upgradedDamage(),
+							new anarchy(),
+							new radialAttack(),
+							new burstifier(),
+							new megaBurstifier(),
+							new behaviourTest(),
+							new multiTest(),
+							new explodingBullets(),
+							new implodingBullets(),
+							new fracturedBlade(),
+							new upgradedDamage(),
 							new bouncyBullets()
 							);
 
@@ -377,8 +386,8 @@ function applyBuff(buff)
 	buff.buffFunction();
 	
 	//Pop up ui informing player that they picked up a buff
-	var txt = "[fntUpgradeTitle]" + buff.name + "\n\n[fntScribble]" + buff.desc;
-	startNotification(txt);
+	scribble_autotype_fade_in(scribText, 1, 0, false);
+	startNotification(scribText);
 	
 	destroyUpgrade(buff);
 }

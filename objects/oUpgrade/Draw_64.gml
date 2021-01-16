@@ -14,7 +14,7 @@ scribble_draw(drawX, drawY, "[fntUpgradeTitle]" + upgrade.name);
 
 drawY = viewHeight/8*2;
 scribble_set_wrap(viewWidth/2, viewHeight, false);
-scribble_draw(drawX, drawY, upgrade.desc, "desc");
+scribble_draw(drawX, drawY, scribText);
 
 //Draw upgrade selection UI
 var amount = oPlayer.abilityAmount;
