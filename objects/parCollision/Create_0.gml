@@ -1,0 +1,2 @@
+depthSorting();
+index = 0;

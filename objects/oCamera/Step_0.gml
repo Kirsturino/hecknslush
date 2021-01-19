@@ -13,3 +13,5 @@ switch (state) {
 		followPlayerAim();
 	break;
 }
+
+cull(parCollision);

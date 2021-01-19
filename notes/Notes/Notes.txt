@@ -27,7 +27,7 @@ Yes
 	- Might need a bigger rework because gneralizing enemy code was done in a hurry
 	- There's a lot of just weird stuff going on with all the radiuses (raidiai?)
 
-- Make FXDrawer utilize vertex buffers
+- Make FXDrawer utilize vertex buffers/primitives
 	- This would mean that rectangles could be rotated, for example
 	- This would also mean calculating vertice locations that take in rotation as an argument, ugh
 	- This is all also probably completely unnecessary
@@ -40,6 +40,8 @@ Yes
 Maybe
 - Enemy graphics implementation + attack indicator system kinda sucks
 	- Not sure how to improve yet, need to do performance testing
+	
+- Drawing walls pretty much takes 2x more processes than it could
 
 ---------------------------------------------------------------------------
 KNOWN BUGS
@@ -58,9 +60,7 @@ UPGRADE/BUFF IDEAS
 	- Probably as new movement functions?
 	- Might result in float, we'll have to see
 	
-- Bouncy Bullets
-	
----------------------------------------------------------------------------
+--------------------------------------------------------------------------
 THINGS TO THINK ABOUT
 - Resolution should be decided soon-ish
 	- Kinda have a fear that current resolution is too big?

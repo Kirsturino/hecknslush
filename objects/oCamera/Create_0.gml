@@ -42,6 +42,12 @@ zoomLerpSpeed = 0.1;
 rot = 0;
 rotTo = 0;
 
+//Cull
+cullDistance = 128;
+cullX = -9999;
+cullY = -9999;
+cullAmount = 0;
+
 function cameraShake() {
 	if (shakeDuration > 0) {
 		var amount = irandom_range(-shakeAmount, shakeAmount);
@@ -115,3 +121,29 @@ function applyCameraPos(spd, width, height) {
 	camera_set_view_angle(view, rot);
 	camera_set_view_size(view, width, height);
 }
+
+function cull(obj)
+{
+	var camX = curX;
+	var camY = curY;
+	
+	var shouldCull =	camX > cullX + cullDistance || camX < cullX - cullDistance ||
+						camY > cullY + cullDistance || camY < cullY - cullDistance;
+	if (shouldCull)
+	{
+		cullAmount++;
+		show_debug_message("culling: " + string(cullAmount));
+		cullX = curX;
+		cullY = curY;
+		
+		with (obj)
+		{
+			var offscreen =	(x < camX - other.cullDistance|| x > camX + viewWidth + other.cullDistance) ||
+							(y < camY - other.cullDistance || y > camY + viewHeight + other.cullDistance);
+						
+			if	(offscreen)	{visible = false;}
+			else			{visible = true;}
+		}
+	}
+}
+

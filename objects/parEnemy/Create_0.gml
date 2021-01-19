@@ -73,6 +73,8 @@ function enemyChasing() {
 	{
 		move.lastSeen[0] = oPlayer.x;
 		move.lastSeen[1] = oPlayer.y;
+		
+		move.aggroTimer = move.aggroTimerMax;
 	}
 	
 	//Get direction, if player too close, reverse direction
@@ -81,8 +83,8 @@ function enemyChasing() {
 	chaseMovement(dist, dir);
 	move.aggroTimer = approach(move.aggroTimer, 0, 1);
 	
-	if (dist < combat.attackRadius && los && attack.cooldown == 0) { toAttacking(); }
-	else if ((dist > combat.chaseRadius || !los) && move.aggroTimer == 0) { toIdle(); }
+	if (dist < combat.attackRadius && los && attack.cooldown == 0)	{ toAttacking(); }
+	else if (dist > combat.chaseRadius || move.aggroTimer == 0)		{ toIdle(); }
 }
 
 function enemyAttacking() {

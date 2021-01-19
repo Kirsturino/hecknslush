@@ -1,4 +1,5 @@
 //GLOBAL TUNING KNOBS
+#macro blockSize 32
 
 //Combat knobs
 global.damageRechargeMultiplier = 2;
